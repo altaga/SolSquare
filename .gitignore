@@ -1,3 +1,6 @@
+Codigo/program/target
+Codigo/program_client/lib/*.js
+
 # Logs
 logs
 *.log
@@ -125,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/.idea/Encode-Solana-Decentralized-Twitter.iml
+/test-ledger/faucet-keypair.json
+/test-ledger/ledger.lock
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/.gitignore
