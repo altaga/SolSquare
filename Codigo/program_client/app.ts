@@ -6,10 +6,10 @@ import * as os from "os";
 
 async function main(feePayer: Keypair) {
   // TODO: Specify the program Id we saved from when we deploy it
-  const progId = new PublicKey("DeAgefytsTT6cucaWBAgah3LkYpN7gngWfxk5JHddWEL");
+  const progId = new PublicKey("9U8FpTpoP6j5uqBURoRUkGY7JLpUmAmALd6KWhMSKaXh");
 
   // Create a new Solana connection
-  const connection = new Connection("http://127.0.0.1:8899", {
+  const connection = new Connection("https://api.devnet.solana.com ", {
     commitment: "confirmed"
   });
 
@@ -28,6 +28,7 @@ async function main(feePayer: Keypair) {
   let account = await getTweet(tweetAccount.publicKey);
   console.info(account);
   console.log(await connection.getAccountInfo(tweetAccount.publicKey));
+  console.log(await connection.getAccountInfo(feePayer.publicKey));
   console.log(await connection.getAccountInfo(feePayer.publicKey));
 
 }

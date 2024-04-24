@@ -25,4 +25,4 @@ toml_edit = "=0.21.0"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-path = "./lib.rs"
+path = "lib.rs"
