@@ -1,3 +1,8 @@
+Codigo/program/target
+Codigo/program_client/lib/*.js
+
+x_sol/target
+
 # Logs
 logs
 *.log
@@ -100,10 +105,6 @@ dist
 # vuepress build output
 .vuepress/dist
 
-# vuepress v2.x temp and cache directory
-.temp
-.cache
-
 # Serverless directories
 .serverless/
 
@@ -125,3 +126,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/.idea/Encode-Solana-Decentralized-Twitter.iml
+/test-ledger/faucet-keypair.json
+/test-ledger/ledger.lock
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/.gitignore
+/Codigo/program_client/app.js
+/x_sol/Cargo.lock

@@ -18,10 +18,5 @@ pub fn add_tweet(
 ) -> ProgramResult {
     // Implement your business logic here...
     tweet_account.data.text = "test txt".to_string();
-
-
-
-
-
     Ok(())
 }
