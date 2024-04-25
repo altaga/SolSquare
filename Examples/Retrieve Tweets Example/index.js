@@ -11,7 +11,7 @@ const tweetSchema = {
 };
 
 // program id
-const programId = new PublicKey("7GTHRrqPjABFdUPmdPAmiaqdhJ162cAg1mTXTY5z9Y7D");
+const programId = new PublicKey("5qx1gsC29htjX9yTKvndnEYE4siBGZ1D8vvGiU3AhvLi");
 
 // connection
 const connection = new Connection(clusterApiUrl("devnet"));
@@ -36,6 +36,7 @@ async function main() {
   });
 
   console.log(tweets);
+  console.log(accounts);
 }
 
 main();
