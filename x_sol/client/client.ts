@@ -1,13 +1,10 @@
-import { serialize } from "borsh";
-import { Buffer } from "buffer";
-import {
-  Transaction,
+const {serialize} = require("borsh")
+const {Transaction,
   TransactionInstruction,
   sendAndConfirmTransaction,
   PublicKey,
   SystemProgram,
-  SYSVAR_RENT_PUBKEY
-} from "@solana/web3.js";
+  SYSVAR_RENT_PUBKEY} = require("@solana/web3.js")
 
 function generateRandomString(n) {
   const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
