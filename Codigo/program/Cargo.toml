@@ -9,7 +9,7 @@ publish = false
 
 [dependencies]
 solana-program = ">=1.16, <1.18"
-borsh = "0.10.3"
+borsh = "1.0.0"
 thiserror = "1"
 num-derive = "0.4"
 num-traits = "0.2"
