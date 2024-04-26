@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TopBar from "../components/TopBar";
 import "../App.css";
 import Feed from "../components/Feed";
-
+import { getTweet } from "../api/getTweet";
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    getTweet().then((tweets) => {
+      setPosts(tweets);
+    });
+  }, []);
 
   return (
     <>

@@ -9,12 +9,9 @@ export default function Feed({ posts }: { posts: Array<object> }) {
 
       <div className="feed">
         <CreateTweet />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+       
         {posts.map((post) => {
-          return <Post />;
+          return <Post post={post}/>;
         })}
 
         {/* {posts.length === 0 && (

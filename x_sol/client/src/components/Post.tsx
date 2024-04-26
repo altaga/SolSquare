@@ -6,9 +6,9 @@ import { ThumbDownOffAlt } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CommentIcon from "@mui/icons-material/Comment";
 import "../App.css";
-export default function Post() {
+export default function Post({ post }: { post: any }) {
   const [comment, setComment] = useState("");
-
+  console.log(post);
   return (
     <div className="post">
       <div className="postWrapper">
@@ -19,12 +19,14 @@ export default function Post() {
               src={"/assets/person/1.jpg"}
               alt=""
             />
-            <span className="postUsername">X Sol Account</span>
-            <span className="postDate">2024-24-12</span>
+            <span className="postUsername">{post.owner}</span>
+            <span className="postDate">
+              {moment(post.timestamp * 1000).format("YYYY-MM-DD HH:mm")}
+            </span>
           </div>
         </div>
         <div className="postCenter">
-          <span className="postText">dfsfds</span>
+          <span className="postText">{post.content}</span>
           <img className="postImg" alt="" />
         </div>
         <div className="postBottom">
