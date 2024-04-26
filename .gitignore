@@ -1,5 +1,6 @@
 Codigo/program/target
 Codigo/program_client/lib/*.js
+.DS_Store
 
 solsquare/target
 
