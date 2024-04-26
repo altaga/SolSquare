@@ -7,10 +7,6 @@ license = "unlicense"
 publish = false
 
 
-
-
-
-
 [dependencies]
 solana-program = ">=1.16, <1.18"
 borsh = "0.10.3"

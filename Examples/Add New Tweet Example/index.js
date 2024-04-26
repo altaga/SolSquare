@@ -42,7 +42,7 @@ const ProgramInstruction = {
 };
 
 // program id
-const programId = new PublicKey("7GTHRrqPjABFdUPmdPAmiaqdhJ162cAg1mTXTY5z9Y7D");
+const programId = new PublicKey("5qx1gsC29htjX9yTKvndnEYE4siBGZ1D8vvGiU3AhvLi");
 
 // connection
 const connection = new Connection(clusterApiUrl("devnet"));
@@ -88,7 +88,7 @@ async function main() {
   const instruction = ProgramInstruction.AddTweet;
 
   const seedStruct = {
-    content: completeStringWithSymbol("Hello this is a tweet", "#", 128),
+    content: completeStringWithSymbol("Hello JOSE is another tweet", "#", 128),
     owner: feePayer.publicKey.toBase58(),
     timestamp: Math.floor(Date.now() / 1000), // Timestamp in seconds, not in miliseconds (u32 limits)
   };
