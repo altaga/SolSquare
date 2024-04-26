@@ -1,14 +1,16 @@
-const {serialize} = require("borsh")
-const {Transaction,
+const { serialize } = require("borsh");
+const {
+  Transaction,
   TransactionInstruction,
   sendAndConfirmTransaction,
   PublicKey,
   SystemProgram,
-  SYSVAR_RENT_PUBKEY} = require("@solana/web3.js")
+  SYSVAR_RENT_PUBKEY,
+} = require("@solana/web3.js");
 
 function generateRandomString(n) {
-  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-  let result = '';
+  const chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  let result = "";
   for (let i = 0; i < n; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -38,7 +40,7 @@ class Assignable {
   }
 }
 
-class Payload extends Assignable { }
+class Payload extends Assignable {}
 
 const payloadSchema = new Map([
   [
@@ -52,7 +54,7 @@ const payloadSchema = new Map([
         ["space", "u8"],
         ["content", "String"],
         ["owner", "String"],
-        ["timestamp", "u32"]
+        ["timestamp", "u32"],
       ],
     },
   ],
@@ -66,7 +68,7 @@ const memorySchema = new Map([
       fields: [
         ["content", "String"],
         ["owner", "String"],
-        ["timestamp", "u32"]
+        ["timestamp", "u32"],
       ],
     },
   ],
@@ -75,13 +77,13 @@ const memorySchema = new Map([
 // Check
 
 // program id
-const programId = pg.PROGRAM_ID
+const programId = pg.PROGRAM_ID;
 
 // connection
-const connection = pg.connection
+const connection = pg.connection;
 
 // setup fee payer
-const feePayer = pg.wallet.keypair
+const feePayer = pg.wallet.keypair;
 
 let seed = generateRandomString(32);
 
@@ -94,18 +96,22 @@ let [pda, bump] = await PublicKey.findProgramAddressSync(
 const kind = ProgramInstruction.AddTweet;
 
 const seedStruct = {
-  content: completeStringWithSymbol("Hello World! This is a New Tweet LOL", "#", 128),
+  content: completeStringWithSymbol(
+    "Hello World! This is a New Tweet LOL",
+    "#",
+    128
+  ),
   owner: feePayer.publicKey.toBase58(),
-  timestamp:(new Date()).toTimeString() // to be done
-}
+  timestamp: new Date().toTimeString(), // to be done
+};
 const seedMemory = new Payload(seedStruct);
-const space = serialize(memorySchema, seedMemory).length
+const space = serialize(memorySchema, seedMemory).length;
 const instruction = new Payload({
   instruction: kind,
   bump,
   seed,
   space,
-  ...seedStruct
+  ...seedStruct,
 });
 const data = Buffer.from(serialize(payloadSchema, instruction));
 
@@ -113,8 +119,8 @@ console.log({
   bump,
   public_key: pda.toBase58(),
   seed,
-  size: space ?? 0
-})
+  size: space ?? 0,
+});
 
 let tx = new Transaction().add(
   new TransactionInstruction({
@@ -141,7 +147,7 @@ let tx = new Transaction().add(
       },
     ],
     data,
-    programId
+    programId,
   })
 );
 
@@ -152,8 +158,10 @@ const transactionSignature = await sendAndConfirmTransaction(
   [feePayer]
 );
 
-console.log("Explorer = ", `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`);
-
+console.log(
+  "Explorer = ",
+  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+);
 
 const accounts = await connection.getProgramAccounts(programId);
 
