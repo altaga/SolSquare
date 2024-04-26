@@ -159,7 +159,7 @@
 
 .feed {
   flex: 6;
-  margin:20px
+  margin: 20px;
 }
 
 .feedWrapper {
@@ -182,8 +182,6 @@
   -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
   box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
 }
-
-
 
 .no-post-text {
   font-size: 20px;
@@ -262,50 +260,54 @@
   margin: 0 10px;
 }
 
-.postDate{
-    font-size: 11px;
+.postDate {
+  font-size: 11px;
 }
-.postCenter{
+.postCenter {
   margin: 20px 0;
 }
 
-.postImg{
+.postImg {
   margin-top: 20px;
   width: 100%;
   max-height: 500px;
   object-fit: contain;
 }
 
-.postBottom{
+.postBottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.postBottomLeft{
+.postBottomLeft {
   display: flex;
-  align-items: center;   
+  align-items: center;
 }
 
-.postBottomRight{
-display: flex;
-align-items: center;   
+.postLikeButton {
+  color: #1877f2;
+  cursor: pointer;
+  padding: 3px;
+  margin: 3px;
+}
+.postBottomRight {
+  display: flex;
+  align-items: center;
 }
 
-
-
-.postLikeCounter{
+.postLikeCounter {
   font-size: 15px;
 }
 
-.postCommentText{
+.postCommentText {
   cursor: pointer;
-  border-bottom: 1px  gray;
+  border-bottom: 1px gray;
   margin-bottom: 2px;
   font-size: 16px;
 }
 
-.postLikeText{
+.postLikeText {
   cursor: pointer;
   border-bottom: 1px gray;
   font-size: 15px;
@@ -313,7 +315,7 @@ align-items: center;
   margin-right: 5px;
 }
 
-.postDislikeText{
+.postDislikeText {
   cursor: pointer;
   border-bottom: 1px gray;
   font-size: 15px;
@@ -321,63 +323,54 @@ align-items: center;
 }
 
 .writeComment {
-display: flex;
-align-items: center;
-border-radius: 10px;
--webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
-margin-top: 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  margin-top: 20px;
 }
 
 .commentProfileImg {
-width: 32px;
-height: 32px;
-border-radius: 50%;
-object-fit: cover;
-margin: 10px;
-
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 10px;
 }
 
 .commentInput {
-border: none;
-width: 80%;
-margin-left: 5px;
-font-size: 15px;
-
+  border: none;
+  width: 80%;
+  margin-left: 5px;
+  font-size: 15px;
 }
 
 .commentInput:focus {
-outline: none;
+  outline: none;
 }
 
-.sendButton
-{
-margin-left: 30px;
-cursor: pointer;
-}
-
-.viewComments
-{
-text-align: center;
-margin-top: 15px;
-
-}
-
-.viewCommentsText{
+.sendButton {
+  margin-left: 30px;
   cursor: pointer;
-  border-bottom: 1px  gray;
+}
+
+.viewComments {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.viewCommentsText {
+  cursor: pointer;
+  border-bottom: 1px gray;
   margin-bottom: 2px;
   font-size: 16px;
-  
 }
 
-.viewCommentsText:hover
-{
+.viewCommentsText:hover {
   color: #1877f2;
   text-decoration: underline;
 }
-
-
 
 .share {
   width: 100%;
@@ -428,58 +421,56 @@ margin-top: 15px;
   justify-content: space-between;
 }
 
-.shareOptions{
-    display: flex;
-    margin-left: 20px;
+.shareOptions {
+  display: flex;
+  margin-left: 20px;
 }
 
-.shareOption{
-    display: flex;
-    align-items: center;
-    margin-right: 15px;
-    cursor: pointer;
+.shareOption {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+  cursor: pointer;
 }
 
-.shareIcon{
-    font-size: 18px;
-    margin-right: 3px;
-    margin-left: 50px;
+.shareIcon {
+  font-size: 18px;
+  margin-right: 3px;
+  margin-left: 50px;
 }
 
-.shareOptionText{
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 5px;
+.shareOptionText {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 5px;
 }
 
-.shareButton{
-    border: none;
-    width: 120px;
-    padding: 7px;
-    border-radius: 5px;
-    background-color: #1877f2;
-    font-weight: 500;
-    margin-right: 20px;
-    cursor: pointer;
-    color: white;
+.shareButton {
+  border: none;
+  width: 120px;
+  padding: 7px;
+  border-radius: 5px;
+  background-color: #1877f2;
+  font-weight: 500;
+  margin-right: 20px;
+  cursor: pointer;
+  color: white;
 }
 
-.shareImgContainer
-{
-padding: 0 20px 10px 20px;
-position: relative;
+.shareImgContainer {
+  padding: 0 20px 10px 20px;
+  position: relative;
 }
 
-.shareImg{
-width: 100%;
-object-fit: cover;
+.shareImg {
+  width: 100%;
+  object-fit: cover;
 }
 
-.shareCancelImg
-{
-position: absolute;
-top: 0;
-right: 20px;
-cursor: pointer;
-opacity: 0.5;
+.shareCancelImg {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  cursor: pointer;
+  opacity: 0.5;
 }
