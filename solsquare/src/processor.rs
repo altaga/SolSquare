@@ -1,3 +1,4 @@
+use std::slice::Iter;
 use borsh::BorshSerialize;
 use solana_program::{
     account_info::AccountInfo,
@@ -133,15 +134,3 @@ pub(crate) fn modify_tweet(
     Ok(())
 }
 
-pub(crate) fn transfer_funds(from_account: Option<&AccountInfo>, to_account: &AccountInfo) -> ProgramResult {
-    // Does the from account have enough lamports to transfer?
-    // TODO: Get the maximum amount of lamports from the from_account to transfer to the to_account
-    const LAMPORTS_TO_TRANSFER: u64 = 0.005 as u64;
-    if **from_account.unwrap().try_borrow_lamports()? < LAMPORTS_TO_TRANSFER {
-        return Err(ProgramError::InsufficientFunds);
-    }
-    // Debit from_account and credit to_account
-    **from_account.unwrap().try_borrow_mut_lamports()? -= LAMPORTS_TO_TRANSFER;
-    **to_account.try_borrow_mut_lamports()? += LAMPORTS_TO_TRANSFER;
-    Ok(())
-}

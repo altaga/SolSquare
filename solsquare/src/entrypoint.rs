@@ -35,7 +35,7 @@ pub fn process_instruction(
         }
         ProgramInstruction::TransferFunds() => {
             msg!("Transfer Funds");
-            crate::processor::transfer_funds(accounts.iter().next(), payer_account_info)?;
+            crate::function::transfer_funds(accounts)?;
         }
     }
     Ok(())

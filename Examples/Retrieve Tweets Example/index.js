@@ -35,7 +35,7 @@ async function main() {
     };
   });
 
-  console.log(tweets);
+  // console.log(tweets);
   console.log(accounts);
 }
 

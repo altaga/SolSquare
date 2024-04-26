@@ -1,7 +1,7 @@
 Codigo/program/target
 Codigo/program_client/lib/*.js
 
-x_sol/target
+solsquare/target
 
 # Logs
 logs
@@ -133,4 +133,5 @@ dist
 /.idea/vcs.xml
 /.idea/.gitignore
 /Codigo/program_client/app.js
-/x_sol/Cargo.lock
+/solsquare/Cargo.lock
+/solsquare/client/package-lock.json
