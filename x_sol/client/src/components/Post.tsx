@@ -8,7 +8,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import "../App.css";
 export default function Post({ post }: { post: any }) {
   const [comment, setComment] = useState("");
-  console.log(post);
+
   return (
     <div className="post">
       <div className="postWrapper">

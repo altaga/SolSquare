@@ -4,14 +4,14 @@ import Post from "./Post";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import "../App.css";
 import CreateTweet from "./CreateTweet";
-export default function Feed({ posts }: { posts: Array<object> }) {
+export default function Feed({ posts, fetchPosts }: { posts: Array<object> ,fetchPosts: () => void}) {
   return (
 
       <div className="feed">
-        <CreateTweet />
+        <CreateTweet fetchPosts={fetchPosts} />
        
-        {posts.map((post) => {
-          return <Post post={post}/>;
+        {posts.map((post,index) => {
+          return <Post post={post} key={index}/>;
         })}
 
         {/* {posts.length === 0 && (

@@ -6,15 +6,30 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Stack from "@mui/material/Stack";
 import { Cancel } from "@mui/icons-material";
 import "../App.css";
+
+import { create } from "../api/createTweet";
 const Input = styled("input")({
   display: "none",
 });
 
-export default function Share() {
+export default function Share({ fetchPosts }: { fetchPosts: () => void }) {
   const [desc, setDesc] = useState("");
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null);
   const isFormValid = () => {
     return desc !== "";
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      let result = await create(desc);
+      if (result) {
+        fetchPosts();
+      }
+      setDesc("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -52,7 +67,12 @@ export default function Share() {
                 </label>
               </Stack>
             </div>
-            <Button variant="contained" type="submit" disabled={!isFormValid()}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={!isFormValid()}
+              onClick={handleSubmit}
+            >
               Create Post
             </Button>
           </div>

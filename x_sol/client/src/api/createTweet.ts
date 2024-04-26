@@ -12,7 +12,7 @@ const {
 } = require("@solana/web3.js");
 const { serialize } = require("borsh");
 const bs58 = require("bs58");
-
+const Buffer = require("buffer").Buffer;
 // Constants and Variables
 
 const tweetSchema = {
@@ -60,7 +60,11 @@ function generateRandomString(n: number) {
   return result;
 }
 
-function completeStringWithSymbol(inputString: string | any[], symbol: string, desiredLength: number) {
+function completeStringWithSymbol(
+  inputString: string | any[],
+  symbol: string,
+  desiredLength: number
+) {
   const currentLength = inputString.length;
   if (currentLength >= desiredLength) {
     return inputString;
@@ -72,10 +76,11 @@ function completeStringWithSymbol(inputString: string | any[], symbol: string, d
 
 // Main code
 
-export const CreateTweet = async (content: any) => {
+export const create = async (content: any) => {
   const seed = generateRandomString(32);
+
   let [pda, bump] = await PublicKey.findProgramAddressSync(
-    [Buffer.from(seed), feePayer.publicKey.toBuffer()],
+    [seed, feePayer.publicKey.toBuffer()],
     programId
   );
 
@@ -84,7 +89,7 @@ export const CreateTweet = async (content: any) => {
   const seedStruct = {
     content: completeStringWithSymbol(content, "#", 128),
     owner: feePayer.publicKey.toBase58(),
-    timestamp: Math.floor(Date.now() / 1000), // Timestamp in seconds, not in miliseconds (u32 limits)
+    timestamp: Math.floor(Date.now() / 1000),
   };
 
   const space = serialize(tweetSchema, seedStruct).length;
