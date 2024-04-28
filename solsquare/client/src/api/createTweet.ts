@@ -1,3 +1,5 @@
+
+
 // Comment this on react
 const {
   Connection,
@@ -13,6 +15,7 @@ const {
 const { serialize } = require("borsh");
 const bs58 = require("bs58");
 const Buffer = require("buffer").Buffer;
+
 // Constants and Variables
 
 const tweetSchema = {
@@ -76,19 +79,16 @@ function completeStringWithSymbol(
 
 // Main code
 
-export const create = async (content: any) => {
+export const create = async (content: any, pubKey: typeof PublicKey | null) => {
   const seed = generateRandomString(32);
 
-  let [pda, bump] = await PublicKey.findProgramAddressSync(
-    [seed, feePayer.publicKey.toBuffer()],
-    programId
-  );
+  let [pda, bump] = PublicKey.findProgramAddressSync([Buffer.from(seed), pubKey.toBuffer()], programId);
 
   const instruction = ProgramInstruction.AddTweet;
 
   const seedStruct = {
     content: completeStringWithSymbol(content, "#", 128),
-    owner: feePayer.publicKey.toBase58(),
+    owner: pubKey.toString(),
     timestamp: Math.floor(Date.now() / 1000),
   };
 
@@ -109,7 +109,7 @@ export const create = async (content: any) => {
     new TransactionInstruction({
       keys: [
         {
-          pubkey: feePayer.publicKey,
+          pubkey:  pubKey.toBytes(), 
           isSigner: true,
           isWritable: true,
         },
@@ -137,7 +137,7 @@ export const create = async (content: any) => {
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     new Transaction().add(tx),
-    [feePayer]
+    
   );
 
   return transactionSignature;

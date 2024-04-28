@@ -6,13 +6,13 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Stack from "@mui/material/Stack";
 import { Cancel } from "@mui/icons-material";
 import "../App.css";
-
+import { PublicKey } from "@solana/web3.js";
 import { create } from "../api/createTweet";
 const Input = styled("input")({
   display: "none",
 });
 
-export default function Share({ fetchPosts }: { fetchPosts: () => void }) {
+export default function Share({ fetchPosts,pubKey }: { fetchPosts: () => void ,pubKey:PublicKey | null}) {
   const [desc, setDesc] = useState("");
   // const [file, setFile] = useState(null);
   const isFormValid = () => {
@@ -22,7 +22,7 @@ export default function Share({ fetchPosts }: { fetchPosts: () => void }) {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      let result = await create(desc);
+      let result = await create(desc, pubKey);
       if (result) {
         fetchPosts();
       }

@@ -41,7 +41,7 @@ export default function Home({
         pubKey={pubKey}
       />
       <div className="homeContainer">
-        <Feed posts={posts} fetchPosts={fetchPosts} connected={connected}/>
+        <Feed posts={posts} fetchPosts={fetchPosts} connected={connected} pubKey={pubKey}/>
       </div>
     </>
   );
