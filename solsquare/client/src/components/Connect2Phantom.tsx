@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler } from "react";
-import {  PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 
 const Connect2Phantom: FC<{
   walletAvail: any;
@@ -14,12 +14,16 @@ const Connect2Phantom: FC<{
     <div>
       {walletAvail ? (
         <>
-          <button disabled={connected} onClick={connectHandler}>
-            Connect to Phantom
-          </button>
-          <button disabled={!connected} onClick={disconnectHandler}>
-            Disconnect from Phantom
-          </button>
+          {!connected && (
+            <button disabled={connected} onClick={connectHandler}>
+              Connect to Phantom
+            </button>
+          )}
+          {connected && (
+            <button disabled={!connected} onClick={disconnectHandler}>
+              Disconnect from Phantom
+            </button>
+          )}
         </>
       ) : (
         <>
