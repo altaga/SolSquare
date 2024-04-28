@@ -5,21 +5,23 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import "../App.css";
 import CreateTweet from "./CreateTweet";
 import { PublicKey } from "@solana/web3.js";
-
+import { PhantomProvider } from "../types/provider";
 export default function Feed({
   posts,
   fetchPosts,
   connected,
-  pubKey
+  pubKey,
+  provider,
 }: {
   posts: Array<object>;
   fetchPosts: () => void;
   connected: boolean | undefined;
   pubKey: PublicKey | null;
+  provider: PhantomProvider | null;
 }) {
   return (
     <div className="feed">
-      {connected && <CreateTweet fetchPosts={fetchPosts} pubKey={pubKey} />}
+      {connected && <CreateTweet fetchPosts={fetchPosts} pubKey={pubKey} provider={provider} />}
 
       {posts.map((post, index) => {
         return <Post post={post} key={index} />;

@@ -4,19 +4,21 @@ import "../App.css";
 import Feed from "../components/Feed";
 import { getTweet } from "../api/getTweet";
 import { PublicKey } from "@solana/web3.js";
-
+import { PhantomProvider } from "../types/provider";
 export default function Home({
   walletAvail,
   connected,
   connectHandler,
   disconnectHandler,
   pubKey,
+  provider
 }: {
   walletAvail: any;
   connected: boolean | undefined;
   connectHandler: MouseEventHandler<HTMLButtonElement> | undefined;
   disconnectHandler: MouseEventHandler<HTMLButtonElement> | undefined;
   pubKey: PublicKey | null;
+  provider: PhantomProvider | null;
 }) {
   const [posts, setPosts] = useState([]);
 
@@ -41,7 +43,7 @@ export default function Home({
         pubKey={pubKey}
       />
       <div className="homeContainer">
-        <Feed posts={posts} fetchPosts={fetchPosts} connected={connected} pubKey={pubKey}/>
+        <Feed posts={posts} fetchPosts={fetchPosts} connected={connected} pubKey={pubKey} provider={provider}/>
       </div>
     </>
   );

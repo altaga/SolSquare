@@ -1,4 +1,4 @@
-
+import { PhantomProvider } from "../types/provider";
 
 // Comment this on react
 const {
@@ -79,10 +79,17 @@ function completeStringWithSymbol(
 
 // Main code
 
-export const create = async (content: any, pubKey: typeof PublicKey | null) => {
+export const create = async (
+  content: any,
+  pubKey: typeof PublicKey | null,
+  provider: PhantomProvider | null
+) => {
   const seed = generateRandomString(32);
 
-  let [pda, bump] = PublicKey.findProgramAddressSync([Buffer.from(seed), pubKey.toBuffer()], programId);
+  let [pda, bump] = PublicKey.findProgramAddressSync(
+    [Buffer.from(seed), pubKey.toBuffer()],
+    programId
+  );
 
   const instruction = ProgramInstruction.AddTweet;
 
@@ -109,7 +116,7 @@ export const create = async (content: any, pubKey: typeof PublicKey | null) => {
     new TransactionInstruction({
       keys: [
         {
-          pubkey:  pubKey.toBytes(), 
+          pubkey: pubKey.toBytes(),
           isSigner: true,
           isWritable: true,
         },
@@ -134,10 +141,11 @@ export const create = async (content: any, pubKey: typeof PublicKey | null) => {
     })
   );
 
+  await provider?.signTransaction(tx);
+  // await provider.signTransaction(tx);
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
-    new Transaction().add(tx),
-    
+    new Transaction().add(tx)
   );
 
   return transactionSignature;

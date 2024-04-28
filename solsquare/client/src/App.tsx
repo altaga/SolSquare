@@ -3,27 +3,11 @@ import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
 import { FC, useEffect, useState } from "react";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
-
-type PhantomEvent = "disconnect" | "connect" | "accountChanged";
-
-interface ConnectOpts {
-  onlyIfTrusted: boolean;
-}
-
-interface PhantomProvider {
-  connect: (opts?: Partial<ConnectOpts>) => Promise<{ publicKey: PublicKey }>;
-  disconnect: () => Promise<void>;
-  on: (event: PhantomEvent, callback: (args: any) => void) => void;
-  isPhantom: boolean;
-}
-
-type WindowWithSolana = Window & {
-  solana?: PhantomProvider;
-};
+import { PhantomProvider, WindowWithSolana } from "./types/provider";
 
 function App() {
   const [walletAvail, setWalletAvail] = useState(false);
-  const [provider, setProvider] = useState<PhantomProvider | null>(null);
+  const [provider, setProvider] = useState<any | null>(null);
   const [connected, setConnected] = useState(false);
   const [pubKey, setPubKey] = useState<PublicKey | null>(null);
 
@@ -31,6 +15,7 @@ function App() {
     if ("solana" in window) {
       const solWindow = window as WindowWithSolana;
       if (solWindow?.solana?.isPhantom) {
+
         setProvider(solWindow.solana);
         setWalletAvail(true);
         // Attemp an eager connection
@@ -56,7 +41,7 @@ function App() {
     event
   ) => {
     console.log(`connect handler`);
-    provider?.connect().catch((err) => {
+    provider?.connect().catch((err:any) => {
       console.error("connect ERROR:", err);
     });
   };
@@ -65,7 +50,7 @@ function App() {
     event
   ) => {
     console.log("disconnect handler");
-    provider?.disconnect().catch((err) => {
+    provider?.disconnect().catch((err:any) => {
       console.error("disconnect ERROR:", err);
     });
   };
@@ -81,6 +66,7 @@ function App() {
               walletAvail={walletAvail}
               connected={connected}
               pubKey={pubKey}
+              provider={provider}
             />
           }
         />

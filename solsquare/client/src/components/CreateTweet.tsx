@@ -8,11 +8,20 @@ import { Cancel } from "@mui/icons-material";
 import "../App.css";
 import { PublicKey } from "@solana/web3.js";
 import { create } from "../api/createTweet";
+import { PhantomProvider } from "../types/provider";
 const Input = styled("input")({
   display: "none",
 });
 
-export default function Share({ fetchPosts,pubKey }: { fetchPosts: () => void ,pubKey:PublicKey | null}) {
+export default function Share({
+  fetchPosts,
+  pubKey,
+  provider,
+}: {
+  fetchPosts: () => void;
+  pubKey: PublicKey | null;
+  provider: PhantomProvider | null;
+}) {
   const [desc, setDesc] = useState("");
   // const [file, setFile] = useState(null);
   const isFormValid = () => {
@@ -22,7 +31,7 @@ export default function Share({ fetchPosts,pubKey }: { fetchPosts: () => void ,p
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      let result = await create(desc, pubKey);
+      let result = await create(desc, pubKey,provider);
       if (result) {
         fetchPosts();
       }
