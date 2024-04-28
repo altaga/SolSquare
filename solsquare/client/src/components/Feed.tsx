@@ -15,7 +15,7 @@ export default function Feed({
 }) {
   return (
     <div className="feed">
-      <CreateTweet fetchPosts={fetchPosts} />
+      {connected && <CreateTweet fetchPosts={fetchPosts} />}
 
       {posts.map((post, index) => {
         return <Post post={post} key={index} />;
