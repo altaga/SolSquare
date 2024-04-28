@@ -1,11 +1,23 @@
-import React from "react";
-
-import { useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Home, Search } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
+import Connect2Phantom from "./Connect2Phantom";
+import { PublicKey } from "@solana/web3.js";
 
-export default function TopBar() {
+export default function TopBar({
+  walletAvail,
+  connected,
+  connectHandler,
+  disconnectHandler,
+  pubKey,
+}: {
+  walletAvail: any;
+  connected: boolean | undefined;
+  connectHandler: MouseEventHandler<HTMLButtonElement> | undefined;
+  disconnectHandler: MouseEventHandler<HTMLButtonElement> | undefined;
+  pubKey: PublicKey | null;
+}) {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
 
@@ -64,6 +76,14 @@ export default function TopBar() {
           Home
         </span>
       </div>
+
+      <Connect2Phantom
+        disconnectHandler={disconnectHandler}
+        connectHandler={connectHandler}
+        walletAvail={walletAvail}
+        connected={connected}
+        pubKey={pubKey}
+      />
     </div>
   );
 }
