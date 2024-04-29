@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 // Add Fonts to NextJS Project
 
 const robotoFlex = Roboto_Flex({ weight: "400", subsets: ["latin"] });
-const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 // Add Metadata like Title, Description to Site
 
