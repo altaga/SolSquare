@@ -158,7 +158,7 @@ export default function FeedHome() {
   // User Utils
   const [users, setUsers] = useState([]);
   // New User Utils
-  const [username, setUsername] = useState("Altaga");
+  const [username, setUsername] = useState("");
   // Modal Utils
   const [loading, setLoading] = useState(false);
   let [amount, setAmount] = useState("");
@@ -467,10 +467,11 @@ export default function FeedHome() {
       );
       const signature = await sendTransaction(transaction, connection);
       transactionToast(signature, "User Created");
-      handleClosePost();
+      handleCloseUser();
       setTimeout(() => {
         setUsername("");
         setLoading(false);
+        getUsers();
       }, 2000);
     } catch (e) {
       setLoading(false);
