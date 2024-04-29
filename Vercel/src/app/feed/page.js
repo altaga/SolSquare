@@ -340,6 +340,27 @@ export default function Address() {
     setRendered(true)
   }, []);
 
+  // PFP Automatic Generator based on each unique wallet on site
+  const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
+  useEffect(() => {
+    // Create a temporary map to assign indexes to unique owners
+    console.log(posts)
+
+    const sortedPostsforPFP = [...posts].sort((a, b) => a.timestamp - b.timestamp);
+
+    console.log(sortedPostsforPFP)
+
+    const map = {};
+    let index = 1;
+    sortedPostsforPFP.forEach(post => {
+      if (!map.hasOwnProperty(post.owner)) {
+        map[post.owner] = index++;
+      }
+    });
+    setOwnerToIndexMap(map);
+  }, [posts]);
+
+
   return (
     <React.Fragment>
       {
@@ -743,7 +764,7 @@ export default function Address() {
                     >
                       <Image
                         style={{ borderRadius: "50%", margin: "1rem" }}
-                        src="/logoW.png"
+                        src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
                         alt="logo"
                         width={50}
                         height={50}
