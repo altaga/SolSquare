@@ -543,7 +543,7 @@ export default function Address() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "white",
+                        color: "#30ceb7",
                         width: "2rem",
                         height: "2rem",
                       }}
@@ -571,7 +571,7 @@ export default function Address() {
                   >
                     <CancelIcon
                       style={{
-                        color: "white",
+                        color: "red",
                         width: "2rem",
                         height: "2rem",
                       }}
@@ -630,7 +630,7 @@ export default function Address() {
           >
             <AddCircleIcon
               style={{
-                color: "white",
+                color: "#30ceb7",
                 width: "2rem",
                 height: "2rem",
               }}
@@ -715,7 +715,7 @@ export default function Address() {
             >
               <AddCircleIcon
                 style={{
-                  color: "white",
+                  color: "#30ceb7",
                   width: "2rem",
                   height: "2rem",
                 }}
@@ -816,7 +816,7 @@ export default function Address() {
                     >
                       <BoltIcon
                         style={{
-                          color: "white",
+                          color: "#30ceb7",
                           width: "2rem",
                           height: "2rem",
                         }}
@@ -842,7 +842,7 @@ export default function Address() {
                     >
                       <ExploreIcon
                         style={{
-                          color: "white",
+                          color: "#30ceb7",
                           width: "2rem",
                           height: "2rem",
                         }}
@@ -867,7 +867,7 @@ export default function Address() {
                       >
                         <AccountBalanceWalletIcon
                           style={{
-                            color: "white",
+                            color: "#30ceb7",
                             width: "2rem",
                             height: "2rem",
                           }}
@@ -904,7 +904,7 @@ export default function Address() {
           <div>
             <ListItemButton onClick={sortHandle}>
               <ListItemIcon>
-                <SortIcon htmlColor="white"/>
+                <SortIcon htmlColor="#30ceb7"/>
               </ListItemIcon>
               <ListItemText primary="Sort By" />
               {!openSort ? <ExpandLess /> : <ExpandMore />}
@@ -913,13 +913,13 @@ export default function Address() {
               <List component="div" disablePadding>
                 <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <DateRangeIcon htmlColor="white" />
+                    <DateRangeIcon htmlColor="#30ceb7" />
                   </ListItemIcon>
                   <ListItemText primary="By Date" />
                 </ListItemButton>
                 <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <AccountBalanceWalletIcon htmlColor="white" />
+                    <AccountBalanceWalletIcon htmlColor="#30ceb7" />
                   </ListItemIcon>
                   <ListItemText primary="By Balance" />
                 </ListItemButton>
