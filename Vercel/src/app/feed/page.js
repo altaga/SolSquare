@@ -161,7 +161,7 @@ export default function Address() {
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
-    posts.sort((a, b) => b.timestamp - a.timestamp);
+    posts.sort((a, b) => b.balance - a.balance);
     setPosts(posts);
   }, [connection]);
 
@@ -309,6 +309,7 @@ export default function Address() {
         getBalance();
       }, 2000);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   }, [publicKey, connection, sendTransaction, message, getPosts, getBalance]);
@@ -758,6 +759,7 @@ export default function Address() {
                   >
                     <Link
                       href={`https://explorer.solana.com/address/${post.owner}?cluster=devnet`}
+                      target="_blank"
                       style={{
                         display: "flex",
                         justifyContent: "flex-start",
