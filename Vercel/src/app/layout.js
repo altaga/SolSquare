@@ -2,13 +2,13 @@ import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import dynamic from "next/dynamic";
-import { Kanit } from "next/font/google";
+import { Kanit, Roboto_Flex, Orbitron } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Add Fonts to NextJS Project
 
-const inter = Kanit({ weight: "400", subsets: ["latin"] });
+const inter = Roboto_Flex({ weight: "400", subsets: ["latin"] });
 
 // Add Metadata like Title, Description to Site
 

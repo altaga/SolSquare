@@ -429,7 +429,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -458,7 +458,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -551,7 +551,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -579,7 +579,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -638,7 +638,7 @@ export default function Address() {
             <div
               style={{
                 margin: "5px",
-                fontSize: "1rem",
+                fontSize: "1.3rem",
                 color: "white",
               }}
             >
@@ -677,15 +677,15 @@ export default function Address() {
             alignItems: "center",
           }}
         >
-          <div style={{ fontSize: "1.5rem", color: "white" }}>Address</div>
+          <div style={{ fontSize: "1.2rem", color: "white" }}>Logged in as:</div>
           <Link
             href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
-              marginTop: "2rem",
+              marginTop: "0rem",
             }}
           >
             {publicKey?.toBase58().substring(0, 22)}
@@ -695,7 +695,7 @@ export default function Address() {
           <div
             style={{
               marginTop: "2rem",
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
             }}
           >
@@ -704,7 +704,7 @@ export default function Address() {
           <div
             style={{
               marginTop: "2rem",
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
             }}
           >
@@ -723,7 +723,7 @@ export default function Address() {
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "1rem",
+                  fontSize: "1.3rem",
                   color: "white",
                 }}
               >
@@ -769,7 +769,7 @@ export default function Address() {
                         width={50}
                         height={50}
                       />
-                      <div style={{ color: "white", fontSize: "1.3rem" }}>
+                      <div style={{ color: "white", fontSize: "1.2rem" }}>
                         {post.owner}
                       </div>
                     </Link>
@@ -824,7 +824,7 @@ export default function Address() {
                       <div
                         style={{
                           margin: "5px",
-                          fontSize: "1rem",
+                          fontSize: "1.2rem",
                           color: "white",
                         }}
                       >
@@ -850,7 +850,7 @@ export default function Address() {
                       <div
                         style={{
                           margin: "5px",
-                          fontSize: "1rem",
+                          fontSize: "1.2rem",
                           color: "white",
                         }}
                       >
@@ -875,7 +875,7 @@ export default function Address() {
                         <div
                           style={{
                             margin: "5px",
-                            fontSize: "1rem",
+                            fontSize: "1.2rem",
                             color: "white",
                           }}
                         >
@@ -899,6 +899,7 @@ export default function Address() {
             borderLeftStyle: "solid",
             borderLeftColor: "rgba(255,255, 255, 0.5)",
             color: "white",
+            
           }}
         >
           <div>
