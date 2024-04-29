@@ -744,7 +744,7 @@ export default function Address() {
                   style={{
                     padding: "1rem",
                     width: "100%",
-                    borderWidth: "1px",
+                    borderWidth: "0px 0px 1px 0px",
                     borderStyle: "solid",
                     borderColor: "rgba(255,255, 255, 0.5)",
                   }}
