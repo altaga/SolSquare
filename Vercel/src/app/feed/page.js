@@ -784,7 +784,7 @@ export default function Address() {
                       )}`}
                     </div>
                     <div style={{ color: "white", marginLeft: "1rem" }}>
-                      {`Boost : ${Math.round(post.balance / LAMPORTS_PER_SOL * 1000) / 1000 - 0.002} SOL`}
+                      {`Boost : ${Math.round((post.balance / LAMPORTS_PER_SOL -0.002) * 1000) / 1000} SOL`}
                     </div>
                   </div>
                   <div
@@ -926,7 +926,7 @@ export default function Address() {
                   <ListItemIcon>
                     <AccountBalanceWalletIcon htmlColor="#30ceb7" />
                   </ListItemIcon>
-                  <ListItemText primary="By Balance" />
+                  <ListItemText primary="By Boost" />
                 </ListItemButton>
               </List>
             </Collapse>
