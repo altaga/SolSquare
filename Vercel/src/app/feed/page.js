@@ -48,6 +48,10 @@ import {
 import Modal from "@mui/material/Modal";
 
 import { useRouter } from "next/navigation";
+import { Orbitron } from "next/font/google";
+
+
+const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const postSchema = {
   struct: {
@@ -417,7 +421,7 @@ export default function Address() {
                       setLoading(true);
                       boostPost();
                     }}
-                    className="buttonInteraction"
+                    className={orbitron.className + " buttonInteraction"}
                   >
                     <BoltIcon
                       style={{
@@ -446,7 +450,7 @@ export default function Address() {
                         setLoading(false);
                       }, 500);
                     }}
-                    className="buttonInteraction"
+                    className={orbitron.className + " buttonInteraction"}
                   >
                     <CancelIcon
                       style={{
@@ -539,7 +543,7 @@ export default function Address() {
                       setLoading(true);
                       addPost();
                     }}
-                    className="buttonInteraction"
+                    className={orbitron.className + " buttonInteraction"}
                   >
                     <AddCircleIcon
                       style={{
@@ -567,7 +571,7 @@ export default function Address() {
                         setLoading(false);
                       }, 500);
                     }}
-                    className="buttonInteraction"
+                    className={orbitron.className + " buttonInteraction"}
                   >
                     <CancelIcon
                       style={{
@@ -626,7 +630,7 @@ export default function Address() {
         <div style={{ margin: "1rem" }}>
           <button
             onClick={() => handleOpenPost()}
-            className="buttonInteraction"
+            className={orbitron.className + " buttonInteraction"}
           >
             <AddCircleIcon
               style={{
@@ -638,7 +642,7 @@ export default function Address() {
             <div
               style={{
                 margin: "5px",
-                fontSize: "1.3rem",
+                fontSize: "1.2rem",
                 color: "white",
               }}
             >
@@ -699,7 +703,7 @@ export default function Address() {
               color: "white",
             }}
           >
-            {`SOL Balance : ${balance / LAMPORTS_PER_SOL}`}
+            {`SOL Balance : ${Math.round(balance / LAMPORTS_PER_SOL * 1000) / 1000}`}
           </div>
           <div
             style={{
@@ -711,7 +715,7 @@ export default function Address() {
             <button
               disabled={true}
               onClick={() => {}}
-              className="buttonInteraction"
+              className={orbitron.className + ' buttonInteraction'}
             >
               <AddCircleIcon
                 style={{
@@ -723,7 +727,7 @@ export default function Address() {
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "1.3rem",
+                  fontSize: "1.2rem",
                   color: "white",
                 }}
               >
@@ -773,14 +777,14 @@ export default function Address() {
                         {post.owner}
                       </div>
                     </Link>
-                    <div style={{ color: "white", margin: "1rem" }}>
+                    <div style={{ color: "white", marginLeft: "1rem" }}>
                       {` ${getTimeDifference(
                         post.timestamp * 1000,
                         Date.now()
                       )}`}
                     </div>
-                    <div style={{ color: "white", margin: "1rem" }}>
-                      {`| Balance : ${post.balance / LAMPORTS_PER_SOL} SOL`}
+                    <div style={{ color: "white", marginLeft: "1rem" }}>
+                      {`Boost : ${Math.round(post.balance / LAMPORTS_PER_SOL * 1000) / 1000 - 0.002} SOL`}
                     </div>
                   </div>
                   <div
@@ -812,7 +816,7 @@ export default function Address() {
                         setSelectedPost(post.addressPDA);
                         handleOpenBoost();
                       }}
-                      className="buttonInteraction"
+                      className={orbitron.className + ' buttonInteraction'}
                     >
                       <BoltIcon
                         style={{
@@ -838,7 +842,7 @@ export default function Address() {
                           "_blank"
                         )
                       }
-                      className="buttonInteraction"
+                      className={orbitron.className + " buttonInteraction"}
                     >
                       <ExploreIcon
                         style={{
@@ -863,7 +867,7 @@ export default function Address() {
                         onClick={() => {
                           withdrawPost(post.addressPDA);
                         }}
-                        className="buttonInteraction"
+                        className={orbitron.className + " buttonInteraction"}
                       >
                         <AccountBalanceWalletIcon
                           style={{

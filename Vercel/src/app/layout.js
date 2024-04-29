@@ -8,7 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Add Fonts to NextJS Project
 
-const inter = Roboto_Flex({ weight: "400", subsets: ["latin"] });
+const robotoFlex = Roboto_Flex({ weight: "400", subsets: ["latin"] });
+const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 // Add Metadata like Title, Description to Site
 
@@ -27,7 +28,7 @@ const WalletComponent = dynamic(() => import("../utils/walletComponent"), {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={robotoFlex.className}>
         {
           // App Router Cache Provider, Toast Container and Wallet Component will be available on all pages
         }
