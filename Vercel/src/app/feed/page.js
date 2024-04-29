@@ -6,6 +6,7 @@ import {
   generateRandomString,
   getTimeDifference,
   modalStyle,
+  modalStyleMobile,
 } from "../../utils/utils";
 // Styled buttons and inputs
 // Solana Core modules
@@ -113,7 +114,6 @@ function findUser(users, owner) {
   try {
     for (let i = 0; i < users.length; i++) {
       if (users[i].owner === owner) {
-        console.log(users);
         return users[i].username;
       }
     }
@@ -140,7 +140,9 @@ function findFollowers(users, owner) {
 export default function FeedHome() {
   const router = useRouter();
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
-  const isTouchScreen = "ontouchstart" in window || navigator.msMaxTouchPoints;
+  const isTouchScreen =
+    ("ontouchstart" in window || navigator.msMaxTouchPoints) ?? false;
+  console.log(isTouchScreen);
   // We use the wallet hooks to interact with the blockchain
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
@@ -178,6 +180,8 @@ export default function FeedHome() {
   // Sort Utils
   const [openSort, setOpenSort] = React.useState(false);
   const sortHandle = () => setOpenSort(!openSort);
+  // Sort Switch
+  const [sortBy, setSortBy] = useState(false);
 
   // Toast notification
 
@@ -350,8 +354,6 @@ export default function FeedHome() {
 
       const space = serialize(postSchema, seedStruct).length;
 
-      console.log("space", space);
-
       const transactionData = {
         instruction,
         bump,
@@ -424,7 +426,6 @@ export default function FeedHome() {
       };
 
       const space = serialize(userSchema, seedStruct).length;
-      console.log("space", space);
 
       const transactionData = {
         instruction,
@@ -477,21 +478,17 @@ export default function FeedHome() {
       setLoading(false);
       console.log(e);
     }
-  }, [publicKey, connection, sendTransaction, username]);
+  }, [publicKey, connection, sendTransaction, username, getUsers]);
 
   const sortByDate = useCallback(async () => {
-    console.log("date");
     let postsTemp = [...posts];
     postsTemp.sort((a, b) => b.timestamp - a.timestamp);
-    console.log(postsTemp);
     setPosts(postsTemp);
   }, [setPosts, posts]);
 
   const sortByBalance = useCallback(async () => {
-    console.log("balance");
     let postsTemp = [...posts];
     postsTemp.sort((a, b) => b.balance - a.balance);
-    console.log(postsTemp);
     setPosts(postsTemp);
   }, [setPosts, posts]);
 
@@ -536,7 +533,692 @@ export default function FeedHome() {
     setOwnerToIndexMap(map);
   }, [posts]);
 
-  return (
+  return isTouchScreen ? (
+    <React.Fragment>
+      {
+        // Boost Modal
+      }
+      <Modal
+        open={openBoost}
+        onClose={handleCloseBoost}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={openBoost} timeout={500}>
+          <Box sx={modalStyleMobile}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontSize: "1.3rem",
+                    marginBottom: "30px",
+                  }}
+                >
+                  Lets boost this post
+                </div>
+                <div style={{ textAlign: "center", fontSize: "1.2rem" }}>
+                  {selectedPost.substring(0, 22)}
+                  <br />
+                  {selectedPost.substring(22)}
+                </div>
+                <input
+                  style={{
+                    alignSelf: "center",
+                    marginTop: "1rem",
+                    marginBottom: "1rem",
+                    padding: "0.5rem",
+                    borderRadius: "10px",
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "black",
+                  }}
+                  placeholder="Enter amount"
+                  className="searchInput"
+                  value={amount}
+                  onChange={(e) => {
+                    setAmount(e.target.value);
+                  }}
+                />
+                <div
+                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                >
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      setLoading(true);
+                      boostPost();
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <BoltIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Boost Post
+                    </div>
+                  </button>
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      handleCloseBoost();
+                      setTimeout(() => {
+                        setAmount("");
+                        setSelectedPost("");
+                        setLoading(false);
+                      }, 500);
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <CancelIcon
+                      style={{
+                        color: "red",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Cancel
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
+      {
+        // Post Modal
+      }
+      <Modal
+        open={openPost}
+        onClose={handleClosePost}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={openPost} timeout={500}>
+          <Box sx={modalStyleMobile}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  Create New Post
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <input
+                    style={{
+                      alignSelf: "center",
+                      marginTop: "1rem",
+                      marginBottom: "1rem",
+                      padding: "0.5rem",
+                      borderRadius: "10px",
+                      borderWidth: "1px",
+                      borderStyle: "solid",
+                      borderColor: "black",
+                    }}
+                    placeholder="Enter post message"
+                    className="searchInput"
+                    value={message}
+                    onChange={(e) => {
+                      if (e.target.value.length >= 128) {
+                        setMessage(e.target.value.substring(0, 128));
+                      }
+                      if (e.target.value.length < 128) {
+                        setMessage(e.target.value);
+                      }
+                    }}
+                  />
+                  <div>{`${128 - message.length}`}</div>
+                </div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                >
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      setLoading(true);
+                      addPost();
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Add Post
+                    </div>
+                  </button>
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      handleClosePost();
+                      setTimeout(() => {
+                        setMessage("");
+                        setLoading(false);
+                      }, 500);
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <CancelIcon
+                      style={{
+                        color: "red",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Cancel
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
+      {
+        // Add User Modal
+      }
+      <Modal
+        open={openUser}
+        onClose={handleCloseUser}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={openUser} timeout={500}>
+          <Box sx={modalStyleMobile}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  Create New User
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <input
+                    style={{
+                      alignSelf: "center",
+                      marginTop: "1rem",
+                      marginBottom: "1rem",
+                      padding: "0.5rem",
+                      borderRadius: "10px",
+                      borderWidth: "1px",
+                      borderStyle: "solid",
+                      borderColor: "black",
+                    }}
+                    placeholder="Enter username"
+                    className="searchInput"
+                    value={username}
+                    onChange={(e) => {
+                      if (e.target.value.length >= 32) {
+                        setUsername(e.target.value.substring(0, 32));
+                      }
+                      if (e.target.value.length < 32) {
+                        setUsername(e.target.value);
+                      }
+                    }}
+                  />
+                  <div>{`${32 - username.length}`}</div>
+                </div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                >
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      setLoading(true);
+                      addUser();
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <AddCircleIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Create User
+                    </div>
+                  </button>
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      handleCloseUser();
+                      setTimeout(() => {
+                        setUsername("");
+                        setLoading(false);
+                      }, 500);
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <CancelIcon
+                      style={{
+                        color: "red",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.8rem",
+                        color: "white",
+                      }}
+                    >
+                      Cancel
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
+      {
+        // Header Bar
+      }
+      <div
+        style={{
+          height: "12vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottomWidth: "2px",
+          borderBottomStyle: "solid",
+          borderBottomColor: "rgba(255,255, 255, 0.5)",
+        }}
+      >
+        <div style={{ margin: "1rem" }}>
+          <Link href="/">
+            <Image src="/logoW.png" alt="logo" width={70} height={70} />
+          </Link>
+        </div>
+        <div style={{ margin: "1rem" }}>
+          <WalletMultiButton />
+        </div>
+      </div>
+      {
+        // Body
+      }
+      <div
+        style={{
+          height: "8vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          border: "1px solid white",
+          borderTop: "none",
+          borderLeft: "none",
+          borderRight: "none",
+        }}
+      >
+        <button
+          style={{
+            width: "50vw",
+            height: "100%",
+            background: !sortBy ? "white" : "black",
+            border: "none",
+          }}
+          onClick={() => {
+            setSortBy(false);
+            sortByBalance();
+          }}
+        >
+          <div style={{ color: !sortBy ? "black" : "white" }}>
+            Sort By Boost
+          </div>
+        </button>
+        <button
+          style={{
+            width: "50vw",
+            height: "100%",
+            background: sortBy ? "white" : "black",
+            border: "none",
+          }}
+          onClick={() => {
+            setSortBy(true);
+            sortByDate();
+          }}
+        >
+          <div style={{ color: sortBy ? "black" : "white" }}>Sort By Data</div>
+        </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "70vh",
+          width: "100vw",
+        }}
+      >
+        <div className="scrollable-div-mobile">
+          {posts.map((post, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  padding: "5px",
+                  width: "100%",
+                  borderWidth: "0px 0px 1px 0px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(255,255, 255, 0.5)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Link
+                    href={`https://explorer.solana.com/address/${post.owner}?cluster=devnet`}
+                    target="_blank"
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      color: "white",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ borderRadius: "50%", margin: "10px" }}
+                      src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
+                      alt="logo"
+                      width={40}
+                      height={40}
+                    />
+                    <>
+                      {findUser(users, post.owner) === post.owner ? (
+                        <div style={{ color: "white", fontSize: "0.9rem" }}>
+                          {post.owner.substring(0, 4)}...
+                          {post.owner.substring(post.owner.length - 4)}
+                        </div>
+                      ) : (
+                        <div style={{ color: "white", fontSize: "0.9rem" }}>
+                          {findUser(users, post.owner).length > 10
+                            ? findUser(users, post.owner).substring(0, 10) +
+                              "..."
+                            : findUser(users, post.owner)}
+                        </div>
+                      )}
+                    </>
+                  </Link>
+                  <div style={{ color: "white", margin: "10px" }}>
+                    {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
+                  </div>
+                  <div style={{ color: "white", margin: "10px" }}>
+                    {`Boost : ${
+                      Math.round(
+                        (post.balance / LAMPORTS_PER_SOL - 0.002) * 1000
+                      ) / 1000
+                    } SOL`}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    color: "white",
+                    margin: "10px 20px 50px 30px",
+                    fontSize: "1.3rem",
+                    textAlign: "justify",
+                  }}
+                >
+                  {post.content}
+                </div>
+                <div
+                  style={{
+                    color: "white",
+                    marginBottom: "10px",
+                    fontSize: "1.3rem",
+                    flexDirection: "row",
+                    display: "flex",
+                    gap: "10px",
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setSelectedPost(post.addressPDA);
+                      handleOpenBoost();
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <BoltIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.7rem",
+                        color: "white",
+                      }}
+                    >
+                      Boost Post
+                    </div>
+                  </button>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://explorer.solana.com/address/${post.addressPDA}?cluster=devnet`,
+                        "_blank"
+                      )
+                    }
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <ExploreIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "1.5rem",
+                        height: "1.5rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "0.7rem",
+                        color: "white",
+                      }}
+                    >
+                      Explorer
+                    </div>
+                  </button>
+                  {post.owner === pubkey?.toBase58() && (
+                    <button
+                      disabled={post.owner !== pubkey?.toBase58()}
+                      onClick={() => {
+                        withdrawPost(post.addressPDA);
+                      }}
+                      className={orbitron.className + " buttonInteraction"}
+                    >
+                      <AccountBalanceWalletIcon
+                        style={{
+                          color: "#30ceb7",
+                          width: "1.5rem",
+                          height: "1.5rem",
+                        }}
+                      />
+                      <div
+                        style={{
+                          margin: "5px",
+                          fontSize: "0.7rem",
+                          color: "white",
+                        }}
+                      >
+                        Withdraw
+                      </div>
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {
+        // Footer
+      }
+      <div
+        style={{
+          height: "10vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderTopWidth: "1px",
+          borderTopStyle: "solid",
+          borderTopColor: "rgba(255,255, 255, 0.5)",
+        }}
+      >
+        {findUser(users, publicKey?.toBase58()) === publicKey?.toBase58() ? (
+          <button
+            onClick={() => handleOpenUser()}
+            className={orbitron.className + " buttonInteraction"}
+          >
+            <AddCircleIcon
+              style={{
+                color: "#30ceb7",
+                width: "1.5rem",
+                height: "1.5rem",
+              }}
+            />
+            <div
+              style={{
+                margin: "5px",
+                fontSize: "1rem",
+                color: "white",
+              }}
+            >
+              Create User
+            </div>
+          </button>
+        ) : (
+          <Link
+            href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "1.2rem",
+              color: "white",
+              margin: "1rem",
+            }}
+          >
+            {`${findUser(users, publicKey?.toBase58())}`}
+          </Link>
+        )}
+        <div style={{ margin: "1rem" }}></div>
+        <div style={{ margin: "1rem" }}>
+          <button
+            onClick={() => handleOpenPost()}
+            className={orbitron.className + " buttonInteraction"}
+          >
+            <AddCircleIcon
+              style={{
+                color: "#30ceb7",
+                width: "1.5rem",
+                height: "1.5rem",
+              }}
+            />
+            <div
+              style={{
+                margin: "5px",
+                fontSize: "1rem",
+                color: "white",
+              }}
+            >
+              Add Post
+            </div>
+          </button>
+        </div>
+      </div>
+    </React.Fragment>
+  ) : (
     <React.Fragment>
       {
         // Boost Modal
@@ -1042,7 +1724,7 @@ export default function FeedHome() {
                     color: "white",
                   }}
                 >
-                  Create Profile
+                  Create User{" "}
                 </div>
               </button>
             </div>
