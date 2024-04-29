@@ -3,7 +3,10 @@ use solana_program::{entrypoint, msg};
 use solana_program::entrypoint::ProgramResult;
 use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
+use crate::create_user::create_user;
 use crate::instructions::ProgramInstruction;
+
+
 // Entry point is a function call process_instruction
 entrypoint!(process_instruction);
 
@@ -27,16 +30,24 @@ pub fn process_instruction(
     match instruction {
         ProgramInstruction::AddTweet(x) => {
             msg!("Add Tweet");
-            crate::processor::create_tweet(program_id, accounts, x)?;
+            crate::add_tweet::add(program_id, accounts, x)?;
         },
         ProgramInstruction::ModifyTweet(x) => {
             msg!("Modify Tweet");
-            crate::processor::modify_tweet(program_id, accounts, x)?;
-        }
+            crate::modify_tweet::edit(accounts, x)?;
+        },
         ProgramInstruction::TransferFunds() => {
             msg!("Transfer Funds");
-            crate::function::transfer_funds(accounts)?;
-        }
+            crate::funds::transfer_funds(accounts)?;
+        },
+        ProgramInstruction::AddUser(x) => {
+            msg!("Add User");
+            create_user(program_id, accounts, x)?;
+        },
+        ProgramInstruction::ModifyUser(x) => {
+            msg!("Modify User");
+            crate::modify_user::modify_user( accounts, x)?;
+        },
     }
     Ok(())
 }
