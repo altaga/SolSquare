@@ -340,6 +340,27 @@ export default function Address() {
     setRendered(true)
   }, []);
 
+  // PFP Automatic Generator based on each unique wallet on site
+  const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
+  useEffect(() => {
+    // Create a temporary map to assign indexes to unique owners
+    console.log(posts)
+
+    const sortedPostsforPFP = [...posts].sort((a, b) => a.timestamp - b.timestamp);
+
+    console.log(sortedPostsforPFP)
+
+    const map = {};
+    let index = 1;
+    sortedPostsforPFP.forEach(post => {
+      if (!map.hasOwnProperty(post.owner)) {
+        map[post.owner] = index++;
+      }
+    });
+    setOwnerToIndexMap(map);
+  }, [posts]);
+
+
   return (
     <React.Fragment>
       {
@@ -408,7 +429,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -437,7 +458,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -522,7 +543,7 @@ export default function Address() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "white",
+                        color: "#30ceb7",
                         width: "2rem",
                         height: "2rem",
                       }}
@@ -530,7 +551,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -550,7 +571,7 @@ export default function Address() {
                   >
                     <CancelIcon
                       style={{
-                        color: "white",
+                        color: "red",
                         width: "2rem",
                         height: "2rem",
                       }}
@@ -558,7 +579,7 @@ export default function Address() {
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1rem",
+                        fontSize: "1.2rem",
                         color: "white",
                       }}
                     >
@@ -609,7 +630,7 @@ export default function Address() {
           >
             <AddCircleIcon
               style={{
-                color: "white",
+                color: "#30ceb7",
                 width: "2rem",
                 height: "2rem",
               }}
@@ -617,7 +638,7 @@ export default function Address() {
             <div
               style={{
                 margin: "5px",
-                fontSize: "1rem",
+                fontSize: "1.3rem",
                 color: "white",
               }}
             >
@@ -656,15 +677,15 @@ export default function Address() {
             alignItems: "center",
           }}
         >
-          <div style={{ fontSize: "1.5rem", color: "white" }}>Address</div>
+          <div style={{ fontSize: "1.2rem", color: "white" }}>Logged in as:</div>
           <Link
             href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
-              marginTop: "2rem",
+              marginTop: "0rem",
             }}
           >
             {publicKey?.toBase58().substring(0, 22)}
@@ -674,7 +695,7 @@ export default function Address() {
           <div
             style={{
               marginTop: "2rem",
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
             }}
           >
@@ -683,7 +704,7 @@ export default function Address() {
           <div
             style={{
               marginTop: "2rem",
-              fontSize: "1.5rem",
+              fontSize: "1.2rem",
               color: "white",
             }}
           >
@@ -694,7 +715,7 @@ export default function Address() {
             >
               <AddCircleIcon
                 style={{
-                  color: "white",
+                  color: "#30ceb7",
                   width: "2rem",
                   height: "2rem",
                 }}
@@ -702,7 +723,7 @@ export default function Address() {
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "1rem",
+                  fontSize: "1.3rem",
                   color: "white",
                 }}
               >
@@ -743,12 +764,12 @@ export default function Address() {
                     >
                       <Image
                         style={{ borderRadius: "50%", margin: "1rem" }}
-                        src="/logoW.png"
+                        src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
                         alt="logo"
                         width={50}
                         height={50}
                       />
-                      <div style={{ color: "white", fontSize: "1.3rem" }}>
+                      <div style={{ color: "white", fontSize: "1.2rem" }}>
                         {post.owner}
                       </div>
                     </Link>
@@ -795,7 +816,7 @@ export default function Address() {
                     >
                       <BoltIcon
                         style={{
-                          color: "white",
+                          color: "#30ceb7",
                           width: "2rem",
                           height: "2rem",
                         }}
@@ -803,7 +824,7 @@ export default function Address() {
                       <div
                         style={{
                           margin: "5px",
-                          fontSize: "1rem",
+                          fontSize: "1.2rem",
                           color: "white",
                         }}
                       >
@@ -821,7 +842,7 @@ export default function Address() {
                     >
                       <ExploreIcon
                         style={{
-                          color: "white",
+                          color: "#30ceb7",
                           width: "2rem",
                           height: "2rem",
                         }}
@@ -829,7 +850,7 @@ export default function Address() {
                       <div
                         style={{
                           margin: "5px",
-                          fontSize: "1rem",
+                          fontSize: "1.2rem",
                           color: "white",
                         }}
                       >
@@ -846,7 +867,7 @@ export default function Address() {
                       >
                         <AccountBalanceWalletIcon
                           style={{
-                            color: "white",
+                            color: "#30ceb7",
                             width: "2rem",
                             height: "2rem",
                           }}
@@ -854,7 +875,7 @@ export default function Address() {
                         <div
                           style={{
                             margin: "5px",
-                            fontSize: "1rem",
+                            fontSize: "1.2rem",
                             color: "white",
                           }}
                         >
@@ -878,12 +899,13 @@ export default function Address() {
             borderLeftStyle: "solid",
             borderLeftColor: "rgba(255,255, 255, 0.5)",
             color: "white",
+            
           }}
         >
           <div>
             <ListItemButton onClick={sortHandle}>
               <ListItemIcon>
-                <SortIcon htmlColor="white"/>
+                <SortIcon htmlColor="#30ceb7"/>
               </ListItemIcon>
               <ListItemText primary="Sort By" />
               {!openSort ? <ExpandLess /> : <ExpandMore />}
@@ -892,13 +914,13 @@ export default function Address() {
               <List component="div" disablePadding>
                 <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <DateRangeIcon htmlColor="white" />
+                    <DateRangeIcon htmlColor="#30ceb7" />
                   </ListItemIcon>
                   <ListItemText primary="By Date" />
                 </ListItemButton>
                 <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <AccountBalanceWalletIcon htmlColor="white" />
+                    <AccountBalanceWalletIcon htmlColor="#30ceb7" />
                   </ListItemIcon>
                   <ListItemText primary="By Balance" />
                 </ListItemButton>
