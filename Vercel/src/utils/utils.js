@@ -42,6 +42,19 @@ export const modalStyle = {
   p: 4,
 };
 
+export const modalStyleMobile = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "90%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
+
 export function generateRandomString(n) {
   const chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
   let result = "";
