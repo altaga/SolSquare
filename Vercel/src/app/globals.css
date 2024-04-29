@@ -67,7 +67,7 @@
 }
 
 .buttonInteraction:hover:disabled {
-  cursor: pointer;
+  cursor: not-allowed;
   background: gray
 }
 

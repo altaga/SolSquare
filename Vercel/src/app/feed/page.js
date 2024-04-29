@@ -1,6 +1,6 @@
 "use client";
 
-import { Bolt, Search } from "@mui/icons-material";
+import { ExpandLess, ExpandMore, Search } from "@mui/icons-material";
 import {
   completeStringWithSymbol,
   generateRandomString,
@@ -24,20 +24,37 @@ import Image from "next/image";
 // NextJS modules
 import Link from "next/link";
 // React modules
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // React Toastify
 import { toast } from "react-toastify";
 
-import BoltIcon from "@mui/icons-material/Bolt";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import ExploreIcon from "@mui/icons-material/Explore";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import ExploreIcon from "@mui/icons-material/Explore";
+import SortIcon from "@mui/icons-material/Sort";
+import {
+  Box,
+  Collapse,
+  Fade,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import Modal from "@mui/material/Modal";
-import { Box, Fade, Typography } from "@mui/material";
+
+import { useRouter } from "next/navigation";
 
 const postSchema = {
-  struct: { content: "string", owner: "string", timestamp: "u32" },
+  struct: {
+    content: "string",
+    owner: { array: { type: "u8", len: 32 } },
+    timestamp: "u32",
+  },
 };
 
 const withdrawSchema = {
@@ -51,7 +68,7 @@ const addPostSchema = {
     seed: "string",
     space: "u8",
     content: "string",
-    owner: "string",
+    owner: { array: { type: "u8", len: 32 } },
     timestamp: "u32",
   },
 };
@@ -59,18 +76,21 @@ const addPostSchema = {
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
 export default function Address() {
+  const router = useRouter();
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
   const isTouchScreen = "ontouchstart" in window || navigator.msMaxTouchPoints;
   // We use the wallet hooks to interact with the blockchain
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
+    useWallet();
   const [pubkey, setPubkey] = useState(null);
   const { connection } = useConnection();
   // States and refs for the UI
-  const [selector, setSelector] = useState(0);
   const [balance, setBalance] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
+  const [rendered, setRendered] = useState(false);
+  const [loginFlag, setLoginFlag] = useState(false);
 
   // Modal Utils
   const [loading, setLoading] = useState(false);
@@ -84,6 +104,9 @@ export default function Address() {
   const [openPost, setOpenPost] = React.useState(false);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
+  // Sort Utils
+  const [openSort, setOpenSort] = React.useState(false);
+  const sortHandle = () => setOpenSort(!openSort);
 
   // Toast notification
 
@@ -116,7 +139,7 @@ export default function Address() {
     const accounts = await connection.getProgramAccounts(programId, {
       filters: [
         {
-          dataSize: 184, // number of bytes
+          dataSize: 168, // number of bytes
         },
       ],
     });
@@ -131,8 +154,10 @@ export default function Address() {
       return {
         ...post,
         content: post.content.replaceAll("#", ""),
+        owner: new PublicKey(post.owner).toBase58(),
       };
     });
+    posts.sort((a, b) => b.timestamp - a.timestamp);
     setPosts(posts);
   }, [connection]);
 
@@ -223,11 +248,13 @@ export default function Address() {
 
       const seedStruct = {
         content: completeStringWithSymbol(message, "#", 128),
-        owner: publicKey.toBase58(),
+        owner: publicKey.toBytes(),
         timestamp: Math.floor(Date.now() / 1000),
       };
 
       const space = serialize(postSchema, seedStruct).length;
+
+      console.log("space", space);
 
       const transactionData = {
         instruction,
@@ -282,14 +309,36 @@ export default function Address() {
     }
   }, [publicKey, connection, sendTransaction, message, getPosts, getBalance]);
 
-  // Detect when wallet is connected and get balance
+  const sortByDate = useCallback(async () => {
+    console.log("date");
+    let postsTemp = [...posts];
+    postsTemp.sort((a, b) => b.timestamp - a.timestamp);
+    console.log(postsTemp);
+    setPosts(postsTemp);
+  }, [setPosts, posts]);
+
+  const sortByBalance = useCallback(async () => {
+    console.log("balance");
+    let postsTemp = [...posts];
+    postsTemp.sort((a, b) => b.balance - a.balance);
+    console.log(postsTemp);
+    setPosts(postsTemp);
+  }, [setPosts, posts]);
+
   useEffect(() => {
-    if (publicKey) {
+    if (publicKey && rendered) {
       setPubkey(publicKey);
       getBalance();
       getPosts();
+      setLoginFlag(true);
+    } else if (!publicKey && rendered && loginFlag) {
+      router.push("/");
     }
-  }, [publicKey, getBalance, getPosts]);
+  }, [publicKey, setPubkey, getBalance, getPosts, rendered, router, loginFlag]);
+
+  useEffect(() => {
+    setRendered(true)
+  }, []);
 
   return (
     <React.Fragment>
@@ -618,10 +667,6 @@ export default function Address() {
               marginTop: "2rem",
             }}
           >
-            {
-              // If the device has a touch screen, only show the first 22 characters of the address
-              // Otherwise, show the full address
-            }
             {publicKey?.toBase58().substring(0, 22)}
             <br />
             {publicKey?.toBase58().substring(22)}
@@ -633,9 +678,6 @@ export default function Address() {
               color: "white",
             }}
           >
-            {
-              // Lamports is a unit of SOL, 1 SOL is 1,000,000,000 (10^9) lamports, when you call getBalance, you get the balance in lamports, to show the balance in SOL, we divide by 10^9 or LAMPORTS_PER_SOL
-            }
             {`SOL Balance : ${balance / LAMPORTS_PER_SOL}`}
           </div>
           <div
@@ -646,11 +688,8 @@ export default function Address() {
             }}
           >
             <button
-              disabled={loading}
-              onClick={() => {
-                setLoading(true);
-                addPost();
-              }}
+              disabled={true}
+              onClick={() => {}}
               className="buttonInteraction"
             >
               <AddCircleIcon
@@ -673,9 +712,7 @@ export default function Address() {
           </div>
         </div>
         <div className="scrollable-div">
-          {posts
-            .sort((a, b) => b.timestamp - a.timestamp)
-            .map((post, index) => {
+          {posts.map((post, index) => {
               return (
                 <div
                   key={index}
@@ -840,8 +877,35 @@ export default function Address() {
             borderLeftWidth: "1px",
             borderLeftStyle: "solid",
             borderLeftColor: "rgba(255,255, 255, 0.5)",
+            color: "white",
           }}
-        ></div>
+        >
+          <div>
+            <ListItemButton onClick={sortHandle}>
+              <ListItemIcon>
+                <SortIcon htmlColor="white"/>
+              </ListItemIcon>
+              <ListItemText primary="Sort By" />
+              {!openSort ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openSort} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <DateRangeIcon htmlColor="white" />
+                  </ListItemIcon>
+                  <ListItemText primary="By Date" />
+                </ListItemButton>
+                <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <AccountBalanceWalletIcon htmlColor="white" />
+                  </ListItemIcon>
+                  <ListItemText primary="By Balance" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );
