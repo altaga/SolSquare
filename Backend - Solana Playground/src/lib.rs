@@ -88,8 +88,8 @@ pub struct UserData {
     bump:u8,
     seed:String,
     space:u8,
-    username:String,
     owner: [u8; 32],
+    username:String,
     timestamp: u32,
     followers:u32
 }
@@ -100,16 +100,16 @@ pub struct UserDataBorsh {
     bump:u8,
     seed:String,
     space:u8,
-    username:String,
     owner: [u8; 32],
+    username:String,
     timestamp: u32,
     followers:u32
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct UserPDADataBorsh {
-    username:String,
     owner: [u8; 32],
+    username:String,
     timestamp: u32,
     followers:u32
 }
@@ -119,8 +119,8 @@ pub fn create_user_data(payload:UserDataBorsh) -> UserData{
         bump:payload.bump,
         seed:payload.seed,
         space:payload.space,
-        username:payload.username,
         owner: payload.owner,
+        username:payload.username,
         timestamp:payload.timestamp,
         followers:payload.followers,
     }
@@ -130,8 +130,8 @@ pub fn create_user_data(payload:UserDataBorsh) -> UserData{
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct UserDataMod {
-    username:String,
     owner: [u8; 32],
+    username:String,
     timestamp: u32,
     followers:u32
 }
@@ -139,16 +139,16 @@ pub struct UserDataMod {
 #[derive(BorshDeserialize)]
 pub struct UserDataModBorsh {
     instruction:u8,
-    username:String,
     owner: [u8; 32],
+    username:String,
     timestamp: u32,
     followers:u32
 }
 
 pub fn create_user_data_mod(payload:UserDataModBorsh) -> UserDataMod{
     UserDataMod {
-        username:payload.username,
         owner: payload.owner,
+        username:payload.username,
         timestamp:payload.timestamp,
         followers:payload.followers,
     }
