@@ -5,11 +5,11 @@ use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
 use solana_program::rent::Rent;
 use solana_program::sysvar::Sysvar;
-
 use crate::state::TweetDataMod;
 
-pub(crate) fn transfer_funds(accounts: &[AccountInfo]) -> ProgramResult {
-
+pub(crate) fn transfer_from_tweet(
+    accounts: &[AccountInfo],
+)-> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let payer_account_info = next_account_info(account_info_iter)?;
     let pda_account_info = next_account_info(account_info_iter)?;

@@ -9,10 +9,9 @@ use solana_program::pubkey::Pubkey;
 use solana_program::rent::Rent;
 use solana_program::system_instruction::create_account;
 use solana_program::sysvar::Sysvar;
-
 use crate::state::{TweetData, TweetPDADataBorsh};
 
-pub(crate) fn add(
+pub(crate) fn create_tweet(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
     data: TweetData

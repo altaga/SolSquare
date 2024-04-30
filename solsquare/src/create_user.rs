@@ -14,8 +14,9 @@ use crate::state::{UserData, UserPDADataBorsh};
 pub(crate) fn create_user(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
-    data: UserData,
+    data: UserData
 ) -> ProgramResult {
+
     let account_info_iter = &mut accounts.iter();
     let payer_account_info = next_account_info(account_info_iter)?;
     let pda_account_info = next_account_info(account_info_iter)?;
@@ -46,7 +47,7 @@ pub(crate) fn create_user(
             &pda_account_info.key,
             rent_lamports,
             _space.into(),
-            program_id,
+            program_id
         ),
         &[
             payer_account_info.clone(),

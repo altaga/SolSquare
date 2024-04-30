@@ -7,7 +7,7 @@ use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
 use crate::state::TweetDataMod;
 
-pub(crate) fn edit(
+pub(crate) fn modify_tweet(
     accounts: &[AccountInfo],
     data: TweetDataMod
 ) -> ProgramResult {

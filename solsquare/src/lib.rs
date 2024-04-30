@@ -1,9 +1,7 @@
-mod state;
 mod processor;
-mod entrypoint;
-mod instructions;
-mod funds;
-mod add_tweet;
+mod state;
+mod create_tweet;
 mod modify_tweet;
+mod transfer_funds;
 mod create_user;
 mod modify_user;

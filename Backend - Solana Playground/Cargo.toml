@@ -1,6 +1,6 @@
 
 [package]
-name = "x_sol"
+name = "SolSquare"
 version = "0.0.1"
 edition = "2021"
 license = "unlicense"
@@ -8,17 +8,10 @@ publish = false
 
 
 [dependencies]
-solana-program = ">=1.16, <1.18"
+solana-program = "=1.18.12"
 borsh = "0.10.3"
-thiserror = "1"
-num-derive = "0.4"
-num-traits = "0.2"
-num_enum = "0.7.0"
-ahash = "=0.8.6"
 toml_edit = "=0.21.0"
-
-
 
 [lib]
 crate-type = ["cdylib", "lib"]
-path = "lib.rs"
+path = "src/lib.rs"

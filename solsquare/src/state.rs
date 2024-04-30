@@ -1,54 +1,78 @@
+// Tweet Data Processing
+
 use borsh::{BorshDeserialize, BorshSerialize};
+
 #[derive(Debug)]
 pub struct TweetData {
-    pub bump:u8,
-    pub seed:String,
-    pub space:u8,
-    pub content:String,
-    pub owner: String,
-    pub timestamp:u32
+    pub(crate) bump:u8,
+    pub(crate) seed:String,
+    pub(crate) space:u8,
+    pub(crate) content:String,
+    pub(crate) owner: [u8; 32],
+    pub(crate) timestamp:u32
 }
 
 #[derive(BorshDeserialize)]
 pub struct TweetDataBorsh {
-    pub instruction:u8,
-    pub bump:u8,
-    pub seed:String,
-    pub space:u8,
-    pub content:String,
-    pub owner: String,
-    pub timestamp:u32
+    instruction:u8,
+    pub(crate) bump:u8,
+    pub(crate) seed:String,
+    pub(crate) space:u8,
+    pub(crate) content:String,
+    pub(crate) owner: [u8; 32],
+    pub(crate) timestamp:u32
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetPDADataBorsh {
-    pub content:String,
-    pub owner: String,
-    pub timestamp:u32
+    pub(crate) content:String,
+    pub(crate) owner: [u8; 32],
+    pub(crate) timestamp:u32
 }
+
+pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
+    TweetData {
+        bump:payload.bump,
+        seed:payload.seed,
+        space:payload.space,
+        content: payload.content,
+        owner: payload.owner,
+        timestamp:payload.timestamp
+    }
+}
+
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetDataMod {
-    pub content:String,
-    pub owner: [u8; 32],
-    pub timestamp:u32
+    pub(crate) content:String,
+    pub(crate) owner: [u8; 32],
+    pub(crate) timestamp:u32
 }
 
 #[derive(BorshDeserialize)]
 pub struct TweetDataModBorsh {
-    pub instruction:u8,
-    pub content:String,
-    pub owner: [u8; 32],
-    pub timestamp:u32
+    instruction:u8,
+    content:String,
+    owner: [u8; 32],
+    timestamp:u32
 }
+
+pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
+    TweetDataMod {
+        content: payload.content,
+        owner: payload.owner,
+        timestamp:payload.timestamp
+    }
+}
+
 
 #[derive(Debug)]
 pub struct UserData {
-    pub bump:u8,
-    pub seed:String,
-    pub space:u8,
-    pub username:String,
-    pub owner: [u8; 32],
+    pub(crate) bump:u8,
+    pub(crate) seed:String,
+    pub(crate) space:u8,
+    pub(crate) owner: [u8; 32],
+    pub(crate) username:String,
     pub(crate) timestamp: u32,
     pub(crate) followers:u32
 }
@@ -56,27 +80,40 @@ pub struct UserData {
 #[derive(BorshDeserialize)]
 pub struct UserDataBorsh {
     instruction:u8,
-    pub(crate) bump:u8,
-    pub(crate) seed:String,
-    pub(crate) space:u8,
-    pub(crate) username:String,
-    pub(crate) owner: [u8; 32],
-    pub(crate) timestamp: u32,
-    pub(crate) followers:u32
+    bump:u8,
+    seed:String,
+    space:u8,
+    owner: [u8; 32],
+    username:String,
+    timestamp: u32,
+    followers:u32
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct UserPDADataBorsh {
-    pub(crate) username:String,
     pub(crate) owner: [u8; 32],
+    pub(crate) username:String,
     pub(crate) timestamp: u32,
     pub(crate) followers:u32
 }
 
+pub fn create_user_data(payload:UserDataBorsh) -> UserData{
+    UserData {
+        bump:payload.bump,
+        seed:payload.seed,
+        space:payload.space,
+        owner: payload.owner,
+        username:payload.username,
+        timestamp:payload.timestamp,
+        followers:payload.followers,
+    }
+}
+
+
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct UserDataMod {
-    pub(crate) username:String,
     pub(crate) owner: [u8; 32],
+    pub(crate) username:String,
     pub(crate) timestamp: u32,
     pub(crate) followers:u32
 }
@@ -84,8 +121,17 @@ pub struct UserDataMod {
 #[derive(BorshDeserialize)]
 pub struct UserDataModBorsh {
     instruction:u8,
-    pub(crate) username:String,
-    pub(crate) owner: [u8; 32],
-    pub(crate) timestamp: u32,
-    pub(crate) followers:u32
+    owner: [u8; 32],
+    username:String,
+    timestamp: u32,
+    followers:u32
+}
+
+pub fn create_user_data_mod(payload:UserDataModBorsh) -> UserDataMod{
+    UserDataMod {
+        owner: payload.owner,
+        username:payload.username,
+        timestamp:payload.timestamp,
+        followers:payload.followers,
+    }
 }
