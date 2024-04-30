@@ -1,8 +1,9 @@
 # Encode-Solana-Decentralized-Twitter
 
+## You own What You Create @
+
 ![image](https://github.com/altaga/Encode-Solana-Decentralized-Twitter/blob/main/Assets/logoB.png)
 
-## You own What You Create @
 
 ## SolSquare is a decentralized censorship-free tweet platform that promotes economic incentives for good behavior.
 
@@ -12,11 +13,11 @@
 Centralized social media platforms have shown the tendency to censor user data, and influence perception. 
 Heated debates have happened on censorship and algorithmic control.
 
-https://www.forbes.com/sites/tomerniv/2023/09/07/censorship-and-decentralized-social-media-a-paradigm-shift/?sh=5b5ab044185a
+(https://www.forbes.com/sites/tomerniv/2023/09/07/censorship-and-decentralized-social-media-a-paradigm-shift/?sh=5b5ab044185a)
 
 This is what users feel like on centralized content platforms.
 
-Picture to be inserted
+![image](https://github.com/altaga/Encode-Solana-Decentralized-Twitter/blob/main/Assets/cancelled-picture.png)
 
 Social platforms make a profit by charging you for access or selling your attention. What if it was inexpensive? 
 
