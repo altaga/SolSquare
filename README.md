@@ -21,7 +21,7 @@ This is what users feel like on centralized content platforms.
 
 Social platforms make a profit by charging you for access or selling your attention. What if it was inexpensive? 
 
-SolSquare was conceptualized to promote cost-effective censorship-free expression, yet use ecomonic incentives for good behavior through boosting for consent or dissent. 
+SolSquare was conceptualized to promote cost-effective censorship-free expression, yet use ecomonic incentives for good behavior through boosting, for consent or dissent. 
 
 ## Highlights
 
@@ -57,9 +57,15 @@ Platform attaining traction
 
 
 
+## How to use SolSquare ? Please check out the user guide at 
+
+
+
 ## What next ?
 
 Release to beta test. Please provide your valuable feedback. 
+
+Happy Tweeting !
 
 
 
