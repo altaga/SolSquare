@@ -5,21 +5,17 @@ use solana_program::{
     borsh0_10::try_from_slice_unchecked,
     entrypoint,
     entrypoint::ProgramResult,
-    msg,
-    program::invoke_signed,
-    program_error::ProgramError,
-    pubkey::Pubkey,
-    system_instruction::create_account
+    msg
     ,
-    sysvar::{rent::Rent, Sysvar}
+    program_error::ProgramError,
+    pubkey::Pubkey
 };
+
 use crate::create_tweet::create_tweet;
 use crate::create_user::create_user;
 use crate::modify_tweet::modify_tweet;
-use crate::state::{create_tweet_data, create_tweet_data_mod, create_user_data, create_user_data_mod, TweetData, TweetDataBorsh, TweetDataMod, TweetDataModBorsh, TweetPDADataBorsh, UserData, UserDataBorsh, UserDataMod, UserDataModBorsh, UserPDADataBorsh};
+use crate::state::{create_tweet_data, create_tweet_data_mod, create_user_data, create_user_data_mod, TweetData, TweetDataBorsh, TweetDataMod, TweetDataModBorsh, UserData, UserDataBorsh, UserDataMod, UserDataModBorsh};
 use crate::transfer_funds::transfer_from_tweet;
-
-
 
 pub enum ProgramInstruction {
     AddTweet(TweetData),

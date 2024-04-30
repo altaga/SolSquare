@@ -1,6 +1,6 @@
 
 [package]
-name = "SolSquare"
+name = "sol_square"
 version = "0.0.1"
 edition = "2021"
 license = "unlicense"
