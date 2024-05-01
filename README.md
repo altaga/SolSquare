@@ -1,6 +1,6 @@
-# SolSquare
+# SOLSQUARE
 
-### You own What You Create @
+### You own what you create.
 ![image](./Assets/logoB.png)
 
 SolSquare is a decentralized censorship-free tweet platform that promotes economic incentives for good behavior.
