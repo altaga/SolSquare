@@ -7,7 +7,7 @@ import {
   getTimeDifference,
   modalStyle,
   modalStyleMobile,
-} from "../../utils/utils";
+} from "../../../utils/utils";
 // Styled buttons and inputs
 // Solana Core modules
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -50,6 +50,8 @@ import Modal from "@mui/material/Modal";
 
 import { useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
+
+
 
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
@@ -137,7 +139,9 @@ function findFollowers(users, owner) {
   }
 }
 
-export default function FeedHome() {
+
+export default function FeedHome({ params }) {
+  const user = params.user;
   const router = useRouter();
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
   const isTouchScreen =
@@ -232,6 +236,7 @@ export default function FeedHome() {
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
+    posts = posts.filter((post) => post.owner == user);
     posts.sort((a, b) => b.balance - a.balance);
     setPosts(posts);
   }, [connection]);

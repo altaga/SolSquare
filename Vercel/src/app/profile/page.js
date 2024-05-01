@@ -232,6 +232,7 @@ export default function FeedHome() {
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
+    posts = posts.filter((post) => post.owner == publicKey?.toBase58());
     posts.sort((a, b) => b.balance - a.balance);
     setPosts(posts);
   }, [connection]);
