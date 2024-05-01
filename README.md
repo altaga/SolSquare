@@ -1,65 +1,159 @@
-# Encode-Solana-Decentralized-Twitter
+# SolSquare
 
-## You own What You Create @
+### You own What You Create @
+![image](./Assets/logoB.png)
 
-![image](https://github.com/altaga/Encode-Solana-Decentralized-Twitter/blob/main/Assets/logoB.png)
+SolSquare is a decentralized censorship-free tweet platform that promotes economic incentives for good behavior.
 
+# Fast Links:
 
-## SolSquare is a decentralized censorship-free tweet platform that promotes economic incentives for good behavior.
+- WebDapp: https://www.solsquare.net/
+- BackEnd Code: [Code](./Backend/)
+- FrontEnd Code: [Code](./Frontend%20-%20NextJS/)
+- Pitch Deck: [Deck](./Presentation/)
+- User Guide: [User-Guide](pending...)
 
+- Video Demo: Click on the image
+[![Video](./Assets/logoB.png)](https://www.youtube.com/watch?v=ngT85GfFafg)
 
-## Inspiration 
+# Inspiration
 
 Centralized social media platforms have shown the tendency to censor user data, and influence perception. 
-Heated debates have happened on censorship and algorithmic control.
 
-(https://www.forbes.com/sites/tomerniv/2023/09/07/censorship-and-decentralized-social-media-a-paradigm-shift/?sh=5b5ab044185a)
+<img src="./Assets/censor.png">
+
+Heated debates have happened on censorship and algorithmic control. [1](#references).
 
 This is what users feel like on centralized content platforms.
 
-![image](https://github.com/altaga/Encode-Solana-Decentralized-Twitter/blob/main/Assets/cancelled-picture.png)
+<img src="./Assets/cancelled-picture.png">
 
 Social platforms make a profit by charging you for access or selling your attention. What if it was inexpensive? 
 
-SolSquare was conceptualized to promote cost-effective censorship-free expression, yet use ecomonic incentives for good behavior through boosting, for consent or dissent. 
+<img src="./Assets/block.png">
 
-## Highlights
+SolSquare was conceptualized to promote cost-effective censorship-free expression, yet use economic incentives for good behavior through boosting, for consent or dissent. 
 
-Gives you the right to your content
+# Solution:
 
-YOU DECIDE WHAT YOU SEE,YOU DECIDE WHAT YOU PAY , YOU DECIDE WHAT YOU SAY 
+SolSquare is like a digital decentralized space for open expression without anyone controlling what's said. It encourages good behavior by rewarding positive contributions by boosts. Built on Solana, it's fast and secure, ensuring everyone can freely express themselves.
 
-Transparency in advertising
+<img src="./Assets/solanaIcon.jpg" >
 
-Boost the tweets you like
+# System Diagram:
 
-Economic incentives or burden for consent of dissent 
+<img src="./Assets/General Diagram.png">
 
+- Solana Native Rust: We built the entire backend in Solana Native Rust because it was easy to add complex functionality to the entire application.
 
-## Why Solana ?
+- Vercel and NextJS: Vercel and Next JS were used as part of the front end due to the ease and agility of being able to make an optimal and fast application. 
 
-High transaction throughput 
+# Solana Native Rust - BackEnd:
 
-Low latency
+SolSquare is a project designed with several key features in mind. Solana and Rust makes SolSquare fast and reliable.
 
-Cost-effective transactions 
+### Solana as main chain:
 
-HIgh degree of usability 
+1. **High Transaction Throughput**: The platform efficiently handles numerous transactions simultaneously.
+   
+2. **Low Latency**: Users enjoy near-instant confirmation times for their transactions.
+   
+3. **Cost-effective Transactions**: SolSquare minimizes transaction fees, ensuring accessibility for all users.
+   
+4. **High Usability**: The platform offers an intuitive interface and a seamless user experience.
+   
+5. **Gaining Traction**: SolSquare is rapidly gaining popularity and attracting a growing user base.
 
-Platform attaining traction 
+### Rust:
 
+The initial step is to configure the [Schemas](./Backend/Backend%20Solsquare%20(Cargo%20Project)/src/state.rs), as they facilitate the serialization and deserialization of all incoming data for the program.
 
-## The presentaion deck can be found at 
+- Tweet (Post) Schema:
+  - Content: String
+  - Owner: [u8; 32]
+  - Timestamp: u32
 
+- User Schema:
+  - Owner: [u8; 32]
+  - Username: String
+  - Timestamp: u32
+  - Followers: u32
 
+The second most crucial aspect of the program involves the instructions, which should be pass this as the first 8 bytes of the transaction as u8. While this is just one method, its implementation may vary among programmers.
 
-## The Solution Design can be found at 
+    pub enum ProgramInstruction {
+        AddTweet(TweetData),
+        ModifyTweet(TweetDataMod),
+        TransferFunds(),
+        AddUser(UserData),
+        ModifyUser(UserDataMod),
+    }
 
+    impl ProgramInstruction {
+        pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
+            let selector = input[0];
+            Ok(match selector {
+                0 => {
+                    // Code
+                },
+                1 => {
+                    // Code
+                },
+                2 => {
+                    // Code
+                },
+                3 => {
+                    // Code
+                },
+                4 => {
+                    // Code
+                },
+                _ => return Err(...)
+            })
+        }
+    }
 
+Lastly, the program's basic functions, which currently total five, are as follows:
 
-## How to use SolSquare ? Please check out the user guide at 
+- Add Tweet: This function creates a PDA account of exactly 168 bytes and adds the information from the aforementioned schema.
 
+- Modify Tweet: This function modifies a PDA account, making only the desired changes.
 
+- Transfer Funds: This function transfers all funds from a tweet to the account owner.
+
+- Add User: This function creates a PDA account of exactly 76 bytes and adds the information from the aforementioned schema.
+
+- Modify User: This function modifies a PDA account, making only the desired changes.
+
+# Vercel and NextJS - FrontEnd:
+
+Using Vercel and Next.js for frontend development simplifies deployment for Next.js apps, making updates effortless.
+
+### Login:
+
+To access the application, logging in to the page is required.
+
+<img src="./Assets/1-login.png">
+
+The app is compatible with all major wallets available in the market.
+
+<img src="./Assets/2-wallets.png">
+
+### Feed Screen:
+
+The entire post feed originates from the Solana network, where each tweet and user is represented as a PDA on the chain.
+
+<img src="./Assets/3-feed.png">
+
+With just one click, users can boost a post, add a new post, or create a new user.
+
+<img src="./Assets/4-post.png">
+
+### Mobile version:
+
+Lastly, it's important to note that in recent years, the majority of users have transitioned to predominantly using mobile phones. Therefore, our app is a progressive web decentralized application (pwd), ensuring full compatibility on mobile devices.
+
+<img src="./Assets/5-screen.png" >
 
 ## What next ?
 
@@ -67,7 +161,9 @@ Release to beta test. Please provide your valuable feedback.
 
 Happy Tweeting !
 
+# References:
 
+1.- https://www.forbes.com/sites/tomerniv/2023/09/07/censorship-and-decentralized-social-media-a-paradigm-shift/?sh=5b5ab044185a
 
 
 
