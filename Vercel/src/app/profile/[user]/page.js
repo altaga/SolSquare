@@ -1740,8 +1740,8 @@ export default function FeedHome({ params }) {
                 color: "white",
               }}
             >
-              {`Followers : ${findFollowers(users, publicKey?.toBase58())}`}
-            </div>
+              
+            </div> //{`Followers : ${findFollowers(users, publicKey?.toBase58())}`}
           )}
         </div>
         <div className="scrollable-div">
