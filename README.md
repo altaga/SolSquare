@@ -12,9 +12,7 @@ SolSquare is a decentralized censorship-free tweet platform that promotes econom
 - FrontEnd Code: [Code](./Frontend%20-%20NextJS/)
 - Pitch Deck: [Deck](./Presentation/)
 - User Guide: [User-Guide](./User%20Guide/)
-
-- Video Demo: Click on the image
-[![Video](./Assets/logoB.png)](https://www.youtube.com/watch?v=ngT85GfFafg)
+- Video Demo: [Video](https://www.youtube.com/watch?v=ngT85GfFafg)
 
 # Inspiration
 
