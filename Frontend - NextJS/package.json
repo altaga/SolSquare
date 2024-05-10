@@ -23,7 +23,7 @@
     "@solana/web3.js": "^1.89.1",
     "bootstrap": "^5.3.3",
     "borsh": "^2.0.0",
-    "next": "14.1.0",
+    "next": "14.1.1",
     "pino-pretty": "^10.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
