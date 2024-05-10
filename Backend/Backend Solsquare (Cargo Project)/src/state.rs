@@ -44,9 +44,13 @@ pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetDataMod {
-    pub(crate) content:String,
     pub(crate) owner: [u8; 32],
+    pub(crate) parent_post: [u8; 32],
+    pub(crate) cid: String,
+    pub(crate) content:String,
+    pub(crate) rudeness: bool,
     pub(crate) timestamp:u32
+
 }
 
 #[derive(BorshDeserialize)]
@@ -54,14 +58,21 @@ pub struct TweetDataModBorsh {
     instruction:u8,
     content:String,
     owner: [u8; 32],
-    timestamp:u32
+    timestamp:u32,
+    parent_post: [u8; 32],
+    cid: String,
+    rudeness: bool
+
 }
 
 pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
     TweetDataMod {
         content: payload.content,
         owner: payload.owner,
-        timestamp:payload.timestamp
+        timestamp:payload.timestamp,
+        parent_post: payload.parent_post,
+        cid: payload.cid,
+        rudeness: payload.rudeness,
     }
 }
 
