@@ -232,7 +232,7 @@ export default function FeedHome({ params }) {
     posts = posts.map((post) => {
       return {
         ...post,
-        content: post.content.replaceAll("#", ""),
+        content: post.content.replaceAll("▄", ""),
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
@@ -259,7 +259,7 @@ export default function FeedHome({ params }) {
     users = users.map((user) => {
       return {
         ...user,
-        username: user.username.replaceAll("#", ""),
+        username: user.username.replaceAll("▄", ""),
         owner: new PublicKey(user.owner).toBase58(),
       };
     });
@@ -352,7 +352,7 @@ export default function FeedHome({ params }) {
       const instruction = 0;
 
       const seedStruct = {
-        content: completeStringWithSymbol(message, "#", 128),
+        content: completeStringWithSymbol(message, "▄", 128),
         owner: publicKey.toBytes(),
         timestamp: Math.floor(Date.now() / 1000),
       };
@@ -425,7 +425,7 @@ export default function FeedHome({ params }) {
 
       const seedStruct = {
         owner: publicKey.toBytes(),
-        username: completeStringWithSymbol(username, "#", 32),
+        username: completeStringWithSymbol(username, "▄", 32),
         timestamp: Math.floor(Date.now() / 1000),
         followers: 0,
       };
