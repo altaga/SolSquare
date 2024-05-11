@@ -16,11 +16,12 @@ const labelsToInclude = [
   "obscene",
 ];
 
-const model = await toxicity.load(threshold, labelsToInclude);;
+let model = toxicity.load(threshold, labelsToInclude);
 
 export async function predictRudeness(text) {
+  let myModel = await model;
   return new Promise((resolve, reject) => {
-    model
+    myModel
       .classify(text)
       .then((predictions) => {
         resolve(predictions);
