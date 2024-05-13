@@ -58,8 +58,11 @@ const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const postSchema = {
   struct: {
-    content: "string",
     owner: { array: { type: "u8", len: 32 } },
+    parentPost: { array: { type: "u8", len: 32 } },
+    rudeness: "bool",
+    cid: "string",
+    content: "string",
     timestamp: "u32",
   },
 };
@@ -69,9 +72,12 @@ const addPostSchema = {
     instruction: "u8",
     bump: "u8",
     seed: "string",
-    space: "u8",
-    content: "string",
+    space: "u16",
     owner: { array: { type: "u8", len: 32 } },
+    parentPost: { array: { type: "u8", len: 32 } },
+    rudeness: "bool",
+    cid: "string",
+    content: "string",
     timestamp: "u32",
   },
 };
@@ -92,7 +98,7 @@ const addUserSchema = {
     instruction: "u8",
     bump: "u8",
     seed: "string",
-    space: "u8",
+    space: "u16",
     owner: { array: { type: "u8", len: 32 } },
     username: "string",
     timestamp: "u32",
@@ -214,7 +220,7 @@ export default function FeedHome() {
     const accounts = await connection.getProgramAccounts(programId, {
       filters: [
         {
-          dataSize: 168, // number of bytes
+          dataSize: 397, // number of bytes
         },
       ],
     });
@@ -228,7 +234,7 @@ export default function FeedHome() {
     posts = posts.map((post) => {
       return {
         ...post,
-        content: post.content.replaceAll("▄", ""),
+        content: post.content.replaceAll("~", ""),
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
@@ -254,7 +260,7 @@ export default function FeedHome() {
     users = users.map((user) => {
       return {
         ...user,
-        username: user.username.replaceAll("▄", ""),
+        username: user.username.replaceAll("~", ""),
         owner: new PublicKey(user.owner).toBase58(),
       };
     });
@@ -347,8 +353,11 @@ export default function FeedHome() {
       const instruction = 0;
 
       const seedStruct = {
-        content: completeStringWithSymbol(message, "▄", 128),
         owner: publicKey.toBytes(),
+        parentPost: new Uint8Array(32).fill(0),
+        rudeness: false,
+        cid: completeStringWithSymbol("", "~", 64),
+        content: completeStringWithSymbol(message, "~", 256),
         timestamp: Math.floor(Date.now() / 1000),
       };
 
@@ -365,6 +374,8 @@ export default function FeedHome() {
       const encoded = serialize(addPostSchema, transactionData);
 
       const data = Buffer.from(encoded);
+
+      console.log({ instruction, bump, seed, space, ...seedStruct });
       let transaction = new Transaction().add(
         new TransactionInstruction({
           keys: [
@@ -420,7 +431,7 @@ export default function FeedHome() {
 
       const seedStruct = {
         owner: publicKey.toBytes(),
-        username: completeStringWithSymbol(username, "▄", 32),
+        username: completeStringWithSymbol(username, "~", 32),
         timestamp: Math.floor(Date.now() / 1000),
         followers: 0,
       };
@@ -1734,9 +1745,7 @@ export default function FeedHome() {
                 fontSize: "1.2rem",
                 color: "white",
               }}
-            >
-              
-            </div> //{`Followers : ${findFollowers(users, publicKey?.toBase58())}`}
+            ></div> //{`Followers : ${findFollowers(users, publicKey?.toBase58())}`}
           )}
         </div>
         <div className="scrollable-div">
