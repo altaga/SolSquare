@@ -6,27 +6,34 @@ use borsh::{BorshDeserialize, BorshSerialize};
 pub struct TweetData {
     pub(crate) bump:u8,
     pub(crate) seed:String,
-    pub(crate) space:u8,
-    pub(crate) content:String,
+    pub(crate) space:u16,
     pub(crate) owner: [u8; 32],
+    pub(crate) parentPost: [u8; 32],
+    pub(crate) rudeness: bool,
+    pub(crate) cid: String,
+    pub(crate) content:String,
     pub(crate) timestamp:u32
 }
-
 #[derive(BorshDeserialize)]
 pub struct TweetDataBorsh {
-    instruction:u8,
-    pub(crate) bump:u8,
-    pub(crate) seed:String,
-    pub(crate) space:u8,
-    pub(crate) content:String,
-    pub(crate) owner: [u8; 32],
-    pub(crate) timestamp:u32
+    _instruction:u8,
+    bump:u8,
+    seed:String,
+    space:u16,
+    owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
+    timestamp:u32
 }
-
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetPDADataBorsh {
-    pub(crate) content:String,
     pub(crate) owner: [u8; 32],
+    pub(crate) parentPost: [u8; 32],
+    pub(crate) rudeness: bool,
+    pub(crate) cid: String,
+    pub(crate) content:String,
     pub(crate) timestamp:u32
 }
 
@@ -35,8 +42,11 @@ pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
         bump:payload.bump,
         seed:payload.seed,
         space:payload.space,
-        content: payload.content,
         owner: payload.owner,
+        parentPost:  payload.parentPost,
+        rudeness: payload.rudeness,
+        cid: payload.cid,
+        content:payload.content,
         timestamp:payload.timestamp
     }
 }
@@ -45,24 +55,22 @@ pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetDataMod {
     pub(crate) owner: [u8; 32],
-    pub(crate) parent_post: [u8; 32],
+    pub(crate) parentPost: [u8; 32],
+    pub(crate) rudeness: bool,
     pub(crate) cid: String,
     pub(crate) content:String,
-    pub(crate) rudeness: bool,
     pub(crate) timestamp:u32
-
 }
 
 #[derive(BorshDeserialize)]
 pub struct TweetDataModBorsh {
-    instruction:u8,
-    content:String,
+    _instruction:u8,
     owner: [u8; 32],
-    timestamp:u32,
-    parent_post: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
     cid: String,
-    rudeness: bool
-
+    content:String,
+    timestamp:u32
 }
 
 pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
@@ -70,7 +78,7 @@ pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
         content: payload.content,
         owner: payload.owner,
         timestamp:payload.timestamp,
-        parent_post: payload.parent_post,
+        parentPost: payload.parentPost,
         cid: payload.cid,
         rudeness: payload.rudeness,
     }
@@ -81,7 +89,7 @@ pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
 pub struct UserData {
     pub(crate) bump:u8,
     pub(crate) seed:String,
-    pub(crate) space:u8,
+    pub(crate) space:u16,
     pub(crate) owner: [u8; 32],
     pub(crate) username:String,
     pub(crate) timestamp: u32,
@@ -90,10 +98,10 @@ pub struct UserData {
 
 #[derive(BorshDeserialize)]
 pub struct UserDataBorsh {
-    instruction:u8,
+    _instruction:u8,
     bump:u8,
     seed:String,
-    space:u8,
+    space:u16,
     owner: [u8; 32],
     username:String,
     timestamp: u32,
@@ -131,7 +139,7 @@ pub struct UserDataMod {
 
 #[derive(BorshDeserialize)]
 pub struct UserDataModBorsh {
-    instruction:u8,
+    _instruction:u8,
     owner: [u8; 32],
     username:String,
     timestamp: u32,

@@ -59,8 +59,11 @@ pub(crate) fn create_tweet(
 
     let mut tweet_data = try_from_slice_unchecked::<TweetPDADataBorsh>(&pda_account_info.data.borrow()).unwrap();
 
-    tweet_data.content = data.content;
     tweet_data.owner= data.owner;
+    tweet_data.parentPost= data.parentPost;
+    tweet_data.rudeness = data.rudeness;
+    tweet_data.cid= data.cid;
+    tweet_data.content = data.content;
     tweet_data.timestamp = data.timestamp;
 
     msg!("Tweet Data: {:?}", tweet_data);

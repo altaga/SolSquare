@@ -1,5 +1,5 @@
-Codigo/program/target
-Codigo/program_client/lib/*.js
+Backend/Backend Solsquare (Cargo Project)/target
+Backend/Backend - Solana Playground/target
 .DS_Store
 
 solsquare/target
@@ -136,3 +136,4 @@ dist
 /Codigo/program_client/app.js
 /solsquare/Cargo.lock
 /solsquare/client/package-lock.json
+/Backend/Backend Solsquare (Cargo Project)/target/

@@ -1,7 +1,16 @@
 
 // Modify User
 
-fn modify_user(
+use borsh::BorshSerialize;
+use solana_program::account_info::{AccountInfo, next_account_info};
+use solana_program::borsh0_10::try_from_slice_unchecked;
+use solana_program::entrypoint::ProgramResult;
+use solana_program::msg;
+use solana_program::program_error::ProgramError;
+use solana_program::pubkey::Pubkey;
+use crate::state::UserDataMod;
+
+pub(crate) fn modify_user(
     accounts: &[AccountInfo],
     data: UserDataMod
 ) -> ProgramResult {

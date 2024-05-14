@@ -27,9 +27,13 @@ pub(crate) fn modify_tweet(
 
     msg!("Prev Data: {:?}", tweet_data);
 
+    tweet_data.owner= data.owner;
+    tweet_data.parentPost= data.parentPost;
+    tweet_data.rudeness = data.rudeness;
+    tweet_data.cid= data.cid;
     tweet_data.content = data.content;
     tweet_data.timestamp = data.timestamp;
-    tweet_data.owner = data.owner;
+
 
     msg!("New Data: {:?}", tweet_data);
     tweet_data.serialize(&mut &mut pda_account_info.data.borrow_mut()[..])?;
