@@ -9,7 +9,7 @@ publish = false
 
 [dependencies]
 solana-program = "=1.18.12"
-borsh = "0.10.3"
+borsh = "1.5.0"
 toml_edit = "=0.21.0"
 
 [lib]
