@@ -8,7 +8,7 @@ async function complete64bytes(cid) {
   
 }
 
-const cidString = completeStringWithSymbol("bafkreieqskeuyh4spxsgthnfolqogeifaj6mupbilolqn3q3jb7lf3lncy", "▄", 64);
+const cidString = completeStringWithSymbol("bafkreieqskeuyh4spxsgthnfolqogeifaj6mupbilolqn3q3jb7lf3lncy", "~", 64);
 console.log(cidString);
 
 

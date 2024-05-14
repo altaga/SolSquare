@@ -711,15 +711,15 @@ export default function FeedHome() {
                     className="searchInput"
                     value={message}
                     onChange={(e) => {
-                      if (e.target.value.length >= 128) {
-                        setMessage(e.target.value.substring(0, 128));
+                      if (e.target.value.length >= 256) {
+                        setMessage(e.target.value.substring(0, 256));
                       }
-                      if (e.target.value.length < 128) {
+                      if (e.target.value.length < 256) {
                         setMessage(e.target.value);
                       }
                     }}
                   />
-                  <div>{`${128 - message.length}`}</div>
+                  <div>{`${256 - message.length}`}</div>
                 </div>
                 <div
                   style={{ display: "flex", justifyContent: "space-evenly" }}
@@ -1387,15 +1387,15 @@ export default function FeedHome() {
                     className="searchInput"
                     value={message}
                     onChange={(e) => {
-                      if (e.target.value.length >= 128) {
-                        setMessage(e.target.value.substring(0, 128));
+                      if (e.target.value.length >= 256) {
+                        setMessage(e.target.value.substring(0, 256));
                       }
-                      if (e.target.value.length < 128) {
+                      if (e.target.value.length < 256) {
                         setMessage(e.target.value);
                       }
                     }}
                   />
-                  <div>{`${128 - message.length} / 128`}</div>
+                  <div>{`${256 - message.length} / 256`}</div>
                 </div>
                 <div
                   style={{ display: "flex", justifyContent: "space-evenly" }}
