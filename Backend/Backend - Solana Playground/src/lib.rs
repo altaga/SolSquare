@@ -21,9 +21,12 @@ use std::str::FromStr;
 pub struct TweetData {
     bump:u8,
     seed:String,
-    space:u8,
-    content:String,
+    space:u16,
     owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
     timestamp:u32
 }
 
@@ -32,16 +35,22 @@ pub struct TweetDataBorsh {
     instruction:u8,
     bump:u8,
     seed:String,
-    space:u8,
-    content:String,
+    space:u16,
     owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
     timestamp:u32
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetPDADataBorsh {
-    content:String,
     owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
     timestamp:u32
 }
 
@@ -50,8 +59,11 @@ pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
         bump:payload.bump,
         seed:payload.seed,
         space:payload.space,
-        content: payload.content,
         owner: payload.owner,
+        parentPost:  payload.parentPost,
+        rudeness: payload.rudeness,
+        cid: payload.cid,
+        content:payload.content,
         timestamp:payload.timestamp
     }
 }
@@ -60,23 +72,32 @@ pub fn create_tweet_data(payload:TweetDataBorsh) -> TweetData{
 
 #[derive(BorshDeserialize, BorshSerialize, Debug)]
 pub struct TweetDataMod {
-    content:String,
     owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
     timestamp:u32
 }
 
 #[derive(BorshDeserialize)]
 pub struct TweetDataModBorsh {
     instruction:u8,
-    content:String,
     owner: [u8; 32],
+    parentPost: [u8; 32],
+    rudeness: bool,
+    cid: String,
+    content:String,
     timestamp:u32
 }
 
 pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
     TweetDataMod {
-        content: payload.content,
         owner: payload.owner,
+        parentPost:  payload.parentPost,
+        rudeness: payload.rudeness,
+        cid: payload.cid,
+        content:payload.content,
         timestamp:payload.timestamp
     }
 }
@@ -87,7 +108,7 @@ pub fn create_tweet_data_mod(payload:TweetDataModBorsh) -> TweetDataMod{
 pub struct UserData {
     bump:u8,
     seed:String,
-    space:u8,
+    space:u16,
     owner: [u8; 32],
     username:String,
     timestamp: u32,
@@ -99,7 +120,7 @@ pub struct UserDataBorsh {
     instruction:u8,
     bump:u8,
     seed:String,
-    space:u8,
+    space:u16,
     owner: [u8; 32],
     username:String,
     timestamp: u32,
@@ -241,7 +262,7 @@ fn create_tweet(
     accounts: &[AccountInfo], 
     data: TweetData
 ) -> ProgramResult {
-
+    msg!("Tweet Data: {:?}", data);
     let account_info_iter = &mut accounts.iter();
     let payer_account_info = next_account_info(account_info_iter)?;
     let pda_account_info = next_account_info(account_info_iter)?;
@@ -265,8 +286,7 @@ fn create_tweet(
     }
 
     let rent_lamports = rent_sysvar_account_info.minimum_balance(_space.into());
-
-    invoke_signed(
+   invoke_signed(
         &create_account(
             &payer_account_info.key,
             &pda_account_info.key,
@@ -281,16 +301,17 @@ fn create_tweet(
         ],
          &[signers_seeds],
     )?;
-
+    
     let mut tweet_data = try_from_slice_unchecked::<TweetPDADataBorsh>(&pda_account_info.data.borrow()).unwrap();
-
-    tweet_data.content = data.content;
     tweet_data.owner= data.owner;
+    tweet_data.parentPost= data.parentPost;
+    tweet_data.rudeness = data.rudeness;
+    tweet_data.cid= data.cid;
+    tweet_data.content = data.content;
     tweet_data.timestamp = data.timestamp;
 
     msg!("Tweet Data: {:?}", tweet_data);
     tweet_data.serialize(&mut &mut pda_account_info.data.borrow_mut()[..])?;
-
     Ok(())
 }
 
@@ -316,9 +337,12 @@ fn modify_tweet(
 
     msg!("Prev Data: {:?}", tweet_data);
 
+    tweet_data.owner= data.owner;
+    tweet_data.parentPost= data.parentPost;
+    tweet_data.rudeness = data.rudeness;
+    tweet_data.cid= data.cid;
     tweet_data.content = data.content;
     tweet_data.timestamp = data.timestamp;
-    tweet_data.owner = data.owner;
 
     msg!("New Data: {:?}", tweet_data);
     tweet_data.serialize(&mut &mut pda_account_info.data.borrow_mut()[..])?;
