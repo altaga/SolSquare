@@ -145,21 +145,11 @@ function findFollowers(users, owner) {
 
 const getRudeness = async (text) => {
   try {
-    let result = await predictRudeness(text);
-
-    // Loop through the results and return the true detection result for any of the label is true
-
-    if (result && result.length > 0) {
-      for (let i = 0; i < result.length; i++) {
-        console.log(result[i]?.results?.[0]?.match);
-        if (result[i]?.results?.[0]?.match) {
-          return true;
-        }
-      }
-    }
-    return false;
+    const result = await predictRudeness(text);
+    return result.some((detections) => detections.value === true);
   } catch (e) {
     console.log(e);
+    return false;
   }
 };
 export default function FeedHome() {
@@ -167,7 +157,6 @@ export default function FeedHome() {
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
   const isTouchScreen =
     ("ontouchstart" in window || navigator.msMaxTouchPoints) ?? false;
-  console.log(isTouchScreen);
   // We use the wallet hooks to interact with the blockchain
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
@@ -380,7 +369,8 @@ export default function FeedHome() {
 
       const instruction = 0;
 
-      let rudenessResult = await getRudeness(message);
+      const rudenessResult = await getRudeness(message);
+      console.log(rudenessResult);
 
       const seedStruct = {
         owner: publicKey.toBytes(),
@@ -434,8 +424,10 @@ export default function FeedHome() {
           programId,
         })
       );
+
       const signature = await sendTransaction(transaction, connection);
       transactionToast(signature, "Post added");
+
       handleClosePost();
       setTimeout(() => {
         getPosts();
