@@ -208,6 +208,14 @@ export default function FeedHome() {
   // Sort Switch
   const [sortBy, setSortBy] = useState(false);
 
+  const [visiblePosts, setVisiblePosts] = useState({});
+
+  const toggleVisibility = (postIndex) => {
+    setVisiblePosts((prev) => ({
+      ...prev,
+      [postIndex]: !prev[postIndex],
+    }));
+  };
   // Toast notification
 
   const transactionToast = (txhash, message) => {
@@ -258,6 +266,7 @@ export default function FeedHome() {
       };
     });
     posts.sort((a, b) => b.balance - a.balance);
+
     setPosts(posts);
   }, [connection]);
 
@@ -1825,18 +1834,37 @@ export default function FeedHome() {
                     } SOL`}
                   </div>
                 </div>
-                <div
-                  style={{
-                    color: "white",
-                    marginRight: "50px",
-                    marginLeft: "50px",
-                    marginBottom: "50px",
-                    fontSize: "1.3rem",
-                    textAlign: "justify",
-                  }}
-                >
-                  {post.content}
-                </div>
+                {post.rudeness && !visiblePosts[post.addressPDA] ? (
+                  <>
+                    <button
+                      onClick={() => toggleVisibility(post.addressPDA)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "white",
+                        cursor: "pointer",
+                        fontSize: "1.3rem",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Show Post
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      color: "white",
+                      marginRight: "50px",
+                      marginLeft: "50px",
+                      marginBottom: "50px",
+                      fontSize: "1.3rem",
+                      textAlign: "justify",
+                    }}
+                  >
+                    {post.content}
+                  </div>
+                )}
+
                 <div
                   style={{
                     color: "white",
