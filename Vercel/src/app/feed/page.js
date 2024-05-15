@@ -50,7 +50,7 @@ import Modal from "@mui/material/Modal";
 
 import { useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
-
+import { predictRudeness } from "../../actions/rudeness";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
@@ -143,6 +143,25 @@ function findFollowers(users, owner) {
   }
 }
 
+const getRudeness = async (text) => {
+  try {
+    let result = await predictRudeness(text);
+
+    // Loop through the results and return the true detection result for any of the label is true
+
+    if (result && result.length > 0) {
+      for (let i = 0; i < result.length; i++) {
+        console.log(result[i]?.results?.[0]?.match);
+        if (result[i]?.results?.[0]?.match) {
+          return true;
+        }
+      }
+    }
+    return false;
+  } catch (e) {
+    console.log(e);
+  }
+};
 export default function FeedHome() {
   const router = useRouter();
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
@@ -352,10 +371,12 @@ export default function FeedHome() {
 
       const instruction = 0;
 
+      let rudenessResult = await getRudeness(message);
+
       const seedStruct = {
         owner: publicKey.toBytes(),
         parentPost: new Uint8Array(32).fill(0),
-        rudeness: false,
+        rudeness: rudenessResult,
         cid: completeStringWithSymbol("", "~", 64),
         content: completeStringWithSymbol(message, "~", 256),
         timestamp: Math.floor(Date.now() / 1000),
