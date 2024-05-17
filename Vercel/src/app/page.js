@@ -12,12 +12,6 @@ export default function Home() {
   const { publicKey } = useWallet();
 
   useEffect(() => {
-    async function run() {
-    }
-    run();
-  }, []);
-
-  useEffect(() => {
     // If wallet is connected, redirect to address
     if (publicKey) {
       window.location.href = `/feed`;
