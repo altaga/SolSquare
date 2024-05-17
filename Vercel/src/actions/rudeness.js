@@ -24,7 +24,13 @@ export async function predictRudeness(text) {
     myModel
       .classify(text)
       .then((predictions) => {
-        resolve(predictions);
+        const result = predictions.map((item) => {
+          return {
+            value: item.results[0].match ?? true, // if undefined, return true, because undefined is falsy in JS
+            label: item.label,
+          };
+        })
+        resolve(result);
       })
       .catch((error) => {
         reject(error);

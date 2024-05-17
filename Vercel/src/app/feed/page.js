@@ -50,7 +50,7 @@ import Modal from "@mui/material/Modal";
 
 import { useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
-
+import { predictRudeness } from "../../actions/rudeness";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
@@ -143,12 +143,20 @@ function findFollowers(users, owner) {
   }
 }
 
+const getRudeness = async (text) => {
+  try {
+    const result = await predictRudeness(text);
+    return result.some((detections) => detections.value === true);
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
 export default function FeedHome() {
   const router = useRouter();
   // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
   const isTouchScreen =
     ("ontouchstart" in window || navigator.msMaxTouchPoints) ?? false;
-  console.log(isTouchScreen);
   // We use the wallet hooks to interact with the blockchain
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
@@ -189,6 +197,14 @@ export default function FeedHome() {
   // Sort Switch
   const [sortBy, setSortBy] = useState(false);
 
+  const [visiblePosts, setVisiblePosts] = useState({});
+
+  const toggleVisibility = (postIndex) => {
+    setVisiblePosts((prev) => ({
+      ...prev,
+      [postIndex]: !prev[postIndex],
+    }));
+  };
   // Toast notification
 
   const transactionToast = (txhash, message) => {
@@ -239,6 +255,7 @@ export default function FeedHome() {
       };
     });
     posts.sort((a, b) => b.balance - a.balance);
+
     setPosts(posts);
   }, [connection]);
 
@@ -352,10 +369,13 @@ export default function FeedHome() {
 
       const instruction = 0;
 
+      const rudenessResult = await getRudeness(message);
+      console.log(rudenessResult);
+
       const seedStruct = {
         owner: publicKey.toBytes(),
         parentPost: new Uint8Array(32).fill(0),
-        rudeness: false,
+        rudeness: rudenessResult,
         cid: completeStringWithSymbol("", "~", 64),
         content: completeStringWithSymbol(message, "~", 256),
         timestamp: Math.floor(Date.now() / 1000),
@@ -404,8 +424,10 @@ export default function FeedHome() {
           programId,
         })
       );
+
       const signature = await sendTransaction(transaction, connection);
       transactionToast(signature, "Post added");
+
       handleClosePost();
       setTimeout(() => {
         getPosts();
@@ -1804,18 +1826,37 @@ export default function FeedHome() {
                     } SOL`}
                   </div>
                 </div>
-                <div
-                  style={{
-                    color: "white",
-                    marginRight: "50px",
-                    marginLeft: "50px",
-                    marginBottom: "50px",
-                    fontSize: "1.3rem",
-                    textAlign: "justify",
-                  }}
-                >
-                  {post.content}
-                </div>
+                {post.rudeness && !visiblePosts[post.addressPDA] ? (
+                  <>
+                    <button
+                      onClick={() => toggleVisibility(post.addressPDA)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "white",
+                        cursor: "pointer",
+                        fontSize: "1.3rem",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Show Post
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      color: "white",
+                      marginRight: "50px",
+                      marginLeft: "50px",
+                      marginBottom: "50px",
+                      fontSize: "1.3rem",
+                      textAlign: "justify",
+                    }}
+                  >
+                    {post.content}
+                  </div>
+                )}
+
                 <div
                   style={{
                     color: "white",
