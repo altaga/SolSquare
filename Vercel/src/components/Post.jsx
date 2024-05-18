@@ -36,82 +36,88 @@ const Post = ({
         borderStyle: "solid",
         borderColor: "rgba(255,255, 255, 0.5)",
       }}
-      onClick={() => {
-        router.push(`/feed/${post.addressPDA}`);
-      }}
     >
       <div
+        onClick={() => {
+          router.push(`/feed/${post.addressPDA}`);
+        }}
         style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
+          cursor: "pointer",
         }}
       >
-        <Link
-          href={`../profile/${post.owner}`}
+        <div
           style={{
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
-            color: "white",
-            textDecoration: "none",
           }}
         >
-          <Image
-            style={{ borderRadius: "50%", margin: "1rem" }}
-            src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
-            alt="logo"
-            width={50}
-            height={50}
-          />
-          <div style={{ color: "white", fontSize: "1.2rem" }}>
-            {findUser(users, post.owner) === post.owner ? (
-              <>{post.owner}</>
-            ) : (
-              <>{findUser(users, post.owner)}</>
-            )}
-          </div>
-        </Link>
-        <div style={{ color: "white", marginLeft: "1rem" }}>
-          {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
-        </div>
-        <div style={{ color: "white", marginLeft: "1rem" }}>
-          {`Boost : ${
-            Math.round((post.balance / LAMPORTS_PER_SOL - 0.002) * 1000) / 1000
-          } SOL`}
-        </div>
-      </div>
-      {post.rudeness && !visiblePosts[post.addressPDA] ? (
-        <>
-          <button
-            onClick={() => toggleVisibility(post.addressPDA)}
+          <Link
+            href={`../profile/${post.owner}`}
             style={{
-              background: "none",
-              border: "none",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
               color: "white",
-              cursor: "pointer",
-              fontSize: "1.3rem",
-              textDecoration: "underline",
+              textDecoration: "none",
             }}
           >
-            Show Post
-          </button>
-        </>
-      ) : (
-        <div
-          style={{
-            color: "white",
-            marginRight: "50px",
-            marginLeft: "50px",
-            marginBottom: "50px",
-            fontSize: "1.3rem",
-            textAlign: "justify",
-          }}
-        >
-          {post.content}
+            <Image
+              style={{ borderRadius: "50%", margin: "1rem" }}
+              src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
+              alt="logo"
+              width={50}
+              height={50}
+            />
+            <div style={{ color: "white", fontSize: "1.2rem" }}>
+              {findUser(users, post.owner) === post.owner ? (
+                <>{post.owner}</>
+              ) : (
+                <>{findUser(users, post.owner)}</>
+              )}
+            </div>
+          </Link>
+          <div style={{ color: "white", marginLeft: "1rem" }}>
+            {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
+          </div>
+          <div style={{ color: "white", marginLeft: "1rem" }}>
+            {`Boost : ${
+              Math.round((post.balance / LAMPORTS_PER_SOL - 0.002) * 1000) /
+              1000
+            } SOL`}
+          </div>
         </div>
-      )}
-
+        {post.rudeness && !visiblePosts[post.addressPDA] ? (
+          <>
+            <button
+              onClick={() => toggleVisibility(post.addressPDA)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "white",
+                cursor: "pointer",
+                fontSize: "1.3rem",
+                textDecoration: "underline",
+              }}
+            >
+              Show Post
+            </button>
+          </>
+        ) : (
+          <div
+            style={{
+              color: "white",
+              marginRight: "50px",
+              marginLeft: "50px",
+              marginBottom: "50px",
+              fontSize: "1.3rem",
+              textAlign: "justify",
+            }}
+          >
+            {post.content}
+          </div>
+        )}
+      </div>
       <div
         style={{
           color: "white",
