@@ -7,7 +7,7 @@ import {
   getTimeDifference,
   modalStyle,
   modalStyleMobile,
-} from "../../utils/utils";
+} from "../../../utils/utils";
 // Styled buttons and inputs
 // Solana Core modules
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -47,23 +47,102 @@ import {
   Typography,
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import Post from "../../components/Post";
-import { useRouter } from "next/navigation";
-import { Orbitron } from "next/font/google";
-import { predictRudeness } from "../../actions/rudeness";
-import {
-  postSchema,
-  addPostSchema,
-  userSchema,
-  addUserSchema,
-  withdrawSchema,
-} from "../../utils/schema";
-import { findUser } from "../../utils/utils";
 
+
+import { Orbitron } from "next/font/google";
+import { predictRudeness } from "../../../actions/rudeness";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
+import { useRouter ,useParams} from 'next/navigation';
+
+// Schemas Post
+
+const postSchema = {
+  struct: {
+    owner: { array: { type: "u8", len: 32 } },
+    parentPost: { array: { type: "u8", len: 32 } },
+    rudeness: "bool",
+    cid: "string",
+    content: "string",
+    timestamp: "u32",
+  },
+};
+
+const addPostSchema = {
+  struct: {
+    instruction: "u8",
+    bump: "u8",
+    seed: "string",
+    space: "u16",
+    owner: { array: { type: "u8", len: 32 } },
+    parentPost: { array: { type: "u8", len: 32 } },
+    rudeness: "bool",
+    cid: "string",
+    content: "string",
+    timestamp: "u32",
+  },
+};
+
+// User Schemas
+
+const userSchema = {
+  struct: {
+    owner: { array: { type: "u8", len: 32 } },
+    username: "string",
+    timestamp: "u32",
+    followers: "u32",
+  },
+};
+
+const addUserSchema = {
+  struct: {
+    instruction: "u8",
+    bump: "u8",
+    seed: "string",
+    space: "u16",
+    owner: { array: { type: "u8", len: 32 } },
+    username: "string",
+    timestamp: "u32",
+    followers: "u32",
+  },
+};
+
+// Instruction Schemas
+
+const withdrawSchema = {
+  struct: { instruction: "u8" },
+};
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
+
+// Utils
+
+function findUser(users, owner) {
+  try {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].owner === owner) {
+        return users[i].username;
+      }
+    }
+    return owner;
+  } catch (e) {
+    console.log(e);
+    return owner;
+  }
+}
+
+function findFollowers(users, owner) {
+  try {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].owner === owner) {
+        return users[i].followers;
+      }
+    }
+    return 0;
+  } catch (e) {
+    return 0;
+  }
+}
 
 const getRudeness = async (text) => {
   try {
@@ -75,8 +154,13 @@ const getRudeness = async (text) => {
   }
 };
 export default function FeedHome() {
+   
   const router = useRouter();
-
+ const roo=useParams()
+ console.log(roo)
+  // Detect if device has a touch screen, then a mobile device, its not perfect, but it simplifies the code
+  const isTouchScreen =
+    ("ontouchstart" in window || navigator.msMaxTouchPoints) ?? false;
   // We use the wallet hooks to interact with the blockchain
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
@@ -466,8 +550,6 @@ export default function FeedHome() {
     loginFlag,
   ]);
 
-  console.log(posts);
-
   useEffect(() => {
     setRendered(true);
   }, []);
@@ -488,8 +570,8 @@ export default function FeedHome() {
     setOwnerToIndexMap(map);
   }, [posts]);
 
-  return (
-    <>
+  return  (
+    <React.Fragment>
       {
         // Boost Modal
       }
@@ -1009,23 +1091,184 @@ export default function FeedHome() {
           )}
         </div>
         <div className="scrollable-div">
-          {pubkey &&
-            posts.map((post, index) => {
-              
-              return <Post
-                  pubkey={pubkey}
-                  ownerToIndexMap={ownerToIndexMap}
-                  visiblePosts={visiblePosts}
-                  toggleVisibility={toggleVisibility}
-                  setSelectedPost={setSelectedPost}
-                  handleOpenBoost={handleOpenBoost}
-                  withdrawPost={withdrawPost}
-                  users={users}
-                  post={post}
-                  index={index}
-                />
-              
-            })}
+          {posts.map((post, index) => {
+            return (
+              <div
+                key={index}
+                style={{
+                  padding: "1rem",
+                  width: "100%",
+                  borderWidth: "0px 0px 1px 0px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(255,255, 255, 0.5)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
+                  <Link
+                    href={`../profile/${post.owner}`}
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      color: "white",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ borderRadius: "50%", margin: "1rem" }}
+                      src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
+                      alt="logo"
+                      width={50}
+                      height={50}
+                    />
+                    <div style={{ color: "white", fontSize: "1.2rem" }}>
+                      {findUser(users, post.owner) === post.owner ? (
+                        <>{post.owner}</>
+                      ) : (
+                        <>{findUser(users, post.owner)}</>
+                      )}
+                    </div>
+                  </Link>
+                  <div style={{ color: "white", marginLeft: "1rem" }}>
+                    {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
+                  </div>
+                  <div style={{ color: "white", marginLeft: "1rem" }}>
+                    {`Boost : ${
+                      Math.round(
+                        (post.balance / LAMPORTS_PER_SOL - 0.002) * 1000
+                      ) / 1000
+                    } SOL`}
+                  </div>
+                </div>
+                {post.rudeness && !visiblePosts[post.addressPDA] ? (
+                  <>
+                    <button
+                      onClick={() => toggleVisibility(post.addressPDA)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "white",
+                        cursor: "pointer",
+                        fontSize: "1.3rem",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Show Post
+                    </button>
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      color: "white",
+                      marginRight: "50px",
+                      marginLeft: "50px",
+                      marginBottom: "50px",
+                      fontSize: "1.3rem",
+                      textAlign: "justify",
+                    }}
+                  >
+                    {post.content}
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    color: "white",
+                    marginRight: "50px",
+                    marginLeft: "50px",
+                    marginBottom: "10px",
+                    fontSize: "1.3rem",
+                    flexDirection: "row",
+                    display: "flex",
+                    gap: "1rem",
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setSelectedPost(post.addressPDA);
+                      handleOpenBoost();
+                    }}
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <BoltIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "2rem",
+                        height: "2rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "1.2rem",
+                        color: "white",
+                      }}
+                    >
+                      Boost Post
+                    </div>
+                  </button>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://explorer.solana.com/address/${post.addressPDA}?cluster=devnet`,
+                        "_blank"
+                      )
+                    }
+                    className={orbitron.className + " buttonInteraction"}
+                  >
+                    <ExploreIcon
+                      style={{
+                        color: "#30ceb7",
+                        width: "2rem",
+                        height: "2rem",
+                      }}
+                    />
+                    <div
+                      style={{
+                        margin: "5px",
+                        fontSize: "1.2rem",
+                        color: "white",
+                      }}
+                    >
+                      Explorer
+                    </div>
+                  </button>
+                  {post.owner === pubkey?.toBase58() && (
+                    <button
+                      disabled={post.owner !== pubkey?.toBase58()}
+                      onClick={() => {
+                        withdrawPost(post.addressPDA);
+                      }}
+                      className={orbitron.className + " buttonInteraction"}
+                    >
+                      <AccountBalanceWalletIcon
+                        style={{
+                          color: "#30ceb7",
+                          width: "2rem",
+                          height: "2rem",
+                        }}
+                      />
+                      <div
+                        style={{
+                          margin: "5px",
+                          fontSize: "1.2rem",
+                          color: "white",
+                        }}
+                      >
+                        Withdraw
+                      </div>
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div
           style={{
@@ -1067,6 +1310,6 @@ export default function FeedHome() {
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }

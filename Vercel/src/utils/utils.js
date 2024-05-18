@@ -73,3 +73,30 @@ export function completeStringWithSymbol(inputString, symbol, desiredLength) {
   const symbolsToAdd = symbol.repeat(remainingLength);
   return inputString + symbolsToAdd;
 }
+
+export function findUser(users, owner) {
+  try {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].owner === owner) {
+        return users[i].username;
+      }
+    }
+    return owner;
+  } catch (e) {
+    console.log(e);
+    return owner;
+  }
+}
+
+export function findFollowers(users, owner) {
+  try {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].owner === owner) {
+        return users[i].followers;
+      }
+    }
+    return 0;
+  } catch (e) {
+    return 0;
+  }
+}
