@@ -7,7 +7,7 @@ import { Kanit, Roboto_Flex, Orbitron } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../components/Header";
-
+import { OwnerProvider } from "../context/feedContext";
 // Add Fonts to NextJS Project
 
 const robotoFlex = Roboto_Flex({ weight: "400", subsets: ["latin"] });
@@ -48,8 +48,11 @@ export default function RootLayout({ children }) {
             {
               // Children in this case is the content of the rendered page
             }
+            <OwnerProvider>
+
             <Header />
             {children}
+            </OwnerProvider>
           </WalletComponent>
         </AppRouterCacheProvider>
         {

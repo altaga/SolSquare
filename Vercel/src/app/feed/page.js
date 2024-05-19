@@ -81,17 +81,24 @@ export default function FeedHome() {
 
   const { publicKey, sendTransaction } = useWallet();
 
-  const { pubkey, getUsers, users, getBalance } = useOwner();
+  const {
+    pubkey,
+    getUsers,
+    users,
+    getBalance,
+    getPosts,
+    posts,
+    setLoading,
+    loading,
+  } = useOwner();
   const { connection } = useConnection();
 
   const [rendered, setRendered] = useState(false);
 
-  const [posts, setPosts] = useState([]);
+  const [post1s, setPosts] = useState([]);
   // New Post Utils
   const [message, setMessage] = useState("");
 
-  // Modal Utils
-  const [loading, setLoading] = useState(false);
   let [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
@@ -120,33 +127,6 @@ export default function FeedHome() {
       [postIndex]: !prev[postIndex],
     }));
   };
-
-  const getPosts = useCallback(async () => {
-    const accounts = await connection.getProgramAccounts(programId, {
-      filters: [
-        {
-          dataSize: 397, // number of bytes
-        },
-      ],
-    });
-    let posts = accounts.map((post) => {
-      return {
-        ...deserialize(postSchema, post.account.data),
-        addressPDA: post.pubkey.toBase58(),
-        balance: post.account.lamports,
-      };
-    });
-    posts = posts.map((post) => {
-      return {
-        ...post,
-        content: post.content.replaceAll("~", ""),
-        owner: new PublicKey(post.owner).toBase58(),
-      };
-    });
-    posts.sort((a, b) => b.balance - a.balance);
-
-    setPosts(posts);
-  }, [connection]);
 
   const boostPost = useCallback(async () => {
     try {
@@ -222,87 +202,6 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
-  const addPost = useCallback(async () => {
-    try {
-      const seed = generateRandomString(32);
-
-      let [pda, bump] = PublicKey.findProgramAddressSync(
-        [Buffer.from(seed), publicKey.toBuffer()],
-        programId
-      );
-
-      const instruction = 0;
-
-      const rudenessResult = await getRudeness(message);
-      console.log(rudenessResult);
-
-      const seedStruct = {
-        owner: publicKey.toBytes(),
-        parentPost: new Uint8Array(32).fill(0),
-        rudeness: rudenessResult,
-        cid: completeStringWithSymbol("", "~", 64),
-        content: completeStringWithSymbol(message, "~", 256),
-        timestamp: Math.floor(Date.now() / 1000),
-      };
-
-      const space = serialize(postSchema, seedStruct).length;
-
-      const transactionData = {
-        instruction,
-        bump,
-        seed,
-        space,
-        ...seedStruct,
-      };
-
-      const encoded = serialize(addPostSchema, transactionData);
-
-      const data = Buffer.from(encoded);
-
-      console.log({ instruction, bump, seed, space, ...seedStruct });
-      let transaction = new Transaction().add(
-        new TransactionInstruction({
-          keys: [
-            {
-              pubkey: publicKey,
-              isSigner: true,
-              isWritable: true,
-            },
-            {
-              pubkey: pda,
-              isSigner: false,
-              isWritable: true,
-            },
-            {
-              pubkey: SYSVAR_RENT_PUBKEY,
-              isSigner: false,
-              isWritable: false,
-            },
-            {
-              pubkey: SystemProgram.programId,
-              isSigner: false,
-              isWritable: false,
-            },
-          ],
-          data,
-          programId,
-        })
-      );
-
-      const signature = await sendTransaction(transaction, connection);
-      TransactionToast(signature, "Post added");
-
-      handleClosePost();
-      setTimeout(() => {
-        getPosts();
-        setMessage("");
-        setLoading(false);
-      }, 2000);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-    }
-  }, [publicKey, connection, sendTransaction, message, getPosts]);
 
   const sortByDate = useCallback(async () => {
     let postsTemp = [...posts];

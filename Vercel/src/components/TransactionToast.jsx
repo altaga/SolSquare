@@ -1,6 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
-
+import Link from "next/link";
 const TransactionToast = (txhash, message) => {
   // Notification can be a component, a string or a plain object
   return toast(

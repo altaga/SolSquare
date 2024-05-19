@@ -1,8 +1,13 @@
 "use client";
 // context/OwnerContext.js
-import { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { userSchema, addUserSchema } from "../utils/schema";
+import {
+  userSchema,
+  addUserSchema,
+  postSchema,
+  addPostSchema,
+} from "../utils/schema";
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -20,6 +25,17 @@ import {
 } from "../utils/utils";
 import { deserialize, serialize } from "borsh";
 import TransactionToast from "../components/TransactionToast";
+import { predictRudeness } from "../actions/rudeness";
+
+const getRudeness = async (text) => {
+  try {
+    const result = await predictRudeness(text);
+    return result.some((detections) => detections.value === true);
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
@@ -29,12 +45,17 @@ export const OwnerProvider = ({ children }) => {
   const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
+  const [openPost, setOpenPost] = useState(false);
+
   const { connection } = useConnection();
   const [username, setUsername] = useState("");
   const [balance, setBalance] = useState(0);
   const [pubkey, setPubkey] = useState(null);
   const [rendered, setRendered] = useState(false);
-
+  const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState("");
+  const handleOpenPost = () => setOpenPost(true);
+  const handleClosePost = () => setOpenPost(false);
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
 
@@ -68,6 +89,112 @@ export const OwnerProvider = ({ children }) => {
     setUsers(users);
   }, [connection]);
 
+  const getPosts = useCallback(async () => {
+    const accounts = await connection.getProgramAccounts(programId, {
+      filters: [
+        {
+          dataSize: 397, // number of bytes
+        },
+      ],
+    });
+    let posts = accounts.map((post) => {
+      return {
+        ...deserialize(postSchema, post.account.data),
+        addressPDA: post.pubkey.toBase58(),
+        balance: post.account.lamports,
+      };
+    });
+    posts = posts.map((post) => {
+      return {
+        ...post,
+        content: post.content.replaceAll("~", ""),
+        owner: new PublicKey(post.owner).toBase58(),
+      };
+    });
+    posts.sort((a, b) => b.balance - a.balance);
+
+    setPosts(posts);
+  }, [connection]);
+
+  const addPost = useCallback(async () => {
+    try {
+      const seed = generateRandomString(32);
+
+      let [pda, bump] = PublicKey.findProgramAddressSync(
+        [Buffer.from(seed), publicKey.toBuffer()],
+        programId
+      );
+
+      const instruction = 0;
+
+      const rudenessResult = await getRudeness(message);
+
+      const seedStruct = {
+        owner: publicKey.toBytes(),
+        parentPost: new Uint8Array(32).fill(0),
+        rudeness: rudenessResult,
+        cid: completeStringWithSymbol("", "~", 64),
+        content: completeStringWithSymbol(message, "~", 256),
+        timestamp: Math.floor(Date.now() / 1000),
+      };
+
+      const space = serialize(postSchema, seedStruct).length;
+
+      const transactionData = {
+        instruction,
+        bump,
+        seed,
+        space,
+        ...seedStruct,
+      };
+
+      const encoded = serialize(addPostSchema, transactionData);
+
+      const data = Buffer.from(encoded);
+
+      let transaction = new Transaction().add(
+        new TransactionInstruction({
+          keys: [
+            {
+              pubkey: publicKey,
+              isSigner: true,
+              isWritable: true,
+            },
+            {
+              pubkey: pda,
+              isSigner: false,
+              isWritable: true,
+            },
+            {
+              pubkey: SYSVAR_RENT_PUBKEY,
+              isSigner: false,
+              isWritable: false,
+            },
+            {
+              pubkey: SystemProgram.programId,
+              isSigner: false,
+              isWritable: false,
+            },
+          ],
+          data,
+          programId,
+        })
+      );
+
+      const signature = await sendTransaction(transaction, connection);
+      TransactionToast(signature, "Post added");
+
+      handleClosePost();
+      setTimeout(() => {
+        getPosts();
+        setMessage("");
+        setLoading(false);
+      }, 2000);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  }, [publicKey, connection, sendTransaction, getPosts]);
   return (
     <OwnerContext.Provider
       value={{
@@ -84,7 +211,16 @@ export const OwnerProvider = ({ children }) => {
         rendered,
         setRendered,
         setPubkey,
-        pubkey
+        pubkey,
+        getPosts,
+        posts,
+        addPost,
+        setMessage,
+        message,
+        handleOpenPost,
+        handleClosePost,
+        openPost,
+        setOpenPost,
       }}
     >
       {children}

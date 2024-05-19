@@ -1,5 +1,5 @@
 "use client";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ExpandLess, ExpandMore, Search } from "@mui/icons-material";
@@ -28,13 +28,22 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useOwner } from "../context/feedContext";
 const Header = () => {
   const { publicKey } = useWallet();
-  const [openPost, setOpenPost] = React.useState(false);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const handleOpenPost = () => setOpenPost(true);
-  const handleClosePost = () => setOpenPost(false);
+
+  const {
+    addPost,
+    setMessage,
+    message,
+    loading,
+    setLoading,
+    openPost,
+    setOpenPost,
+    handleClosePost,
+    handleOpenPost,
+  } = useOwner();
+
   if (!publicKey) {
     return;
   }
@@ -160,7 +169,7 @@ const Header = () => {
                     disabled={loading}
                     onClick={() => {
                       setLoading(true);
-                      addPost();
+                      const result = addPost();
                     }}
                     className={orbitron.className + " buttonInteraction"}
                   >
