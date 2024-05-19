@@ -6,21 +6,14 @@ import UserProfile from "../../components/UserProfile";
 import SortSideBar from "../../components/SortSideBar";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
-import { OwnerProvider } from "../../context/feedContext";
 import { useOwner } from "../../context/feedContext";
 import { useRouter } from "next/navigation";
-const FeedLayOut = ({children}) => {
+
+const FeedLayOut = ({ children }) => {
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
-   const router = useRouter();
-  const {
-    getBalance,
-    setPubkey,
-    getUsers,
-    setRendered,
-    rendered,
-  } = useOwner();
 
+  const { getBalance, setPubkey, getUsers, setRendered, rendered } = useOwner();
 
   useEffect(() => {
     setRendered(true);
@@ -32,16 +25,13 @@ const FeedLayOut = ({children}) => {
       getBalance();
       // getPosts();
       getUsers();
-    } 
+    }
   }, [
     publicKey,
-    // setPubkey,
     getBalance,
     // getPosts,
     getUsers,
     rendered,
-    // router,
-    // loginFlag,
   ]);
   return (
     <div
