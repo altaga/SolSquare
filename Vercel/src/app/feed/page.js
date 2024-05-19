@@ -68,7 +68,7 @@ const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
 export default function FeedHome() {
-  const router = useRouter();
+
 
   const { publicKey, sendTransaction } = useWallet();
 
@@ -85,11 +85,6 @@ export default function FeedHome() {
   } = useOwner();
   const { connection } = useConnection();
 
-
-
-  const [post1s, setPosts] = useState([]);
-
-
   let [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
@@ -97,11 +92,6 @@ export default function FeedHome() {
   const handleOpenBoost = () => setOpenBoost(true);
   const handleCloseBoost = () => setOpenBoost(false);
 
-  // Sort Utils
-  const [openSort, setOpenSort] = React.useState(false);
-  const sortHandle = () => setOpenSort(!openSort);
-  // Sort Switch
-  const [sortBy, setSortBy] = useState(false);
 
   const [visiblePosts, setVisiblePosts] = useState({});
 
@@ -186,17 +176,7 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
-  const sortByDate = useCallback(async () => {
-    let postsTemp = [...posts];
-    postsTemp.sort((a, b) => b.timestamp - a.timestamp);
-    setPosts(postsTemp);
-  }, [setPosts, posts]);
 
-  const sortByBalance = useCallback(async () => {
-    let postsTemp = [...posts];
-    postsTemp.sort((a, b) => b.balance - a.balance);
-    setPosts(postsTemp);
-  }, [setPosts, posts]);
 
   return (
     <FeedLayOut>

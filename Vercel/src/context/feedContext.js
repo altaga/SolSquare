@@ -116,7 +116,7 @@ export const OwnerProvider = ({ children }) => {
     setPosts(posts);
   }, [connection]);
 
-  const addPost = useCallback(async () => {
+  const addPost = useCallback(async (text) => {
     try {
       const seed = generateRandomString(32);
 
@@ -127,14 +127,14 @@ export const OwnerProvider = ({ children }) => {
 
       const instruction = 0;
 
-      const rudenessResult = await getRudeness(message);
+      const rudenessResult = await getRudeness(text);
 
       const seedStruct = {
         owner: publicKey.toBytes(),
         parentPost: new Uint8Array(32).fill(0),
         rudeness: rudenessResult,
         cid: completeStringWithSymbol("", "~", 64),
-        content: completeStringWithSymbol(message, "~", 256),
+        content: completeStringWithSymbol(text, "~", 256),
         timestamp: Math.floor(Date.now() / 1000),
       };
 
@@ -221,6 +221,7 @@ export const OwnerProvider = ({ children }) => {
         handleClosePost,
         openPost,
         setOpenPost,
+        setPosts
       }}
     >
       {children}

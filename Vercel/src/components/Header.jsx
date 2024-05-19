@@ -168,7 +168,7 @@ const Header = () => {
                     disabled={loading}
                     onClick={() => {
                       setLoading(true);
-                      const result = addPost();
+                      addPost(message);
                     }}
                     className={orbitron.className + " buttonInteraction"}
                   >
