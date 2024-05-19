@@ -67,15 +67,6 @@ const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
-const getRudeness = async (text) => {
-  try {
-    const result = await predictRudeness(text);
-    return result.some((detections) => detections.value === true);
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-};
 export default function FeedHome() {
   const router = useRouter();
 
@@ -94,11 +85,10 @@ export default function FeedHome() {
   } = useOwner();
   const { connection } = useConnection();
 
-  const [rendered, setRendered] = useState(false);
+
 
   const [post1s, setPosts] = useState([]);
-  // New Post Utils
-  const [message, setMessage] = useState("");
+
 
   let [amount, setAmount] = useState("");
   // Modal Boost
@@ -106,14 +96,7 @@ export default function FeedHome() {
   const [selectedPost, setSelectedPost] = React.useState("");
   const handleOpenBoost = () => setOpenBoost(true);
   const handleCloseBoost = () => setOpenBoost(false);
-  // Modal Tweet
-  const [openPost, setOpenPost] = React.useState(false);
-  const handleOpenPost = () => setOpenPost(true);
-  const handleClosePost = () => setOpenPost(false);
-  // Modal User
-  const [openUser, setOpenUser] = React.useState(false);
-  const handleOpenUser = () => setOpenUser(true);
-  const handleCloseUser = () => setOpenUser(false);
+
   // Sort Utils
   const [openSort, setOpenSort] = React.useState(false);
   const sortHandle = () => setOpenSort(!openSort);

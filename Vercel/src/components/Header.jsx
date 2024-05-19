@@ -39,7 +39,6 @@ const Header = () => {
     loading,
     setLoading,
     openPost,
-    setOpenPost,
     handleClosePost,
     handleOpenPost,
   } = useOwner();
