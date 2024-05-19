@@ -90,6 +90,7 @@ export default function FeedHome() {
     posts,
     setLoading,
     loading,
+    ownerToIndexMap,
   } = useOwner();
   const { connection } = useConnection();
 
@@ -202,7 +203,6 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
-
   const sortByDate = useCallback(async () => {
     let postsTemp = [...posts];
     postsTemp.sort((a, b) => b.timestamp - a.timestamp);
@@ -214,34 +214,6 @@ export default function FeedHome() {
     postsTemp.sort((a, b) => b.balance - a.balance);
     setPosts(postsTemp);
   }, [setPosts, posts]);
-
-  useEffect(() => {
-    if (publicKey && rendered) {
-      getBalance();
-      getPosts();
-      getUsers();
-    }
-  }, [publicKey, getBalance, getPosts, getUsers, rendered, router]);
-
-  useEffect(() => {
-    setRendered(true);
-  }, []);
-
-  // PFP Automatic Generator based on each unique wallet on site
-  const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
-  useEffect(() => {
-    const sortedPostsforPFP = [...posts].sort(
-      (a, b) => a.timestamp - b.timestamp
-    );
-    const map = {};
-    let index = 1;
-    sortedPostsforPFP.forEach((post) => {
-      if (!map.hasOwnProperty(post.owner)) {
-        map[post.owner] = index++;
-      }
-    });
-    setOwnerToIndexMap(map);
-  }, [posts]);
 
   return (
     <FeedLayOut>

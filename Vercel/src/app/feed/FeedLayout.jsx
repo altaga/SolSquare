@@ -13,7 +13,16 @@ const FeedLayOut = ({ children }) => {
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
 
-  const { getBalance, setPubkey, getUsers, setRendered, rendered } = useOwner();
+  const {
+    getBalance,
+    setPubkey,
+    getUsers,
+    setRendered,
+    rendered,
+    posts,
+    setOwnerToIndexMap,
+    getPosts
+  } = useOwner();
 
   useEffect(() => {
     setRendered(true);
@@ -23,7 +32,7 @@ const FeedLayOut = ({ children }) => {
     if (publicKey && rendered) {
       setPubkey(publicKey);
       getBalance();
-      // getPosts();
+      getPosts();
       getUsers();
     }
   }, [
@@ -33,6 +42,20 @@ const FeedLayOut = ({ children }) => {
     getUsers,
     rendered,
   ]);
+
+  useEffect(() => {
+    const sortedPostsforPFP = [...posts].sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
+    const map = {};
+    let index = 1;
+    sortedPostsforPFP.forEach((post) => {
+      if (!map.hasOwnProperty(post.owner)) {
+        map[post.owner] = index++;
+      }
+    });
+    setOwnerToIndexMap(map);
+  }, [posts]);
   return (
     <div
       style={{
