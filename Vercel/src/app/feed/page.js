@@ -61,6 +61,7 @@ import {
 import { findUser } from "../../utils/utils";
 import FeedLayOut from "./FeedLayout";
 import { useOwner } from "../../context/feedContext";
+import TransactionToast from "../../components/TransactionToast";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
@@ -78,26 +79,17 @@ const getRudeness = async (text) => {
 export default function FeedHome() {
   const router = useRouter();
 
-  // We use the wallet hooks to interact with the blockchain
-  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
-    useWallet();
+  const { publicKey, sendTransaction } = useWallet();
 
-  console.log("publicKey in the feedv compoenntntntn", publicKey);
-  const { pubkey } = useOwner();
+  const { pubkey, getUsers, users, getBalance } = useOwner();
   const { connection } = useConnection();
-  // States and refs for the UI
-  const [balance, setBalance] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
+
   const [rendered, setRendered] = useState(false);
-  const [loginFlag, setLoginFlag] = useState(false);
-  // Post Utils
+
   const [posts, setPosts] = useState([]);
   // New Post Utils
   const [message, setMessage] = useState("");
-  // User Utils
-  const [users, setUsers] = useState([]);
-  // New User Utils
-  const [username, setUsername] = useState("");
+
   // Modal Utils
   const [loading, setLoading] = useState(false);
   let [amount, setAmount] = useState("");
@@ -128,32 +120,6 @@ export default function FeedHome() {
       [postIndex]: !prev[postIndex],
     }));
   };
-  // Toast notification
-
-  const transactionToast = (txhash, message) => {
-    // Notification can be a component, a string or a plain object
-    toast(
-      <div>
-        {message}:
-        <br />
-        <Link
-          href={`https://explorer.solana.com/tx/${txhash}?cluster=devnet`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {txhash}
-        </Link>
-      </div>
-    );
-  };
-
-  // Ignore useCallback, its for performance
-
-  // Get balance of the connected wallet
-  const getBalance = useCallback(async () => {
-    const balance = await connection.getBalance(publicKey);
-    setBalance(balance);
-  }, [publicKey, connection]);
 
   const getPosts = useCallback(async () => {
     const accounts = await connection.getProgramAccounts(programId, {
@@ -182,31 +148,6 @@ export default function FeedHome() {
     setPosts(posts);
   }, [connection]);
 
-  const getUsers = useCallback(async () => {
-    const accounts = await connection.getProgramAccounts(programId, {
-      filters: [
-        {
-          dataSize: 76, // number of bytes
-        },
-      ],
-    });
-    let users = accounts.map((user) => {
-      return {
-        ...deserialize(userSchema, user.account.data),
-        addressPDA: user.pubkey.toBase58(),
-        balance: user.account.lamports,
-      };
-    });
-    users = users.map((user) => {
-      return {
-        ...user,
-        username: user.username.replaceAll("~", ""),
-        owner: new PublicKey(user.owner).toBase58(),
-      };
-    });
-    setUsers(users);
-  }, [connection]);
-
   const boostPost = useCallback(async () => {
     try {
       const transaction = new Transaction().add(
@@ -217,7 +158,7 @@ export default function FeedHome() {
         })
       );
       const signature = await sendTransaction(transaction, connection);
-      transactionToast(signature, "Post boosted");
+      TransactionToast(signature, "Post boosted");
       handleCloseBoost();
       setTimeout(() => {
         setAmount("");
@@ -268,7 +209,7 @@ export default function FeedHome() {
           })
         );
         const signature = await sendTransaction(transaction, connection);
-        transactionToast(signature, "Withdraw from post");
+        TransactionToast(signature, "Withdraw from post");
         setTimeout(() => {
           getPosts();
           setSelectedPost("");
@@ -349,7 +290,7 @@ export default function FeedHome() {
       );
 
       const signature = await sendTransaction(transaction, connection);
-      transactionToast(signature, "Post added");
+      TransactionToast(signature, "Post added");
 
       handleClosePost();
       setTimeout(() => {
@@ -362,79 +303,6 @@ export default function FeedHome() {
       console.log(e);
     }
   }, [publicKey, connection, sendTransaction, message, getPosts]);
-
-  const addUser = useCallback(async () => {
-    try {
-      const seed = generateRandomString(32);
-
-      let [pda, bump] = PublicKey.findProgramAddressSync(
-        [Buffer.from(seed), publicKey.toBuffer()],
-        programId
-      );
-
-      const instruction = 3;
-
-      const seedStruct = {
-        owner: publicKey.toBytes(),
-        username: completeStringWithSymbol(username, "~", 32),
-        timestamp: Math.floor(Date.now() / 1000),
-        followers: 0,
-      };
-
-      const space = serialize(userSchema, seedStruct).length;
-
-      const transactionData = {
-        instruction,
-        bump,
-        seed,
-        space,
-        ...seedStruct,
-      };
-
-      const encoded = serialize(addUserSchema, transactionData);
-
-      const data = Buffer.from(encoded);
-      let transaction = new Transaction().add(
-        new TransactionInstruction({
-          keys: [
-            {
-              pubkey: publicKey,
-              isSigner: true,
-              isWritable: true,
-            },
-            {
-              pubkey: pda,
-              isSigner: false,
-              isWritable: true,
-            },
-            {
-              pubkey: SYSVAR_RENT_PUBKEY,
-              isSigner: false,
-              isWritable: false,
-            },
-            {
-              pubkey: SystemProgram.programId,
-              isSigner: false,
-              isWritable: false,
-            },
-          ],
-          data,
-          programId,
-        })
-      );
-      const signature = await sendTransaction(transaction, connection);
-      transactionToast(signature, "User Created");
-      handleCloseUser();
-      setTimeout(() => {
-        setUsername("");
-        setLoading(false);
-        getUsers();
-      }, 2000);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-    }
-  }, [publicKey, connection, sendTransaction, username, getUsers]);
 
   const sortByDate = useCallback(async () => {
     let postsTemp = [...posts];
@@ -449,26 +317,12 @@ export default function FeedHome() {
   }, [setPosts, posts]);
 
   useEffect(() => {
-    console.log("useeffect", publicKey);
     if (publicKey && rendered) {
-     
       getBalance();
       getPosts();
       getUsers();
-      setLoginFlag(true);
-    } else if (!publicKey && rendered && loginFlag) {
-      router.push("/");
     }
-  }, [
-    publicKey,
-  
-    getBalance,
-    getPosts,
-    getUsers,
-    rendered,
-    router,
-    loginFlag,
-  ]);
+  }, [publicKey, getBalance, getPosts, getUsers, rendered, router]);
 
   useEffect(() => {
     setRendered(true);
