@@ -38,7 +38,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { deserialize, serialize } from "borsh";
-import TransactionToast from "../components/TransactionToast";
+import TransactionToast from "./TransactionToast";
 
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);

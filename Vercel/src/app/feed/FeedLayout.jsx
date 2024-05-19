@@ -8,31 +8,31 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 import { OwnerProvider } from "../../context/feedContext";
 import { useOwner } from "../../context/feedContext";
-
+import { useRouter } from "next/navigation";
 const FeedLayOut = ({children}) => {
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
+   const router = useRouter();
   const {
     getBalance,
-
+    setPubkey,
     getUsers,
     setRendered,
     rendered,
   } = useOwner();
 
-  console.log("publicKey", publicKey);
+
   useEffect(() => {
     setRendered(true);
   }, []);
 
   useEffect(() => {
     if (publicKey && rendered) {
+      setPubkey(publicKey);
       getBalance();
       // getPosts();
       getUsers();
-    } else if (!publicKey && rendered) {
-      //   router.push("/");
-    }
+    } 
   }, [
     publicKey,
     // setPubkey,

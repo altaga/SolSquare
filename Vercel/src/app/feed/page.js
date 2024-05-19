@@ -60,7 +60,7 @@ import {
 } from "../../utils/schema";
 import { findUser } from "../../utils/utils";
 import FeedLayOut from "./FeedLayout";
-
+import { useOwner } from "../../context/feedContext";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
@@ -83,7 +83,7 @@ export default function FeedHome() {
     useWallet();
 
   console.log("publicKey in the feedv compoenntntntn", publicKey);
-  const [pubkey, setPubkey] = useState(null);
+  const { pubkey } = useOwner();
   const { connection } = useConnection();
   // States and refs for the UI
   const [balance, setBalance] = useState(0);
@@ -451,7 +451,7 @@ export default function FeedHome() {
   useEffect(() => {
     console.log("useeffect", publicKey);
     if (publicKey && rendered) {
-      setPubkey(publicKey);
+     
       getBalance();
       getPosts();
       getUsers();
@@ -461,7 +461,7 @@ export default function FeedHome() {
     }
   }, [
     publicKey,
-    setPubkey,
+  
     getBalance,
     getPosts,
     getUsers,
@@ -602,22 +602,23 @@ export default function FeedHome() {
       </Modal>
 
       <div className="scrollable-div">
-        {posts.map((post, index) => {
-          return (
-            <Post
-              pubkey={publicKey}
-              ownerToIndexMap={ownerToIndexMap}
-              visiblePosts={visiblePosts}
-              toggleVisibility={toggleVisibility}
-              setSelectedPost={setSelectedPost}
-              handleOpenBoost={handleOpenBoost}
-              withdrawPost={withdrawPost}
-              users={users}
-              post={post}
-              index={index}
-            />
-          );
-        })}
+        {pubkey &&
+          posts.map((post, index) => {
+            return (
+              <Post
+                pubkey={pubkey}
+                ownerToIndexMap={ownerToIndexMap}
+                visiblePosts={visiblePosts}
+                toggleVisibility={toggleVisibility}
+                setSelectedPost={setSelectedPost}
+                handleOpenBoost={handleOpenBoost}
+                withdrawPost={withdrawPost}
+                users={users}
+                post={post}
+                index={index}
+              />
+            );
+          })}
       </div>
     </FeedLayOut>
   );

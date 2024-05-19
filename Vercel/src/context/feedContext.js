@@ -82,7 +82,9 @@ export const OwnerProvider = ({ children }) => {
         balance,
         getBalance,
         rendered,
-        setRendered
+        setRendered,
+        setPubkey,
+        pubkey
       }}
     >
       {children}
