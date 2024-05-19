@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
 import ExploreIcon from "@mui/icons-material/Explore";
-
+import { useOwner } from "../context/feedContext";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const Post = ({
@@ -25,7 +25,7 @@ const Post = ({
   index,
 }) => {
   const router = useRouter();
-
+  const { setParentPostData } = useOwner();
   return (
     <div
       key={index}
@@ -39,8 +39,13 @@ const Post = ({
     >
       <div
         onClick={() => {
-
-          (post.rudeness && visiblePosts[post.addressPDA] ||  !post.rudeness) && router.push(`/feed/${post.addressPDA}`);
+          if (
+            (post.rudeness && visiblePosts[post.addressPDA]) ||
+            !post.rudeness
+          ) {
+            setParentPostData(post);
+            router.push(`/feed/${post.addressPDA}`);
+          }
         }}
         style={{
           cursor: "pointer",

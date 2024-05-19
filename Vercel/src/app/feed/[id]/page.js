@@ -14,7 +14,7 @@ import {
 } from "@solana/web3.js";
 import { serialize } from "borsh";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -22,7 +22,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../../components/Post";
-import { useParams } from "next/navigation";
+import { useParams, useLocation } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
 import { withdrawSchema } from "../../../utils/schema";
@@ -41,7 +41,7 @@ export default function FeedHome() {
 
   const {
     pubkey,
-   
+
     users,
     getBalance,
     getPosts,
@@ -50,14 +50,23 @@ export default function FeedHome() {
     loading,
     ownerToIndexMap,
     setParentPost,
+    parentPostData,
   } = useOwner();
   const { connection } = useConnection();
 
-  if (parentId?.id) {
-    setParentPost(parentId.id);
-  } else {
-    return;
-  }
+  useEffect(() => {
+    if (parentId?.id) {
+      setParentPost(parentId.id);
+      getPosts(parentPostData);
+    } else {
+      return;
+    }
+
+    return () => {
+      setParentPost(null);
+    };
+  }, [parentId]);
+
   const [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
@@ -148,11 +157,9 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
+
   return (
     <>
-      {
-        // Boost Modal
-      }
       <Modal
         open={openBoost}
         onClose={handleCloseBoost}
@@ -260,6 +267,20 @@ export default function FeedHome() {
       </Modal>
 
       <div className="scrollable-div">
+        {parentPostData && (
+          <Post
+            post={parentPostData}
+            pubkey={pubkey}
+            ownerToIndexMap={ownerToIndexMap}
+            visiblePosts={visiblePosts}
+            toggleVisibility={toggleVisibility}
+            setSelectedPost={setSelectedPost}
+            handleOpenBoost={handleOpenBoost}
+            withdrawPost={withdrawPost}
+            users={users}
+            index={0}
+          />
+        )}
         {pubkey &&
           posts.map((post, index) => {
             return (
@@ -273,7 +294,7 @@ export default function FeedHome() {
                 withdrawPost={withdrawPost}
                 users={users}
                 post={post}
-                index={index}
+                index={index + 1}
               />
             );
           })}

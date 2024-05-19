@@ -35,7 +35,7 @@ const FeedLayOut = ({ children }) => {
       getPosts();
       getUsers();
     }
-  }, [publicKey, getBalance, getPosts, getUsers, rendered, pathname]);
+  }, [publicKey, getBalance, getPosts, getUsers, rendered]);
 
   useEffect(() => {
     const sortedPostsforPFP = [...posts].sort(

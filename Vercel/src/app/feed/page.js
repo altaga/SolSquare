@@ -20,7 +20,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../components/Post";
-
+import {useLocation} from "next/navigation";
 import { Orbitron } from "next/font/google";
 
 import { withdrawSchema } from "../../utils/schema";
@@ -50,7 +50,7 @@ export default function FeedHome() {
   } = useOwner();
   const { connection } = useConnection();
 
-  setParentPost(null);
+
   let [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);

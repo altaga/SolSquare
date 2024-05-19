@@ -2,25 +2,15 @@
 
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { userSchema, postSchema, addPostSchema } from "../utils/schema";
 import {
-  userSchema,
-
-  postSchema,
-  addPostSchema,
-} from "../utils/schema";
-import {
-
   PublicKey,
   SYSVAR_RENT_PUBKEY,
   SystemProgram,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import {
-  completeStringWithSymbol,
-  generateRandomString,
-
-} from "../utils/utils";
+import { completeStringWithSymbol, generateRandomString } from "../utils/utils";
 import { deserialize, serialize } from "borsh";
 import TransactionToast from "../components/TransactionToast";
 import { predictRudeness } from "../actions/rudeness";
@@ -54,11 +44,11 @@ export const OwnerProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
+  const [parentPostData, setParentPostData] = useState(null);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
-  const { publicKey, sendTransaction } =
-    useWallet();
-
+  const { publicKey, sendTransaction } = useWallet();
+  console.log(parentPostData);
   const getBalance = useCallback(async () => {
     const balance = await connection.getBalance(publicKey);
     setBalance(balance);
@@ -89,33 +79,49 @@ export const OwnerProvider = ({ children }) => {
     setUsers(users);
   }, [connection]);
 
-  const getPosts = useCallback(async () => {
-    const accounts = await connection.getProgramAccounts(programId, {
-      filters: [
-        {
-          dataSize: 397, // number of bytes
-        },
-      ],
-    });
-    let posts = accounts.map((post) => {
-      return {
-        ...deserialize(postSchema, post.account.data),
-        addressPDA: post.pubkey.toBase58(),
-        balance: post.account.lamports,
-      };
-    });
-    posts = posts.map((post) => {
-      return {
-        ...post,
-        content: post.content.replaceAll("~", ""),
-        owner: new PublicKey(post.owner).toBase58(),
-      };
-    });
+  const getPosts = useCallback(
+    async (parentData) => {
+      const accounts = await connection.getProgramAccounts(programId, {
+        filters: [
+          {
+            dataSize: 397, // number of bytes
+          },
+        ],
+      });
+      let posts = accounts.map((post) => {
+        return {
+          ...deserialize(postSchema, post.account.data),
+          addressPDA: post.pubkey.toBase58(),
+          balance: post.account.lamports,
+        };
+      });
+      posts = posts.map((post) => {
+        return {
+          ...post,
+          content: post.content.replaceAll("~", ""),
+          owner: new PublicKey(post.owner).toBase58(),
+        };
+      });
 
-    posts.sort((a, b) => b.balance - a.balance);
+      // if (parentData) {
+      //   console.log(posts,parentData);
+      //   posts = posts.filter((post) => {
+      //     console.log(post.parentPost,Buffer.from(parentData?.addressPDA, "base64").slice(0, 32));
+      //     return (
+      //       post.parentPost ==  Buffer.from(parentData?.addressPDA, "base64").slice(0, 32)
+      //     );
+      //   });
 
-    setPosts(posts);
-  }, [connection, router]);
+      // } else {
+      //   setParentPostData(null);
+      // }
+      // console.log(posts);
+      posts.sort((a, b) => b.balance - a.balance);
+
+      setPosts(posts);
+    },
+    [connection]
+  );
 
   const addPost = useCallback(
     async (text) => {
@@ -231,6 +237,8 @@ export const OwnerProvider = ({ children }) => {
         setPosts,
         setParentPost,
         parentPost,
+        parentPostData,
+        setParentPostData,
       }}
     >
       {children}
