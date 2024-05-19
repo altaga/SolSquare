@@ -39,7 +39,8 @@ const Post = ({
     >
       <div
         onClick={() => {
-          router.push(`/feed/${post.addressPDA}`);
+
+          (post.rudeness && visiblePosts[post.addressPDA] ||  !post.rudeness) && router.push(`/feed/${post.addressPDA}`);
         }}
         style={{
           cursor: "pointer",
