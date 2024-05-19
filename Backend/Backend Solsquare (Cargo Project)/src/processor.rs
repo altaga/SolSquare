@@ -16,6 +16,7 @@ use crate::instructions::ProgramInstruction;
 use crate::modify_tweet::modify_tweet;
 use crate::modify_user::modify_user;
 use crate::transfer_funds::transfer_from_tweet;
+use crate::transfer_tokens::transfer_tokens;
 
 // Entry point is a function call process_instruction
 entrypoint!(process_instruction);
@@ -57,6 +58,10 @@ pub fn process_instruction(
         ProgramInstruction::ModifyUser(x) => {
             msg!("Modify User");
             modify_user(accounts, x)?;
+        }
+        ProgramInstruction::TransferTokens() => {
+            msg!("Transfer Token");
+            transfer_tokens(program_id, accounts, instruction_data)?;
         }
     }
     Ok(())

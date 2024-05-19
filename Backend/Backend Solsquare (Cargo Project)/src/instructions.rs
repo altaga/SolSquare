@@ -8,6 +8,7 @@ pub enum ProgramInstruction {
     TransferFunds(),
     AddUser(UserData),
     ModifyUser(UserDataMod),
+    TransferTokens(),
 }
 
 impl ProgramInstruction {

@@ -11,6 +11,7 @@ publish = false
 solana-program = "=1.18.12"
 borsh = "0.10.3"
 toml_edit = "=0.21.0"
+spl-token =  { version = "4.0.1",features = ["no-entrypoint"] }
 
 [lib]
 crate-type = ["cdylib", "lib"]
