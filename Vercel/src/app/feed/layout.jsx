@@ -1,36 +1,21 @@
-"use client"
+// pages/feed/layout.js
+"use client";
+
 import UserProfile from "../../components/UserProfile";
 import SortSideBar from "../../components/SortSideBar";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { OwnerProvider } from "../../context/feedContext";
+import { useOwner } from "../../context/feedContext";
+import FeedLayout from "./FeedLayout";
+const Layout = ({ children }) => {
 
-const layout = ({ children }) => {
 
-    const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
-
-  
-
-  // We use the wallet hooks to interact with the blockchain
-  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
-    useWallet();
-  const [pubkey, setPubkey] = useState(null);
-  const { connection } = useConnection();
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        height: "90vh",
-        width: "99vw",
-      }}
-    >
-      <UserProfile ownerToIndexMap={ownerToIndexMap}  />
-      {children}
-      <SortSideBar />
-    </div>
+    <OwnerProvider>
+     <FeedLayout/>
+    </OwnerProvider>
   );
 };
 
-export default layout;
+export default Layout;

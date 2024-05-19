@@ -9,7 +9,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Modal } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { userSchema,addUserSchema } from "../utils/schema";
 import {
   Box,
   Collapse,
@@ -27,16 +28,115 @@ import {
   modalStyle,
   modalStyleMobile,
 } from "../utils/utils";
-const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
+import { useOwner } from "../context/feedContext";
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  SYSVAR_RENT_PUBKEY,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { deserialize, serialize } from "borsh";
+import TransactionToast from "../components/TransactionToast";
 
-const UserProfile = ({ ownerToIndexMap, publicKey, users, balance }) => {
+const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
+const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
+
+const UserProfile = () => {
+  const {
+    ownerToIndexMap,
+    users,
+    balance,
+    loading,
+    setUsers,
+    setLoading,
+
+    getUsers,
+  } = useOwner();
+
   const [openUser, setOpenUser] = React.useState(false);
   const handleOpenUser = () => setOpenUser(true);
   const handleCloseUser = () => setOpenUser(false);
   const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
+    useWallet();
+    const { connection } = useConnection();
 
-  return  (
+  const addUser = useCallback(async () => {
+    try {
+      const seed = generateRandomString(32);
+
+      let [pda, bump] = PublicKey.findProgramAddressSync(
+        [Buffer.from(seed), publicKey.toBuffer()],
+        programId
+      );
+
+      const instruction = 3;
+
+      const seedStruct = {
+        owner: publicKey.toBytes(),
+        username: completeStringWithSymbol(username, "~", 32),
+        timestamp: Math.floor(Date.now() / 1000),
+        followers: 0,
+      };
+
+      const space = serialize(userSchema, seedStruct).length;
+
+      const transactionData = {
+        instruction,
+        bump,
+        seed,
+        space,
+        ...seedStruct,
+      };
+
+      const encoded = serialize(addUserSchema, transactionData);
+
+      const data = Buffer.from(encoded);
+      let transaction = new Transaction().add(
+        new TransactionInstruction({
+          keys: [
+            {
+              pubkey: publicKey,
+              isSigner: true,
+              isWritable: true,
+            },
+            {
+              pubkey: pda,
+              isSigner: false,
+              isWritable: true,
+            },
+            {
+              pubkey: SYSVAR_RENT_PUBKEY,
+              isSigner: false,
+              isWritable: false,
+            },
+            {
+              pubkey: SystemProgram.programId,
+              isSigner: false,
+              isWritable: false,
+            },
+          ],
+          data,
+          programId,
+        })
+      );
+      const signature = await sendTransaction(transaction, connection);
+      TransactionToast(signature, "User Created");
+      handleCloseUser();
+      setTimeout(() => {
+        setUsername("");
+        setLoading(false);
+        getUsers();
+      }, 2000);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  }, [publicKey, connection, sendTransaction, username, getUsers]);
+
+  return (
     <>
       <div
         style={{

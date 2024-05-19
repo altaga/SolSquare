@@ -598,11 +598,11 @@ export default function FeedHome() {
       </Modal>
 
       <div className="scrollable-div">
-        {pubkey &&
+        {
           posts.map((post, index) => {
             return (
               <Post
-                pubkey={pubkey}
+                pubkey={publicKey}
                 ownerToIndexMap={ownerToIndexMap}
                 visiblePosts={visiblePosts}
                 toggleVisibility={toggleVisibility}
