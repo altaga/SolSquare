@@ -54,6 +54,7 @@ export const OwnerProvider = ({ children }) => {
   const [rendered, setRendered] = useState(false);
   const [posts, setPosts] = useState([]);
   const [message, setMessage] = useState("");
+  const [parentPost, setParentPost] = useState(null);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
@@ -116,85 +117,91 @@ export const OwnerProvider = ({ children }) => {
     setPosts(posts);
   }, [connection]);
 
-  const addPost = useCallback(async (text) => {
-    try {
-      const seed = generateRandomString(32);
+  const addPost = useCallback(
+    async (text) => {
+      try {
+        const seed = generateRandomString(32);
 
-      let [pda, bump] = PublicKey.findProgramAddressSync(
-        [Buffer.from(seed), publicKey.toBuffer()],
-        programId
-      );
+        let [pda, bump] = PublicKey.findProgramAddressSync(
+          [Buffer.from(seed), publicKey.toBuffer()],
+          programId
+        );
 
-      const instruction = 0;
+        const instruction = 0;
 
-      const rudenessResult = await getRudeness(text);
+        const rudenessResult = await getRudeness(text);
+        const buffer = Buffer.from(parentPost, "base64");
+        const byteArrayBuffer = buffer.slice(0, 32);
 
-      const seedStruct = {
-        owner: publicKey.toBytes(),
-        parentPost: new Uint8Array(32).fill(0),
-        rudeness: rudenessResult,
-        cid: completeStringWithSymbol("", "~", 64),
-        content: completeStringWithSymbol(text, "~", 256),
-        timestamp: Math.floor(Date.now() / 1000),
-      };
+        const seedStruct = {
+          owner: publicKey.toBytes(),
+          parentPost: parentPost ? byteArrayBuffer : new Uint8Array(32).fill(0),
+          rudeness: rudenessResult,
+          cid: completeStringWithSymbol("", "~", 64),
+          content: completeStringWithSymbol(text, "~", 256),
+          timestamp: Math.floor(Date.now() / 1000),
+        };
 
-      const space = serialize(postSchema, seedStruct).length;
+        console.log(seedStruct);
+        const space = serialize(postSchema, seedStruct).length;
 
-      const transactionData = {
-        instruction,
-        bump,
-        seed,
-        space,
-        ...seedStruct,
-      };
+        const transactionData = {
+          instruction,
+          bump,
+          seed,
+          space,
+          ...seedStruct,
+        };
 
-      const encoded = serialize(addPostSchema, transactionData);
+        const encoded = serialize(addPostSchema, transactionData);
 
-      const data = Buffer.from(encoded);
+        const data = Buffer.from(encoded);
 
-      let transaction = new Transaction().add(
-        new TransactionInstruction({
-          keys: [
-            {
-              pubkey: publicKey,
-              isSigner: true,
-              isWritable: true,
-            },
-            {
-              pubkey: pda,
-              isSigner: false,
-              isWritable: true,
-            },
-            {
-              pubkey: SYSVAR_RENT_PUBKEY,
-              isSigner: false,
-              isWritable: false,
-            },
-            {
-              pubkey: SystemProgram.programId,
-              isSigner: false,
-              isWritable: false,
-            },
-          ],
-          data,
-          programId,
-        })
-      );
+        let transaction = new Transaction().add(
+          new TransactionInstruction({
+            keys: [
+              {
+                pubkey: publicKey,
+                isSigner: true,
+                isWritable: true,
+              },
+              {
+                pubkey: pda,
+                isSigner: false,
+                isWritable: true,
+              },
+              {
+                pubkey: SYSVAR_RENT_PUBKEY,
+                isSigner: false,
+                isWritable: false,
+              },
+              {
+                pubkey: SystemProgram.programId,
+                isSigner: false,
+                isWritable: false,
+              },
+            ],
+            data,
+            programId,
+          })
+        );
 
-      const signature = await sendTransaction(transaction, connection);
-      TransactionToast(signature, "Post added");
+        const signature = await sendTransaction(transaction, connection);
+        TransactionToast(signature, "Post added");
 
-      handleClosePost();
-      setTimeout(() => {
-        getPosts();
-        setMessage("");
+        handleClosePost();
+        setTimeout(() => {
+          getPosts();
+          setMessage("");
+          setLoading(false);
+        }, 2000);
+      } catch (e) {
         setLoading(false);
-      }, 2000);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-    }
-  }, [publicKey, connection, sendTransaction, getPosts]);
+        console.log(e);
+      }
+    },
+    [publicKey, connection, sendTransaction, getPosts]
+  );
   return (
     <OwnerContext.Provider
       value={{
@@ -221,7 +228,9 @@ export const OwnerProvider = ({ children }) => {
         handleClosePost,
         openPost,
         setOpenPost,
-        setPosts
+        setPosts,
+        setParentPost,
+        parentPost,
       }}
     >
       {children}

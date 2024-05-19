@@ -59,7 +59,7 @@ import {
   withdrawSchema,
 } from "../../utils/schema";
 import { findUser } from "../../utils/utils";
-import FeedLayOut from "./FeedLayout";
+
 import { useOwner } from "../../context/feedContext";
 import TransactionToast from "../../components/TransactionToast";
 // Fonts
@@ -82,9 +82,11 @@ export default function FeedHome() {
     setLoading,
     loading,
     ownerToIndexMap,
+    setParentPost
   } = useOwner();
   const { connection } = useConnection();
 
+  setParentPost(null);
   let [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
@@ -179,7 +181,7 @@ export default function FeedHome() {
 
 
   return (
-    <FeedLayOut>
+    <>
       {
         // Boost Modal
       }
@@ -308,6 +310,6 @@ export default function FeedHome() {
             );
           })}
       </div>
-    </FeedLayOut>
+    </>
   );
 }

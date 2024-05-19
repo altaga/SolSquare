@@ -10,6 +10,7 @@ import { useOwner } from "../../context/feedContext";
 import { useRouter } from "next/navigation";
 
 const FeedLayOut = ({ children }) => {
+  const router = useRouter();
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
 
@@ -38,9 +39,10 @@ const FeedLayOut = ({ children }) => {
   }, [
     publicKey,
     getBalance,
-    // getPosts,
+    getPosts,
     getUsers,
     rendered,
+    router
   ]);
 
   useEffect(() => {
