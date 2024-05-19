@@ -8,7 +8,25 @@ import { Orbitron } from "next/font/google";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Modal } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 
+import {
+  Box,
+  Collapse,
+  Fade,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import {
+  completeStringWithSymbol,
+  generateRandomString,
+  getTimeDifference,
+  modalStyle,
+  modalStyleMobile,
+} from "../utils/utils";
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const UserProfile = ({ ownerToIndexMap, publicKey, users, balance }) => {

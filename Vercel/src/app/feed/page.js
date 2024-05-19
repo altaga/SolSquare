@@ -466,8 +466,6 @@ export default function FeedHome() {
     loginFlag,
   ]);
 
-  console.log(posts);
-
   useEffect(() => {
     setRendered(true);
   }, []);
@@ -598,207 +596,25 @@ export default function FeedHome() {
           </Box>
         </Fade>
       </Modal>
-      {
-        // Post Modal
-      }
-     
-      {
-        // Add User Modal
-      }
-      <Modal
-        open={openUser}
-        onClose={handleCloseUser}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Fade in={openUser} timeout={500}>
-          <Box sx={modalStyle}>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
-                  Create New User
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <input
-                    style={{
-                      alignSelf: "center",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                      padding: "0.5rem",
-                      borderRadius: "10px",
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderColor: "black",
-                    }}
-                    placeholder="Enter username"
-                    className="searchInput"
-                    value={username}
-                    onChange={(e) => {
-                      if (e.target.value.length >= 32) {
-                        setUsername(e.target.value.substring(0, 32));
-                      }
-                      if (e.target.value.length < 32) {
-                        setUsername(e.target.value);
-                      }
-                    }}
-                  />
-                  <div>{`${32 - username.length} / 32`}</div>
-                </div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
-                >
-                  <button
-                    disabled={loading}
-                    onClick={() => {
-                      setLoading(true);
-                      addUser();
-                    }}
-                    className={orbitron.className + " buttonInteraction"}
-                  >
-                    <AddCircleIcon
-                      style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    />
-                    <div
-                      style={{
-                        margin: "5px",
-                        fontSize: "1.2rem",
-                        color: "white",
-                      }}
-                    >
-                      Create User
-                    </div>
-                  </button>
-                  <button
-                    disabled={loading}
-                    onClick={() => {
-                      handleCloseUser();
-                      setTimeout(() => {
-                        setUsername("");
-                        setLoading(false);
-                      }, 500);
-                    }}
-                    className={orbitron.className + " buttonInteraction"}
-                  >
-                    <CancelIcon
-                      style={{
-                        color: "red",
-                        width: "2rem",
-                        height: "2rem",
-                      }}
-                    />
-                    <div
-                      style={{
-                        margin: "5px",
-                        fontSize: "1.2rem",
-                        color: "white",
-                      }}
-                    >
-                      Cancel
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
 
-      {
-        // Body
-      }
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "90vh",
-          width: "99vw",
-        }}
-      >
-        
-        {
-          // Feed
-        }
-        <div className="scrollable-div">
-          {pubkey &&
-            posts.map((post, index) => {
-              return (
-                <Post
-                  pubkey={pubkey}
-                  ownerToIndexMap={ownerToIndexMap}
-                  visiblePosts={visiblePosts}
-                  toggleVisibility={toggleVisibility}
-                  setSelectedPost={setSelectedPost}
-                  handleOpenBoost={handleOpenBoost}
-                  withdrawPost={withdrawPost}
-                  users={users}
-                  post={post}
-                  index={index}
-                />
-              );
-            })}
-        </div>
-        <div
-          style={{
-            backgroundColor: "black",
-            width: "20%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            borderLeftWidth: "1px",
-            borderLeftStyle: "solid",
-            borderLeftColor: "rgba(255,255, 255, 0.5)",
-            color: "white",
-          }}
-        >
-          <div>
-            <ListItemButton onClick={sortHandle}>
-              <ListItemIcon>
-                <SortIcon htmlColor="#30ceb7" />
-              </ListItemIcon>
-              <ListItemText primary="Sort By" />
-              {!openSort ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openSort} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <DateRangeIcon htmlColor="#30ceb7" />
-                  </ListItemIcon>
-                  <ListItemText primary="By Date" />
-                </ListItemButton>
-                <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <AccountBalanceWalletIcon htmlColor="#30ceb7" />
-                  </ListItemIcon>
-                  <ListItemText primary="By Boost" />
-                </ListItemButton>
-              </List>
-            </Collapse>
-          </div>
-        </div>
+      <div className="scrollable-div">
+        {pubkey &&
+          posts.map((post, index) => {
+            return (
+              <Post
+                pubkey={pubkey}
+                ownerToIndexMap={ownerToIndexMap}
+                visiblePosts={visiblePosts}
+                toggleVisibility={toggleVisibility}
+                setSelectedPost={setSelectedPost}
+                handleOpenBoost={handleOpenBoost}
+                withdrawPost={withdrawPost}
+                users={users}
+                post={post}
+                index={index}
+              />
+            );
+          })}
       </div>
     </>
   );
