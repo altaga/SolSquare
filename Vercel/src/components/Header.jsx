@@ -1,33 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ExpandLess, ExpandMore, Search } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Orbitron } from "next/font/google";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Modal from "@mui/material/Modal";
-import {
-  completeStringWithSymbol,
-  generateRandomString,
-  getTimeDifference,
-  modalStyle,
-  modalStyleMobile,
-} from "../utils/utils";
+import { modalStyle } from "../utils/utils";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
-import {
-  Box,
-  Collapse,
-  Fade,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Box, Fade, Typography } from "@mui/material";
 import { useOwner } from "../context/feedContext";
 const Header = () => {
   const { publicKey } = useWallet();

@@ -1,17 +1,9 @@
 "use client";
 
-import { ExpandLess, ExpandMore, Search } from "@mui/icons-material";
-import {
-  completeStringWithSymbol,
-  generateRandomString,
-  getTimeDifference,
-  modalStyle,
-  modalStyleMobile,
-} from "../../../utils/utils";
-// Styled buttons and inputs
-// Solana Core modules
+import { modalStyle } from "../../../utils/utils";
+
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -20,48 +12,24 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { deserialize, serialize } from "borsh";
-import Image from "next/image";
-// NextJS modules
-import Link from "next/link";
-// React modules
-import React, { Fragment, useCallback, useEffect, useState } from "react";
-// React Toastify
-import { toast } from "react-toastify";
+import { serialize } from "borsh";
 
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import React, { useCallback, useState } from "react";
+
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
-import DateRangeIcon from "@mui/icons-material/DateRange";
-import ExploreIcon from "@mui/icons-material/Explore";
-import SortIcon from "@mui/icons-material/Sort";
-import {
-  Box,
-  Collapse,
-  Fade,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+
+import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../../components/Post";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
-import {
-  postSchema,
-  addPostSchema,
-  userSchema,
-  addUserSchema,
-  withdrawSchema,
-} from "../../../utils/schema";
+import { withdrawSchema } from "../../../utils/schema";
 
 import { useOwner } from "../../../context/feedContext";
 import TransactionToast from "../../../components/TransactionToast";
-// Fonts
+
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
@@ -73,7 +41,7 @@ export default function FeedHome() {
 
   const {
     pubkey,
-    getUsers,
+   
     users,
     getBalance,
     getPosts,
@@ -90,7 +58,7 @@ export default function FeedHome() {
   } else {
     return;
   }
-  let [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("");
   // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
   const [selectedPost, setSelectedPost] = React.useState("");

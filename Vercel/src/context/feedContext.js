@@ -1,15 +1,15 @@
 "use client";
-// context/OwnerContext.js
+
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
   userSchema,
-  addUserSchema,
+
   postSchema,
   addPostSchema,
 } from "../utils/schema";
 import {
-  LAMPORTS_PER_SOL,
+
   PublicKey,
   SYSVAR_RENT_PUBKEY,
   SystemProgram,
@@ -19,14 +19,12 @@ import {
 import {
   completeStringWithSymbol,
   generateRandomString,
-  getTimeDifference,
-  modalStyle,
-  modalStyleMobile,
+
 } from "../utils/utils";
 import { deserialize, serialize } from "borsh";
 import TransactionToast from "../components/TransactionToast";
 import { predictRudeness } from "../actions/rudeness";
-
+import { useRouter } from "next/navigation";
 const getRudeness = async (text) => {
   try {
     const result = await predictRudeness(text);
@@ -42,6 +40,7 @@ const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 const OwnerContext = createContext();
 
 export const OwnerProvider = ({ children }) => {
+  const router = useRouter();
   const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -57,7 +56,7 @@ export const OwnerProvider = ({ children }) => {
   const [parentPost, setParentPost] = useState(null);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
-  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
+  const { publicKey, sendTransaction } =
     useWallet();
 
   const getBalance = useCallback(async () => {
@@ -112,10 +111,11 @@ export const OwnerProvider = ({ children }) => {
         owner: new PublicKey(post.owner).toBase58(),
       };
     });
+
     posts.sort((a, b) => b.balance - a.balance);
 
     setPosts(posts);
-  }, [connection]);
+  }, [connection, router]);
 
   const addPost = useCallback(
     async (text) => {
@@ -130,12 +130,12 @@ export const OwnerProvider = ({ children }) => {
         const instruction = 0;
 
         const rudenessResult = await getRudeness(text);
-        const buffer = Buffer.from(parentPost, "base64");
-        const byteArrayBuffer = buffer.slice(0, 32);
 
         const seedStruct = {
           owner: publicKey.toBytes(),
-          parentPost: parentPost ? byteArrayBuffer : new Uint8Array(32).fill(0),
+          parentPost: parentPost
+            ? Buffer.from(parentPost, "base64").slice(0, 32)
+            : new Uint8Array(32).fill(0),
           rudeness: rudenessResult,
           cid: completeStringWithSymbol("", "~", 64),
           content: completeStringWithSymbol(text, "~", 256),

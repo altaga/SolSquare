@@ -4,15 +4,14 @@ import React, { useEffect } from "react";
 import React from "react";
 import UserProfile from "../../components/UserProfile";
 import SortSideBar from "../../components/SortSideBar";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {  useWallet } from "@solana/wallet-adapter-react";
 
 import { useOwner } from "../../context/feedContext";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const FeedLayOut = ({ children }) => {
-  const router = useRouter();
-  const { publicKey, sendTransaction, connecting, disconnecting, connected } =
-    useWallet();
+  const { publicKey } = useWallet();
+  const pathname = usePathname();
 
   const {
     getBalance,
@@ -22,7 +21,7 @@ const FeedLayOut = ({ children }) => {
     rendered,
     posts,
     setOwnerToIndexMap,
-    getPosts
+    getPosts,
   } = useOwner();
 
   useEffect(() => {
@@ -36,14 +35,7 @@ const FeedLayOut = ({ children }) => {
       getPosts();
       getUsers();
     }
-  }, [
-    publicKey,
-    getBalance,
-    getPosts,
-    getUsers,
-    rendered,
-    router
-  ]);
+  }, [publicKey, getBalance, getPosts, getUsers, rendered, pathname]);
 
   useEffect(() => {
     const sortedPostsforPFP = [...posts].sort(

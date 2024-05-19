@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import SortIcon from "@mui/icons-material/Sort";
 import { ExpandLess, ExpandMore, Search } from "@mui/icons-material";
 import DateRangeIcon from "@mui/icons-material/DateRange";
@@ -21,7 +21,7 @@ const SortSideBar = () => {
   const { setPosts, posts } = useOwner();
   const sortHandle = () => setOpenSort(!openSort);
 
-  const [openSort, setOpenSort] = React.useState(false);
+  const [openSort, setOpenSort] = useState(false);
 
   const sortByDate = useCallback(async () => {
     let postsTemp = [...posts];
