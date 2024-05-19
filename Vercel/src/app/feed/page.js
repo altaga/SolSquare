@@ -59,6 +59,7 @@ import {
   withdrawSchema,
 } from "../../utils/schema";
 import { findUser } from "../../utils/utils";
+import FeedLayOut from "./FeedLayout";
 
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
@@ -80,6 +81,8 @@ export default function FeedHome() {
   // We use the wallet hooks to interact with the blockchain
   const { publicKey, sendTransaction, connecting, disconnecting, connected } =
     useWallet();
+
+  console.log("publicKey in the feedv compoenntntntn", publicKey);
   const [pubkey, setPubkey] = useState(null);
   const { connection } = useConnection();
   // States and refs for the UI
@@ -446,6 +449,7 @@ export default function FeedHome() {
   }, [setPosts, posts]);
 
   useEffect(() => {
+    console.log("useeffect", publicKey);
     if (publicKey && rendered) {
       setPubkey(publicKey);
       getBalance();
@@ -487,7 +491,7 @@ export default function FeedHome() {
   }, [posts]);
 
   return (
-    <>
+    <FeedLayOut>
       {
         // Boost Modal
       }
@@ -598,24 +602,23 @@ export default function FeedHome() {
       </Modal>
 
       <div className="scrollable-div">
-        {
-          posts.map((post, index) => {
-            return (
-              <Post
-                pubkey={publicKey}
-                ownerToIndexMap={ownerToIndexMap}
-                visiblePosts={visiblePosts}
-                toggleVisibility={toggleVisibility}
-                setSelectedPost={setSelectedPost}
-                handleOpenBoost={handleOpenBoost}
-                withdrawPost={withdrawPost}
-                users={users}
-                post={post}
-                index={index}
-              />
-            );
-          })}
+        {posts.map((post, index) => {
+          return (
+            <Post
+              pubkey={publicKey}
+              ownerToIndexMap={ownerToIndexMap}
+              visiblePosts={visiblePosts}
+              toggleVisibility={toggleVisibility}
+              setSelectedPost={setSelectedPost}
+              handleOpenBoost={handleOpenBoost}
+              withdrawPost={withdrawPost}
+              users={users}
+              post={post}
+              index={index}
+            />
+          );
+        })}
       </div>
-    </>
+    </FeedLayOut>
   );
 }
