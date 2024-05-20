@@ -19,8 +19,7 @@ const FeedLayOut = ({ children }) => {
     getUsers,
     setRendered,
     rendered,
-    posts,
-    setOwnerToIndexMap,
+   
     getPosts,
   } = useOwner();
 
@@ -30,7 +29,7 @@ const FeedLayOut = ({ children }) => {
 
   useEffect(() => {
     if (publicKey && rendered) {
-      console.log("publicKey--------------------------------", publicKey);
+
       setPubkey(publicKey);
       getBalance();
       getPosts();

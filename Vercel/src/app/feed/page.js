@@ -13,14 +13,14 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { serialize } from "borsh";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, use } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../components/Post";
-import { useLocation } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
 import { withdrawSchema } from "../../utils/schema";
@@ -34,6 +34,7 @@ const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
 export default function FeedHome() {
   const { publicKey, sendTransaction } = useWallet();
+  const pathname = usePathname();
 
   const {
     pubkey,
@@ -44,7 +45,7 @@ export default function FeedHome() {
     setLoading,
     loading,
     ownerToIndexMap,
-    setParentPost,
+
     setOwnerToIndexMap,
   } = useOwner();
   const { connection } = useConnection();
@@ -153,6 +154,13 @@ export default function FeedHome() {
 
     setOwnerToIndexMap(map);
   }, [posts]);
+
+  useEffect(() => {
+    if (pubkey) {
+      getBalance();
+      getPosts();
+    }
+  }, [pathname]);
 
   return (
     <>

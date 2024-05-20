@@ -47,7 +47,7 @@ const Header = () => {
         }}
       >
         <div style={{ margin: "1rem" }}>
-          <Link href="/">
+          <Link href={publicKey ? "/feed" : "/"}>
             <Image src="/logoW.png" alt="logo" width={70} height={70} />
           </Link>
         </div>

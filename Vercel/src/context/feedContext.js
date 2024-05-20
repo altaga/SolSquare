@@ -98,7 +98,6 @@ export const OwnerProvider = ({ children }) => {
         });
       }
 
-      console.log(filter);
       const accounts = await connection.getProgramAccounts(programId, {
         filters: filter,
       });
@@ -123,13 +122,10 @@ export const OwnerProvider = ({ children }) => {
 
       posts.sort((a, b) => b.balance - a.balance);
 
-
       setPosts(posts);
     },
     [connection]
   );
-
-
 
   const addPost = useCallback(
     async (text) => {
