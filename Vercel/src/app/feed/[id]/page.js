@@ -18,6 +18,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
@@ -157,7 +158,6 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
-
   return (
     <>
       <Modal
@@ -268,18 +268,21 @@ export default function FeedHome() {
 
       <div className="scrollable-div">
         {parentPostData && (
-          <Post
-            post={parentPostData}
-            pubkey={pubkey}
-            ownerToIndexMap={ownerToIndexMap}
-            visiblePosts={visiblePosts}
-            toggleVisibility={toggleVisibility}
-            setSelectedPost={setSelectedPost}
-            handleOpenBoost={handleOpenBoost}
-            withdrawPost={withdrawPost}
-            users={users}
-            index={0}
-          />
+          <>
+            <Post
+              post={parentPostData}
+              pubkey={pubkey}
+              ownerToIndexMap={ownerToIndexMap}
+              visiblePosts={visiblePosts}
+              toggleVisibility={toggleVisibility}
+              setSelectedPost={setSelectedPost}
+              handleOpenBoost={handleOpenBoost}
+              withdrawPost={withdrawPost}
+              users={users}
+              index={0}
+              comment={true}
+            />
+          </>
         )}
         {pubkey &&
           posts.map((post, index) => {

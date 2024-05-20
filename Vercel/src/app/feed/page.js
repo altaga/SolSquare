@@ -38,7 +38,6 @@ export default function FeedHome() {
 
   const {
     pubkey,
-  
     users,
     getBalance,
     getPosts,
@@ -52,7 +51,7 @@ export default function FeedHome() {
 
 
   let [amount, setAmount] = useState("");
-  // Modal Boost
+
   const [openBoost, setOpenBoost] = React.useState(false);
   const [selectedPost, setSelectedPost] = React.useState("");
   const handleOpenBoost = () => setOpenBoost(true);

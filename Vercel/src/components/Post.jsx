@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { findUser, getTimeDifference } from "../utils/utils";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import CommentIcon from "@mui/icons-material/Comment";
 import Image from "next/image";
 import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -23,9 +24,10 @@ const Post = ({
   post,
   users,
   index,
+  comment = false,
 }) => {
   const router = useRouter();
-  const { setParentPostData } = useOwner();
+  const { setParentPostData, parentId, setOpenPost} = useOwner();
   return (
     <div
       key={index}
@@ -209,6 +211,31 @@ const Post = ({
               }}
             >
               Withdraw
+            </div>
+          </button>
+        )}
+        {comment && (
+          <button
+            onClick={() => {
+              setOpenPost(true)
+            }}
+            className={orbitron.className + " buttonInteraction"}
+          >
+            <CommentIcon
+              style={{
+                color: "#30ceb7",
+                width: "2rem",
+                height: "2rem",
+              }}
+            />
+            <div
+              style={{
+                margin: "5px",
+                fontSize: "1.2rem",
+                color: "white",
+              }}
+            >
+              Add Comment
             </div>
           </button>
         )}

@@ -48,7 +48,7 @@ export const OwnerProvider = ({ children }) => {
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
   const { publicKey, sendTransaction } = useWallet();
-  console.log(parentPostData);
+
   const getBalance = useCallback(async () => {
     const balance = await connection.getBalance(publicKey);
     setBalance(balance);
@@ -124,7 +124,7 @@ export const OwnerProvider = ({ children }) => {
   );
 
   const addPost = useCallback(
-    async (text) => {
+    async (text,parentPostId) => {
       try {
         const seed = generateRandomString(32);
 
@@ -139,8 +139,8 @@ export const OwnerProvider = ({ children }) => {
 
         const seedStruct = {
           owner: publicKey.toBytes(),
-          parentPost: parentPost
-            ? Buffer.from(parentPost, "base64").slice(0, 32)
+          parentPost: parentPostId
+            ? Buffer.from(parentPostId, "base64").slice(0, 32)
             : new Uint8Array(32).fill(0),
           rudeness: rudenessResult,
           cid: completeStringWithSymbol("", "~", 64),
