@@ -30,6 +30,7 @@ const FeedLayOut = ({ children }) => {
 
   useEffect(() => {
     if (publicKey && rendered) {
+      console.log("publicKey--------------------------------", publicKey);
       setPubkey(publicKey);
       getBalance();
       getPosts();
@@ -37,19 +38,7 @@ const FeedLayOut = ({ children }) => {
     }
   }, [publicKey, getBalance, getPosts, getUsers, rendered]);
 
-  useEffect(() => {
-    const sortedPostsforPFP = [...posts].sort(
-      (a, b) => a.timestamp - b.timestamp
-    );
-    const map = {};
-    let index = 1;
-    sortedPostsforPFP.forEach((post) => {
-      if (!map.hasOwnProperty(post.owner)) {
-        map[post.owner] = index++;
-      }
-    });
-    setOwnerToIndexMap(map);
-  }, [posts]);
+
   return (
     <div
       style={{

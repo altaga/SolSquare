@@ -123,6 +123,7 @@ const UserProfile = () => {
     }
   }, [publicKey, connection, sendTransaction, username, getUsers]);
 
+
   return (
     <>
       <div

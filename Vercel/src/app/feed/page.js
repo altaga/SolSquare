@@ -13,18 +13,17 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { serialize } from "borsh";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../components/Post";
-import {useLocation} from "next/navigation";
+import { useLocation } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
 import { withdrawSchema } from "../../utils/schema";
-
 
 import { useOwner } from "../../context/feedContext";
 import TransactionToast from "../../components/TransactionToast";
@@ -46,9 +45,9 @@ export default function FeedHome() {
     loading,
     ownerToIndexMap,
     setParentPost,
+    setOwnerToIndexMap,
   } = useOwner();
   const { connection } = useConnection();
-
 
   let [amount, setAmount] = useState("");
 
@@ -139,6 +138,21 @@ export default function FeedHome() {
     },
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
+
+  useEffect(() => {
+    const sortedPostsforPFP = [...posts].sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
+    const map = {};
+    let index = 1;
+    sortedPostsforPFP.forEach((post) => {
+      if (!map.hasOwnProperty(post.owner)) {
+        map[post.owner] = index++;
+      }
+    });
+
+    setOwnerToIndexMap(map);
+  }, [posts]);
 
   return (
     <>

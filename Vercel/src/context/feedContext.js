@@ -123,12 +123,13 @@ export const OwnerProvider = ({ children }) => {
 
       posts.sort((a, b) => b.balance - a.balance);
 
+
       setPosts(posts);
     },
     [connection]
   );
 
-  console.log(posts);
+
 
   const addPost = useCallback(
     async (text) => {
