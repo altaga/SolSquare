@@ -93,7 +93,7 @@ export const OwnerProvider = ({ children }) => {
         filter.push({
           memcmp: {
             offset: 32,
-            bytes: Buffer.from(parentData?.addressPDA, "base64").slice(0, 32),
+            bytes: new PublicKey(parentData?.addressPDA).toString(),
           },
         });
       }
@@ -128,6 +128,8 @@ export const OwnerProvider = ({ children }) => {
     [connection]
   );
 
+  console.log(posts);
+
   const addPost = useCallback(
     async (text) => {
       try {
@@ -140,11 +142,11 @@ export const OwnerProvider = ({ children }) => {
 
         const instruction = 0;
 
-        const rudenessResult = true; //await getRudeness(text);
+        const rudenessResult = await getRudeness(text);
 
         let parentPostPDA = new Uint8Array(32).fill(0);
         if (singlePostPage && parentPost) {
-          parentPostPDA = Buffer.from(parentPost, "base64").slice(0, 32);
+          parentPostPDA = new PublicKey(parentPost).toBytes();
         }
         const seedStruct = {
           owner: publicKey.toBytes(),
