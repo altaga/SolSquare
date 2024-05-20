@@ -45,6 +45,8 @@ export const OwnerProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
   const [parentPostData, setParentPostData] = useState(null);
+
+  const [singlePostPage, setSinglePostPage] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
   const handleClosePost = () => setOpenPost(false);
   const { publicKey, sendTransaction } = useWallet();
@@ -124,7 +126,7 @@ export const OwnerProvider = ({ children }) => {
   );
 
   const addPost = useCallback(
-    async (text,parentPostId) => {
+    async (text) => {
       try {
         const seed = generateRandomString(32);
 
@@ -135,13 +137,15 @@ export const OwnerProvider = ({ children }) => {
 
         const instruction = 0;
 
-        const rudenessResult = await getRudeness(text);
+        const rudenessResult = true; //await getRudeness(text);
 
+        let parentPostPDA = new Uint8Array(32).fill(0);
+        if (singlePostPage && parentPost) {
+          parentPostPDA = Buffer.from(parentPost, "base64").slice(0, 32);
+        }
         const seedStruct = {
           owner: publicKey.toBytes(),
-          parentPost: parentPostId
-            ? Buffer.from(parentPostId, "base64").slice(0, 32)
-            : new Uint8Array(32).fill(0),
+          parentPost: parentPostPDA,
           rudeness: rudenessResult,
           cid: completeStringWithSymbol("", "~", 64),
           content: completeStringWithSymbol(text, "~", 256),
@@ -206,7 +210,7 @@ export const OwnerProvider = ({ children }) => {
         console.log(e);
       }
     },
-    [publicKey, connection, sendTransaction, getPosts]
+    [publicKey, connection, sendTransaction, getPosts, singlePostPage]
   );
   return (
     <OwnerContext.Provider
@@ -239,6 +243,7 @@ export const OwnerProvider = ({ children }) => {
         parentPost,
         parentPostData,
         setParentPostData,
+        setSinglePostPage,
       }}
     >
       {children}

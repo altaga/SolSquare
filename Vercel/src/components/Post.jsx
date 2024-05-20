@@ -27,7 +27,7 @@ const Post = ({
   comment = false,
 }) => {
   const router = useRouter();
-  const { setParentPostData, parentId, setOpenPost} = useOwner();
+  const { setParentPostData, parentId, setOpenPost,setSinglePostPage} = useOwner();
   return (
     <div
       key={index}
@@ -218,6 +218,7 @@ const Post = ({
           <button
             onClick={() => {
               setOpenPost(true)
+              setSinglePostPage(true);
             }}
             className={orbitron.className + " buttonInteraction"}
           >

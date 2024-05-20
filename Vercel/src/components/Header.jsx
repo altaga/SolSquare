@@ -26,6 +26,7 @@ const Header = () => {
     openPost,
     handleClosePost,
     handleOpenPost,
+    setSinglePostPage,
   } = useOwner();
 
   if (!publicKey) {
@@ -154,6 +155,7 @@ const Header = () => {
                     onClick={() => {
                       setLoading(true);
                       addPost(message);
+                      setSinglePostPage(false);
                     }}
                     className={orbitron.className + " buttonInteraction"}
                   >
