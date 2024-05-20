@@ -83,12 +83,24 @@ export const OwnerProvider = ({ children }) => {
 
   const getPosts = useCallback(
     async (parentData) => {
-      const accounts = await connection.getProgramAccounts(programId, {
-        filters: [
-          {
-            dataSize: 397, // number of bytes
+      let filter = [
+        {
+          dataSize: 397, // number of bytes
+        },
+      ];
+
+      if (parentData) {
+        filter.push({
+          memcmp: {
+            offset: 32,
+            bytes: Buffer.from(parentData?.addressPDA, "base64").slice(0, 32),
           },
-        ],
+        });
+      }
+
+      console.log(filter);
+      const accounts = await connection.getProgramAccounts(programId, {
+        filters: filter,
       });
       let posts = accounts.map((post) => {
         return {
@@ -105,19 +117,10 @@ export const OwnerProvider = ({ children }) => {
         };
       });
 
-      // if (parentData) {
-      //   console.log(posts,parentData);
-      //   posts = posts.filter((post) => {
-      //     console.log(post.parentPost,Buffer.from(parentData?.addressPDA, "base64").slice(0, 32));
-      //     return (
-      //       post.parentPost ==  Buffer.from(parentData?.addressPDA, "base64").slice(0, 32)
-      //     );
-      //   });
+      if (!parentData) {
+        setParentPostData(null);
+      }
 
-      // } else {
-      //   setParentPostData(null);
-      // }
-      // console.log(posts);
       posts.sort((a, b) => b.balance - a.balance);
 
       setPosts(posts);
