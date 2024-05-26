@@ -1,6 +1,6 @@
 "use client";
 
-import { modalStyle } from "../../utils/utils";
+import { modalStyle } from "../../../utils/utils";
 
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
@@ -13,31 +13,36 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { serialize } from "borsh";
-import React, { useCallback, useState, useEffect, use } from "react";
+
+import React, { useCallback, useEffect, useState } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import Post from "../../components/Post";
-import { usePathname } from "next/navigation";
+import Post from "../../../components/Post";
+import { useParams, useLocation } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
-import { withdrawSchema } from "../../utils/schema";
+import { withdrawSchema } from "../../../utils/schema";
 
-import { useOwner } from "../../context/feedContext";
-import TransactionToast from "../../components/TransactionToast";
+import { useOwner } from "../../../context/feedContext";
+import TransactionToast from "../../../components/TransactionToast";
 
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
 export default function FeedHome() {
+  const parentId = useParams();
+
   const { publicKey, sendTransaction } = useWallet();
-  const pathname = usePathname();
 
   const {
     pubkey,
+
     users,
     getBalance,
     getPosts,
@@ -45,13 +50,26 @@ export default function FeedHome() {
     setLoading,
     loading,
     ownerToIndexMap,
-
-    setOwnerToIndexMap,
+    setParentPost,
+    parentPostData,
   } = useOwner();
   const { connection } = useConnection();
 
-  let [amount, setAmount] = useState("");
+  useEffect(() => {
+    if (parentId?.id) {
+      setParentPost(parentId.id);
+      getPosts(parentPostData);
+    } else {
+      return;
+    }
 
+    return () => {
+      setParentPost(null);
+    };
+  }, [parentId]);
+
+  const [amount, setAmount] = useState("");
+  // Modal Boost
   const [openBoost, setOpenBoost] = React.useState(false);
   const [selectedPost, setSelectedPost] = React.useState("");
   const handleOpenBoost = () => setOpenBoost(true);
@@ -140,33 +158,8 @@ export default function FeedHome() {
     [publicKey, connection, sendTransaction, getPosts, getBalance]
   );
 
-  useEffect(() => {
-    const sortedPostsforPFP = [...posts].sort(
-      (a, b) => a.timestamp - b.timestamp
-    );
-    const map = {};
-    let index = 1;
-    sortedPostsforPFP.forEach((post) => {
-      if (!map.hasOwnProperty(post.owner)) {
-        map[post.owner] = index++;
-      }
-    });
-
-    setOwnerToIndexMap(map);
-  }, [posts]);
-
-  useEffect(() => {
-    if (pubkey) {
-      getBalance();
-      getPosts();
-    }
-  }, [pathname]);
-
   return (
     <>
-      {
-        // Boost Modal
-      }
       <Modal
         open={openBoost}
         onClose={handleCloseBoost}
@@ -274,6 +267,23 @@ export default function FeedHome() {
       </Modal>
 
       <div className="scrollable-div">
+        {parentPostData && (
+          <>
+            <Post
+              post={parentPostData}
+              pubkey={pubkey}
+              ownerToIndexMap={ownerToIndexMap}
+              visiblePosts={visiblePosts}
+              toggleVisibility={toggleVisibility}
+              setSelectedPost={setSelectedPost}
+              handleOpenBoost={handleOpenBoost}
+              withdrawPost={withdrawPost}
+              users={users}
+              index={0}
+              comment={true}
+            />
+          </>
+        )}
         {pubkey &&
           posts.map((post, index) => {
             return (
@@ -287,7 +297,7 @@ export default function FeedHome() {
                 withdrawPost={withdrawPost}
                 users={users}
                 post={post}
-                index={index}
+                index={index + 1}
               />
             );
           })}
