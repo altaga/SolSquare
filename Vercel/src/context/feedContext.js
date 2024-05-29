@@ -15,6 +15,7 @@ import { deserialize, serialize } from "borsh";
 import TransactionToast from "../components/TransactionToast";
 import { predictRudeness } from "../actions/rudeness";
 import { useRouter } from "next/navigation";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 const getRudeness = async (text) => {
   try {
     const result = await predictRudeness(text);
@@ -26,6 +27,14 @@ const getRudeness = async (text) => {
 };
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
+
+
+const tokenAddress = new PublicKey(
+  process.env.NEXT_PUBLIC_TOKEN_ADDRESS
+);
+const tokenAddressAuthority = new PublicKey(
+  process.env.NEXT_PUBLIC_TOKEN_ADDRESS_AUTH
+);
 
 const OwnerContext = createContext();
 
@@ -116,11 +125,39 @@ export const OwnerProvider = ({ children }) => {
         };
       });
 
+      posts = await Promise.all(
+        posts.map(async (post) => {
+          const OWNER = new PublicKey(post.addressPDA);
+          const [address] = PublicKey.findProgramAddressSync(
+            [
+              OWNER.toBuffer(),
+              TOKEN_PROGRAM_ID.toBuffer(),
+              tokenAddress.toBuffer(),
+            ],
+            ASSOCIATED_TOKEN_PROGRAM_ID
+          );
+          let bonkBalance;
+          try {
+            bonkBalance = await connection.getTokenAccountBalance(address);
+            bonkBalance = bonkBalance.value.uiAmount;
+          } catch (e) {
+            bonkBalance = 0;
+          }
+          return {
+            ...post,
+            bonkBalance,
+            content: post.content.replaceAll("~", ""),
+            owner: new PublicKey(post.owner).toBase58(),
+          };
+        })
+      );
+      
+
       if (!parentData) {
         setParentPostData(null);
       }
 
-      posts.sort((a, b) => b.balance - a.balance);
+      posts.sort((a, b) => b.bonkBalance - a.bonkBalance);
 
       setPosts(posts);
     },

@@ -27,7 +27,8 @@ const Post = ({
   comment = false,
 }) => {
   const router = useRouter();
-  const { setParentPostData, parentId, setOpenPost,setSinglePostPage} = useOwner();
+  const { setParentPostData, parentId, setOpenPost, setSinglePostPage } =
+    useOwner();
   return (
     <div
       key={index}
@@ -88,11 +89,23 @@ const Post = ({
           <div style={{ color: "white", marginLeft: "1rem" }}>
             {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
           </div>
-          <div style={{ color: "white", marginLeft: "1rem" }}>
-            {`Boost : ${
-              Math.round((post.balance / LAMPORTS_PER_SOL - 0.002) * 1000) /
-              1000
-            } SOL`}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                color: "white",
+                marginRight: "0.5rem",
+                marginLeft: "3rem",
+              }}
+            >
+              {`Boost : ${Math.round(post.bonkBalance)} BONK`}
+            </div>
+            <Image src={"/bonk.webp"} alt="logo" width={30} height={30}></Image>
           </div>
         </div>
         {post.rudeness && !visiblePosts[post.addressPDA] ? (
@@ -217,7 +230,7 @@ const Post = ({
         {comment && (
           <button
             onClick={() => {
-              setOpenPost(true)
+              setOpenPost(true);
               setSinglePostPage(true);
             }}
             className={orbitron.className + " buttonInteraction"}
