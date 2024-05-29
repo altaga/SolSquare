@@ -31,7 +31,7 @@ const SortSideBar = () => {
 
   const sortByBalance = useCallback(async () => {
     let postsTemp = [...posts];
-    postsTemp.sort((a, b) => b.balance - a.balance);
+    postsTemp.sort((a, b) => b.bonkBalance - a.bonkBalance);
     setPosts(postsTemp);
   }, [setPosts, posts]);
 
