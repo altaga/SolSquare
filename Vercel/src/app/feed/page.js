@@ -27,12 +27,16 @@ import { withdrawSchema } from "../../utils/schema";
 
 import { useOwner } from "../../context/feedContext";
 import TransactionToast from "../../components/TransactionToast";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, createAssociatedTokenAccountInstruction, createTransferInstruction, getAccount } from "@solana/spl-token";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAccount,
+} from "@solana/spl-token";
 import { toast } from "react-toastify";
 
-const tokenAddress = new PublicKey(
-  process.env.NEXT_PUBLIC_TOKEN_ADDRESS
-);
+const tokenAddress = new PublicKey(process.env.NEXT_PUBLIC_TOKEN_ADDRESS);
 const tokenAddressAuthority = new PublicKey(
   process.env.NEXT_PUBLIC_TOKEN_ADDRESS_AUTH
 );
@@ -112,12 +116,7 @@ export default function FeedHome() {
       );
       let isTokenAccountAlreadyMade = false;
       try {
-        await getAccount(
-          connection,
-          addressTo,
-          "confirmed",
-          TOKEN_PROGRAM_ID
-        );
+        await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
         isTokenAccountAlreadyMade = true;
       } catch {
         // Nothing
@@ -223,7 +222,7 @@ export default function FeedHome() {
                 pubkey: TOKEN_PROGRAM_ID,
                 isSigner: false,
                 isWritable: false,
-              }
+              },
             ],
             data,
             programId,
@@ -381,6 +380,7 @@ export default function FeedHome() {
           posts.map((post, index) => {
             return (
               <Post
+                key={"post-" + index}
                 pubkey={pubkey}
                 ownerToIndexMap={ownerToIndexMap}
                 visiblePosts={visiblePosts}

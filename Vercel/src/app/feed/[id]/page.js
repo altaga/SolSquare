@@ -289,6 +289,7 @@ export default function FeedHome() {
           posts.map((post, index) => {
             return (
               <Post
+                key={"post-" + index}
                 pubkey={pubkey}
                 ownerToIndexMap={ownerToIndexMap}
                 visiblePosts={visiblePosts}
