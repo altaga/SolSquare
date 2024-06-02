@@ -115,6 +115,7 @@ export default function FeedHome() {
     selectedPost,
     getPosts,
     getBalance,
+    setLoading
   ]);
 
   const withdrawPost = useCallback(

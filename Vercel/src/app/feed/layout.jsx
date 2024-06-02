@@ -1,7 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-
-import React from "react";
 import UserProfile from "../../components/UserProfile";
 import SortSideBar from "../../components/SortSideBar";
 import {  useWallet } from "@solana/wallet-adapter-react";

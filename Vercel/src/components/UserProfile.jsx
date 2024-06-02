@@ -1,7 +1,6 @@
 "use client";
 import React, { Fragment, useCallback, useState } from "react";
 import Link from "next/link";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import Image from "next/image";
 import { findUser } from "../utils/utils";
 import { Orbitron } from "next/font/google";
