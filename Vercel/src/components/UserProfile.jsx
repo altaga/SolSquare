@@ -122,7 +122,6 @@ const UserProfile = () => {
     }
   }, [publicKey, connection, sendTransaction, username, getUsers]);
 
-
   return (
     <>
       <div
@@ -139,13 +138,15 @@ const UserProfile = () => {
           alignItems: "center",
         }}
       >
-        <Image
-          style={{ borderRadius: "50%", margin: "1rem" }}
-          src={`/pfp/${ownerToIndexMap[publicKey?.toBase58()]}.png`} // Use the mapped index for the pfp source
-          alt="logo"
-          width={150}
-          height={150}
-        />
+        {ownerToIndexMap[publicKey?.toBase58()] && (
+          <Image
+            style={{ borderRadius: "50%", margin: "1rem" }}
+            src={`/pfp/${ownerToIndexMap[publicKey?.toBase58()]}.png`} // Use the mapped index for the pfp source
+            alt="logo"
+            width={150}
+            height={150}
+          />
+        )}
         <div style={{ fontSize: "1.2rem", color: "white" }}>Logged in as:</div>
         <Link
           href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}

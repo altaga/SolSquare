@@ -71,13 +71,15 @@ const Post = ({
               textDecoration: "none",
             }}
           >
-            <Image
-              style={{ borderRadius: "50%", margin: "1rem" }}
-              src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
-              alt="logo"
-              width={50}
-              height={50}
-            />
+            {ownerToIndexMap[post.owner] && (
+              <Image
+                style={{ borderRadius: "50%", margin: "1rem" }}
+                src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
+                alt="logo"
+                width={50}
+                height={50}
+              />
+            )}
             <div style={{ color: "white", fontSize: "1.2rem" }}>
               {findUser(users, post.owner) === post.owner ? (
                 <>{post.owner}</>
