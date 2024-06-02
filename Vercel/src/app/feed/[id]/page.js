@@ -54,9 +54,13 @@ export default function FeedHome() {
     parentPostData,
   } = useOwner();
   const { connection } = useConnection();
-
+  console.log("ParentId", parentId);
   useEffect(() => {
+  
     if (parentId?.id) {
+      //set The parentPost Data
+console.log("fsdffffff",parentId.id);
+
       setParentPost(parentId.id);
       getPosts(parentPostData);
     } else {
