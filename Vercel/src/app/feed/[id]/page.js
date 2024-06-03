@@ -52,6 +52,7 @@ export default function FeedHome() {
     ownerToIndexMap,
     setParentPost,
     parentPostData,
+    getMainPDAInfo,
   } = useOwner();
   const { connection } = useConnection();
 
@@ -59,8 +60,9 @@ export default function FeedHome() {
     if (parentId?.id) {
       //set The parentPost Data
 
+      getMainPDAInfo(parentId.id);
       setParentPost(parentId.id);
-      getPosts(parentPostData);
+    
     } else {
       return;
     }

@@ -257,6 +257,29 @@ export const OwnerProvider = ({ children }) => {
     },
     [publicKey, connection, sendTransaction, getPosts, singlePostPage]
   );
+
+  const getMainPDAInfo = useCallback(
+    async (addressPDA) => {
+      const mainAccount = await connection.getAccountInfo(
+        new PublicKey(addressPDA)
+      );
+
+      let post = {
+        ...deserialize(postSchema, mainAccount.data),
+        addressPDA: new PublicKey(addressPDA),
+        balance: 0
+      };
+      post = {
+        ...post,
+        content: post.content.replaceAll("~", ""),
+        owner: new PublicKey(post.owner).toBase58(),
+      };
+      setParentPostData(post);
+      getPosts(post);
+    },
+    [connection]
+  );
+
   return (
     <OwnerContext.Provider
       value={{
@@ -289,6 +312,7 @@ export const OwnerProvider = ({ children }) => {
         parentPostData,
         setParentPostData,
         setSinglePostPage,
+        getMainPDAInfo
       }}
     >
       {children}

@@ -46,7 +46,6 @@ const Post = ({
             (post.rudeness && visiblePosts[post.addressPDA]) ||
             !post.rudeness
           ) {
-            setParentPostData(post);
             router.push(`/feed/${post.addressPDA}`);
           }
         }}
