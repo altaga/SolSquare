@@ -18,7 +18,7 @@ export default function Home() {
     }
   }, [publicKey]);
 
-console.log("Predicting rudeness")
+
   return (
     <div
       style={{
