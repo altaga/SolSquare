@@ -92,6 +92,7 @@ export const OwnerProvider = ({ children }) => {
 
   const getPosts = useCallback(
     async (parentData) => {
+  
       let filter = [
         {
           dataSize: 397, // number of bytes
@@ -267,7 +268,7 @@ export const OwnerProvider = ({ children }) => {
       let post = {
         ...deserialize(postSchema, mainAccount.data),
         addressPDA: new PublicKey(addressPDA),
-        balance: 0
+        balance: 0,
       };
       post = {
         ...post,
@@ -312,7 +313,7 @@ export const OwnerProvider = ({ children }) => {
         parentPostData,
         setParentPostData,
         setSinglePostPage,
-        getMainPDAInfo
+        getMainPDAInfo,
       }}
     >
       {children}

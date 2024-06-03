@@ -77,6 +77,7 @@ export default function FeedHome() {
     ownerToIndexMap,
 
     setOwnerToIndexMap,
+    setParentPostData,
   } = useOwner();
   const { connection } = useConnection();
 
@@ -259,6 +260,7 @@ export default function FeedHome() {
 
   useEffect(() => {
     if (pubkey) {
+      setParentPostData(null);
       getBalance();
       getPosts();
     }
