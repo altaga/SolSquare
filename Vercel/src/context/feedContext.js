@@ -15,7 +15,10 @@ import { deserialize, serialize } from "borsh";
 import TransactionToast from "../components/TransactionToast";
 import { predictRudeness } from "../actions/rudeness";
 import { useRouter } from "next/navigation";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 const getRudeness = async (text) => {
   try {
     const result = await predictRudeness(text);
@@ -28,10 +31,7 @@ const getRudeness = async (text) => {
 
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
-
-const tokenAddress = new PublicKey(
-  process.env.NEXT_PUBLIC_TOKEN_ADDRESS
-);
+const tokenAddress = new PublicKey(process.env.NEXT_PUBLIC_TOKEN_ADDRESS);
 const tokenAddressAuthority = new PublicKey(
   process.env.NEXT_PUBLIC_TOKEN_ADDRESS_AUTH
 );
@@ -92,6 +92,7 @@ export const OwnerProvider = ({ children }) => {
 
   const getPosts = useCallback(
     async (parentData) => {
+  
       let filter = [
         {
           dataSize: 397, // number of bytes
@@ -103,6 +104,13 @@ export const OwnerProvider = ({ children }) => {
           memcmp: {
             offset: 32,
             bytes: new PublicKey(parentData?.addressPDA).toString(),
+          },
+        });
+      } else {
+        filter.push({
+          memcmp: {
+            offset: 32,
+            bytes: new PublicKey(Buffer.alloc(32, 0)).toString(),
           },
         });
       }
@@ -151,7 +159,6 @@ export const OwnerProvider = ({ children }) => {
           };
         })
       );
-      
 
       if (!parentData) {
         setParentPostData(null);
@@ -251,6 +258,29 @@ export const OwnerProvider = ({ children }) => {
     },
     [publicKey, connection, sendTransaction, getPosts, singlePostPage]
   );
+
+  const getMainPDAInfo = useCallback(
+    async (addressPDA) => {
+      const mainAccount = await connection.getAccountInfo(
+        new PublicKey(addressPDA)
+      );
+
+      let post = {
+        ...deserialize(postSchema, mainAccount.data),
+        addressPDA: new PublicKey(addressPDA),
+        balance: 0,
+      };
+      post = {
+        ...post,
+        content: post.content.replaceAll("~", ""),
+        owner: new PublicKey(post.owner).toBase58(),
+      };
+      setParentPostData(post);
+      getPosts(post);
+    },
+    [connection]
+  );
+
   return (
     <OwnerContext.Provider
       value={{
@@ -283,6 +313,7 @@ export const OwnerProvider = ({ children }) => {
         parentPostData,
         setParentPostData,
         setSinglePostPage,
+        getMainPDAInfo,
       }}
     >
       {children}

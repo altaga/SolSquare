@@ -23,7 +23,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../../components/Post";
-import { useParams, useLocation } from "next/navigation";
+import { useParams, useLocation, useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
 
 import { withdrawSchema } from "../../../utils/schema";
@@ -37,7 +37,7 @@ const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
 
 export default function FeedHome() {
   const parentId = useParams();
-
+  const navigate = useRouter();
   const { publicKey, sendTransaction } = useWallet();
 
   const {
@@ -52,13 +52,17 @@ export default function FeedHome() {
     ownerToIndexMap,
     setParentPost,
     parentPostData,
+    getMainPDAInfo,
   } = useOwner();
   const { connection } = useConnection();
 
   useEffect(() => {
     if (parentId?.id) {
+      //set The parentPost Data
+
+      getMainPDAInfo(parentId.id);
       setParentPost(parentId.id);
-      getPosts(parentPostData);
+    
     } else {
       return;
     }
@@ -115,7 +119,7 @@ export default function FeedHome() {
     selectedPost,
     getPosts,
     getBalance,
-    setLoading
+    setLoading,
   ]);
 
   const withdrawPost = useCallback(
@@ -269,7 +273,19 @@ export default function FeedHome() {
 
       <div className="scrollable-div">
         {parentPostData && (
-          <>
+          <div>
+            <button
+              onClick={() => {
+                navigate.back();
+              }}
+              style={{
+                display: "flex flex-start",
+                alignItems: "center",
+                marginBottom: "10px",
+              }}
+            >
+              ← Back
+            </button>
             <Post
               post={parentPostData}
               pubkey={pubkey}
@@ -283,7 +299,7 @@ export default function FeedHome() {
               index={0}
               comment={true}
             />
-          </>
+          </div>
         )}
         {pubkey &&
           posts.map((post, index) => {
