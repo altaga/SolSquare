@@ -4,7 +4,10 @@
   body {
     height: 100vh;
     width: 100vw;
-    background-color: black;
+    background: hsla(0, 0%, 0%, 1);
+    background: linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
+    background: -moz-linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
+    background: -webkit-linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
   }
 }
 
@@ -15,7 +18,10 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    background-color: black;
+    background: hsla(0, 0%, 0%, 1);
+    background: linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
+    background: -moz-linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
+    background: -webkit-linear-gradient(315deg, hsla(0, 0%, 0%, 1) 28%, hsla(39, 41%, 7%, 1) 100%);
   }
 }
 
@@ -50,15 +56,14 @@
   align-items: center;
   flex-direction: row;
   display: flex;
-  background-color: black;
+  background-color: #353535;
   border-width: 0px;
-  padding: 5px;
-  border-radius: 10px;
+  border-radius: 7.5px;
 }
 
 .buttonInteraction:hover {
   cursor: pointer;
-  background: linear-gradient(270deg, rgba(255, 255, 255, 0.5) 0%, black 100%);
+  background: linear-gradient(135deg, rgba(231, 140, 25, 0.5) 10%, #353535 100%);
 }
 
 .buttonInteraction:disabled {
@@ -76,7 +81,7 @@
 }
 
 .scrollable-div {
-  background-color: black;
+  background-color: none;
   width: 60%;
   height: 100%;
   display: flex;
@@ -92,7 +97,6 @@
 }
 
 .scrollable-div-mobile {
-  background-color: black;
   width: 100%;
   height: 100%;
   display: flex;
@@ -100,4 +104,13 @@
   align-items: center;
   justify-content: flex-start;
   overflow: auto;
+}
+
+.post {
+  padding: 0.5rem;
+  width: calc(100% - 3rem);
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(128, 128, 128, 0.1);
+  border: none;
 }

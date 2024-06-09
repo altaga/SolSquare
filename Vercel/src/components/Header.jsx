@@ -81,15 +81,15 @@ const Header = () => {
             >
               <AddCircleIcon
                 style={{
-                  color: "#30ceb7",
-                  width: "2rem",
-                  height: "2rem",
+                  color: "#E78C19",
+                  width: "1.5rem",
+                  height: "1.5rem",
                 }}
               />
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "1.2rem",
+                  fontSize: "1rem",
                   color: "white",
                 }}
               >
@@ -172,15 +172,15 @@ const Header = () => {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -201,14 +201,14 @@ const Header = () => {
                     <CancelIcon
                       style={{
                         color: "red",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >

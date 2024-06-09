@@ -24,7 +24,6 @@ const Post = ({
   post,
   users,
   index,
-  comment = false,
 }) => {
   const router = useRouter();
   const { setParentPostData, parentId, setOpenPost, setSinglePostPage } =
@@ -32,13 +31,7 @@ const Post = ({
   return (
     <div
       key={index}
-      style={{
-        padding: "1rem",
-        width: "100%",
-        borderWidth: "0px 0px 1px 0px",
-        borderStyle: "solid",
-        borderColor: "rgba(255,255, 255, 0.5)",
-      }}
+      className="post"
     >
       <div
         onClick={() => {
@@ -72,7 +65,7 @@ const Post = ({
           >
             {ownerToIndexMap[post.owner] && (
               <Image
-                style={{ borderRadius: "50%", margin: "1rem" }}
+                style={{ borderRadius: "15%", margin: "1rem" }}
                 src={`/pfp/${ownerToIndexMap[post.owner]}.png`} // Use the mapped index for the pfp source
                 alt="logo"
                 width={50}
@@ -81,7 +74,7 @@ const Post = ({
             )}
             <div style={{ color: "white", fontSize: "1.2rem" }}>
               {findUser(users, post.owner) === post.owner ? (
-                <>{post.owner}</>
+                <>{post.owner.slice(0,5)+'...'+post.owner.slice(-5)  }</>
               ) : (
                 <>{findUser(users, post.owner)}</>
               )}
@@ -93,20 +86,20 @@ const Post = ({
           <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
               alignItems: "center",
+              marginLeft: "auto",
+              marginRight: "0.5rem"
             }}
           >
             <div
               style={{
                 color: "white",
-                marginRight: "0.5rem",
-                marginLeft: "3rem",
+                marginRight: "0.5rem"
               }}
             >
-              {`Boost : ${Math.round(post.bonkBalance)} BONK`}
+              {`⚡${Math.round(post.bonkBalance)} BONK`}
             </div>
-            <Image src={"/bonk.webp"} alt="logo" width={30} height={30}></Image>
+            <Image src={"/bonk.webp"} alt="logo" width={25} height={25}></Image>
           </div>
         </div>
         {post.rudeness && !visiblePosts[post.addressPDA] ? (
@@ -129,9 +122,9 @@ const Post = ({
           <div
             style={{
               color: "white",
-              marginRight: "50px",
-              marginLeft: "50px",
-              marginBottom: "50px",
+              marginRight: "3rem",
+              marginLeft: "3rem",
+              marginBottom: "1.5rem",
               fontSize: "1.3rem",
               textAlign: "justify",
             }}
@@ -143,9 +136,9 @@ const Post = ({
       <div
         style={{
           color: "white",
-          marginRight: "50px",
-          marginLeft: "50px",
-          marginBottom: "10px",
+          marginRight: "1rem",
+          marginLeft: "1rem",
+          marginBottom: "1rem",
           fontSize: "1.3rem",
           flexDirection: "row",
           display: "flex",
@@ -161,19 +154,19 @@ const Post = ({
         >
           <BoltIcon
             style={{
-              color: "#30ceb7",
-              width: "2rem",
-              height: "2rem",
+              color: "#E78C19",
+              width: "1.5rem",
+              height: "1.5rem",
             }}
           />
           <div
             style={{
               margin: "5px",
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               color: "white",
             }}
           >
-            Boost Post
+            Boost
           </div>
         </button>
         <button
@@ -187,19 +180,43 @@ const Post = ({
         >
           <ExploreIcon
             style={{
-              color: "#30ceb7",
-              width: "2rem",
-              height: "2rem",
+              color: "#E78C19",
+              width: "1.5rem",
+              height: "1.5rem",
             }}
           />
           <div
             style={{
               margin: "5px",
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               color: "white",
             }}
           >
             Explorer
+          </div>
+        </button>
+        <button
+          onClick={() => {
+            setOpenPost(true);
+            setSinglePostPage(true);
+          }}
+          className={orbitron.className + " buttonInteraction"}
+        >
+          <CommentIcon
+            style={{
+              color: "#E78C19",
+              width: "1.5rem",
+              height: "1.5rem",
+            }}
+          />
+          <div
+            style={{
+              margin: "5px",
+              fontSize: "1rem",
+              color: "white",
+            }}
+          >
+            {`Reply (${0})`}
           </div>
         </button>
         {post.owner === pubkey?.toBase58() && (
@@ -212,45 +229,19 @@ const Post = ({
           >
             <AccountBalanceWalletIcon
               style={{
-                color: "#30ceb7",
-                width: "2rem",
-                height: "2rem",
+                color: "#E78C19",
+                width: "1.5rem",
+                height: "1.5rem",
               }}
             />
             <div
               style={{
                 margin: "5px",
-                fontSize: "1.2rem",
+                fontSize: "1rem",
                 color: "white",
               }}
             >
               Withdraw
-            </div>
-          </button>
-        )}
-        {comment && (
-          <button
-            onClick={() => {
-              setOpenPost(true);
-              setSinglePostPage(true);
-            }}
-            className={orbitron.className + " buttonInteraction"}
-          >
-            <CommentIcon
-              style={{
-                color: "#30ceb7",
-                width: "2rem",
-                height: "2rem",
-              }}
-            />
-            <div
-              style={{
-                margin: "5px",
-                fontSize: "1.2rem",
-                color: "white",
-              }}
-            >
-              Add Comment
             </div>
           </button>
         )}

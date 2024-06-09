@@ -18,7 +18,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Box, Fade, Typography } from "@mui/material";
 import Modal from "@mui/material/Modal";
@@ -221,18 +221,18 @@ export default function FeedHome() {
                     <BoltIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -250,14 +250,14 @@ export default function FeedHome() {
                     <CancelIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -273,18 +273,38 @@ export default function FeedHome() {
 
       <div className="scrollable-div">
         {parentPostData && (
-          <div>
+            <div
+              style={{
+                width: "100%",
+                marginLeft: "2rem",
+              }}>
             <button
+              className={orbitron.className + " buttonInteraction"}
               onClick={() => {
                 navigate.back();
               }}
               style={{
                 display: "flex flex-start",
                 alignItems: "center",
-                marginBottom: "10px",
+                marginTop: "1rem",
               }}
             >
-              ← Back
+            <ArrowBackIcon
+              style={{
+                color: "#E78C19",
+                width: "1.5rem",
+                height: "1.5rem",
+              }}
+            />
+            <div
+              style={{
+                margin: "5px",
+                fontSize: "1rem",
+                color: "white",
+              }}
+            >
+              Back
+            </div>
             </button>
             <Post
               post={parentPostData}
@@ -297,12 +317,15 @@ export default function FeedHome() {
               withdrawPost={withdrawPost}
               users={users}
               index={0}
-              comment={true}
             />
-          </div>
+            </div>
         )}
         {pubkey &&
           posts.map((post, index) => {
+            console.log(post);
+            console.log(index);
+            console.log(ownerToIndexMap);
+            console.log(visiblePosts);
             return (
               <Post
                 key={"post-" + index}

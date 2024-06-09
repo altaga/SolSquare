@@ -602,7 +602,7 @@ export default function FeedHome() {
                   >
                     <BoltIcon
                       style={{
-                        color: "#30ceb7",
+                        color: "#E78C19",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -614,7 +614,7 @@ export default function FeedHome() {
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -724,7 +724,7 @@ export default function FeedHome() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
+                        color: "#E78C19",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -845,7 +845,7 @@ export default function FeedHome() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
+                        color: "#E78C19",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -1034,7 +1034,7 @@ export default function FeedHome() {
                     {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
                   </div>
                   <div style={{ color: "white", margin: "10px" }}>
-                    {`Boost : ${
+                    {`⚡${
                       Math.round(
                         (post.balance / LAMPORTS_PER_SOL - 0.002) * 1000
                       ) / 1000
@@ -1070,7 +1070,7 @@ export default function FeedHome() {
                   >
                     <BoltIcon
                       style={{
-                        color: "#30ceb7",
+                        color: "#E78C19",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -1082,7 +1082,7 @@ export default function FeedHome() {
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -1096,7 +1096,7 @@ export default function FeedHome() {
                   >
                     <ExploreIcon
                       style={{
-                        color: "#30ceb7",
+                        color: "#E78C19",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -1121,7 +1121,7 @@ export default function FeedHome() {
                     >
                       <AccountBalanceWalletIcon
                         style={{
-                          color: "#30ceb7",
+                          color: "#E78C19",
                           width: "1.5rem",
                           height: "1.5rem",
                         }}
@@ -1165,7 +1165,7 @@ export default function FeedHome() {
           >
             <AddCircleIcon
               style={{
-                color: "#30ceb7",
+                color: "#E78C19",
                 width: "1.5rem",
                 height: "1.5rem",
               }}
@@ -1202,7 +1202,7 @@ export default function FeedHome() {
           >
             <AddCircleIcon
               style={{
-                color: "#30ceb7",
+                color: "#E78C19",
                 width: "1.5rem",
                 height: "1.5rem",
               }}
@@ -1281,18 +1281,18 @@ export default function FeedHome() {
                     <BoltIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -1310,14 +1310,14 @@ export default function FeedHome() {
                     <CancelIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1402,15 +1402,15 @@ export default function FeedHome() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1431,14 +1431,14 @@ export default function FeedHome() {
                     <CancelIcon
                       style={{
                         color: "red",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1523,15 +1523,15 @@ export default function FeedHome() {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1552,14 +1552,14 @@ export default function FeedHome() {
                     <CancelIcon
                       style={{
                         color: "red",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1610,15 +1610,15 @@ export default function FeedHome() {
           >
             <AddCircleIcon
               style={{
-                color: "#30ceb7",
-                width: "2rem",
-                height: "2rem",
+                color: "#E78C19",
+                width: "1.5rem",
+                height: "1.5rem",
               }}
             />
             <div
               style={{
-                margin: "5px",
-                fontSize: "1.2rem",
+                margin: "0px 5px",
+                fontSize: "1rem",
                 color: "white",
               }}
             >
@@ -1645,7 +1645,7 @@ export default function FeedHome() {
       >
         <div
           style={{
-            backgroundColor: "black",
+            backgroundColor: "none",
             width: "20%",
             height: "100%",
             display: "flex",
@@ -1716,15 +1716,15 @@ export default function FeedHome() {
               >
                 <AddCircleIcon
                   style={{
-                    color: "#30ceb7",
-                    width: "2rem",
-                    height: "2rem",
+                    color: "#E78C19",
+                    width: "1.5rem",
+                    height: "1.5rem",
                   }}
                 />
                 <div
                   style={{
                     margin: "5px",
-                    fontSize: "1.2rem",
+                    fontSize: "1rem",
                     color: "white",
                   }}
                 >
@@ -1747,13 +1747,7 @@ export default function FeedHome() {
             return (
               <div
                 key={index}
-                style={{
-                  padding: "1rem",
-                  width: "100%",
-                  borderWidth: "0px 0px 1px 0px",
-                  borderStyle: "solid",
-                  borderColor: "rgba(255,255, 255, 0.5)",
-                }}
+                className="post"
               >
                 <div
                   style={{
@@ -1793,7 +1787,7 @@ export default function FeedHome() {
                     {` ${getTimeDifference(post.timestamp * 1000, Date.now())}`}
                   </div>
                   <div style={{ color: "white", marginLeft: "1rem" }}>
-                    {`Boost : ${
+                    {`⚡${
                       Math.round(
                         (post.balance / LAMPORTS_PER_SOL - 0.002) * 1000
                       ) / 1000
@@ -1833,19 +1827,19 @@ export default function FeedHome() {
                   >
                     <BoltIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -1859,15 +1853,15 @@ export default function FeedHome() {
                   >
                     <ExploreIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -1884,15 +1878,15 @@ export default function FeedHome() {
                     >
                       <AccountBalanceWalletIcon
                         style={{
-                          color: "#30ceb7",
-                          width: "2rem",
-                          height: "2rem",
+                          color: "#E78C19",
+                          width: "1.5rem",
+                          height: "1.5rem",
                         }}
                       />
                       <div
                         style={{
                           margin: "5px",
-                          fontSize: "1.2rem",
+                          fontSize: "1rem",
                           color: "white",
                         }}
                       >
@@ -1907,7 +1901,7 @@ export default function FeedHome() {
         </div>
         <div
           style={{
-            backgroundColor: "black",
+            backgroundColor: "none",
             width: "20%",
             height: "100%",
             display: "flex",
@@ -1921,7 +1915,7 @@ export default function FeedHome() {
           <div>
             <ListItemButton onClick={sortHandle}>
               <ListItemIcon>
-                <SortIcon htmlColor="#30ceb7" />
+                <SortIcon htmlColor="#E78C19" />
               </ListItemIcon>
               <ListItemText primary="Sort By" />
               {!openSort ? <ExpandLess /> : <ExpandMore />}
@@ -1930,13 +1924,13 @@ export default function FeedHome() {
               <List component="div" disablePadding>
                 <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <DateRangeIcon htmlColor="#30ceb7" />
+                    <DateRangeIcon htmlColor="#E78C19" />
                   </ListItemIcon>
                   <ListItemText primary="By Date" />
                 </ListItemButton>
                 <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
                   <ListItemIcon>
-                    <AccountBalanceWalletIcon htmlColor="#30ceb7" />
+                    <AccountBalanceWalletIcon htmlColor="#E78C19" />
                   </ListItemIcon>
                   <ListItemText primary="By Boost" />
                 </ListItemButton>
