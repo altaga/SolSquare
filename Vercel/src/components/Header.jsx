@@ -48,7 +48,7 @@ const Header = () => {
       >
         <div style={{ margin: "1rem" }}>
           <Link href={publicKey ? "/feed" : "/"}>
-            <Image src="/logoW.png" alt="logo" width={70} height={70} />
+            <Image src="/logoO.png" alt="logo" width={70} height={70} />
           </Link>
         </div>
         <div className="searchBar">

@@ -170,6 +170,30 @@ const Post = ({
           </div>
         </button>
         <button
+          onClick={() => {
+            setOpenPost(true);
+            setSinglePostPage(true);
+          }}
+          className={orbitron.className + " buttonInteraction"}
+        >
+          <CommentIcon
+            style={{
+              color: "#E78C19",
+              width: "1.5rem",
+              height: "1.5rem",
+            }}
+          />
+          <div
+            style={{
+              margin: "5px",
+              fontSize: "1rem",
+              color: "white",
+            }}
+          >
+            {`Reply (${0})`}
+          </div>
+        </button>
+        <button
           onClick={() =>
             window.open(
               `https://explorer.solana.com/address/${post.addressPDA}?cluster=devnet`,
@@ -193,30 +217,6 @@ const Post = ({
             }}
           >
             Explorer
-          </div>
-        </button>
-        <button
-          onClick={() => {
-            setOpenPost(true);
-            setSinglePostPage(true);
-          }}
-          className={orbitron.className + " buttonInteraction"}
-        >
-          <CommentIcon
-            style={{
-              color: "#E78C19",
-              width: "1.5rem",
-              height: "1.5rem",
-            }}
-          />
-          <div
-            style={{
-              margin: "5px",
-              fontSize: "1rem",
-              color: "white",
-            }}
-          >
-            {`Reply (${0})`}
           </div>
         </button>
         {post.owner === pubkey?.toBase58() && (
