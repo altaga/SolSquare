@@ -38,7 +38,7 @@ const SortSideBar = () => {
   return (
     <div
       style={{
-        backgroundColor: "black",
+        backgroundColor: "none",
         width: "20%",
         height: "100%",
         display: "flex",
@@ -52,7 +52,7 @@ const SortSideBar = () => {
       <div>
         <ListItemButton onClick={sortHandle}>
           <ListItemIcon>
-            <SortIcon htmlColor="#30ceb7" />
+            <SortIcon htmlColor="#E78C19" />
           </ListItemIcon>
           <ListItemText primary="Sort By" />
           {!openSort ? <ExpandLess /> : <ExpandMore />}
@@ -61,13 +61,13 @@ const SortSideBar = () => {
           <List component="div" disablePadding>
             <ListItemButton onClick={() => sortByDate()} sx={{ pl: 4 }}>
               <ListItemIcon>
-                <DateRangeIcon htmlColor="#30ceb7" />
+                <DateRangeIcon htmlColor="#E78C19" />
               </ListItemIcon>
               <ListItemText primary="By Date" />
             </ListItemButton>
             <ListItemButton onClick={() => sortByBalance()} sx={{ pl: 4 }}>
               <ListItemIcon>
-                <AccountBalanceWalletIcon htmlColor="#30ceb7" />
+                <AccountBalanceWalletIcon htmlColor="#E78C19" />
               </ListItemIcon>
               <ListItemText primary="By Boost" />
             </ListItemButton>

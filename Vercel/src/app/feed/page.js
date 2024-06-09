@@ -33,6 +33,8 @@ import {
   createAssociatedTokenAccountInstruction,
   createTransferInstruction,
   getAccount,
+  getAssociatedTokenAddressSync,
+  getOrCreateAssociatedTokenAccount
 } from "@solana/spl-token";
 import { toast } from "react-toastify";
 
@@ -103,7 +105,7 @@ export default function FeedHome() {
         [
           publicKey.toBuffer(),
           TOKEN_PROGRAM_ID.toBuffer(),
-          tokenAddress.toBuffer(),
+          tokenAddress.toBuffer()
         ],
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
@@ -111,7 +113,7 @@ export default function FeedHome() {
         [
           new PublicKey(selectedPost).toBuffer(),
           TOKEN_PROGRAM_ID.toBuffer(),
-          tokenAddress.toBuffer(),
+          tokenAddress.toBuffer()
         ],
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
@@ -327,18 +329,18 @@ export default function FeedHome() {
                     <BoltIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
-                      Boost Post
+                      Boost
                     </div>
                   </button>
                   <button
@@ -356,14 +358,14 @@ export default function FeedHome() {
                     <CancelIcon
                       style={{
                         color: "white",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >

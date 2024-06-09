@@ -126,7 +126,7 @@ const UserProfile = () => {
     <>
       <div
         style={{
-          backgroundColor: "black",
+          backgroundColor: "none",
           width: "20%",
           height: "100%",
           display: "flex",
@@ -140,7 +140,7 @@ const UserProfile = () => {
       >
         {ownerToIndexMap[publicKey?.toBase58()] && (
           <Image
-            style={{ borderRadius: "50%", margin: "1rem" }}
+            style={{ borderRadius: "15px", margin: "1rem" }}
             src={`/pfp/${ownerToIndexMap[publicKey?.toBase58()]}.png`} // Use the mapped index for the pfp source
             alt="logo"
             width={150}
@@ -194,15 +194,15 @@ const UserProfile = () => {
             >
               <AddCircleIcon
                 style={{
-                  color: "#30ceb7",
-                  width: "2rem",
-                  height: "2rem",
+                  color: "#E78C19",
+                  width: "1.5rem",
+                  height: "1.5rem",
                 }}
               />
               <div
                 style={{
                   margin: "5px",
-                  fontSize: "1.2rem",
+                  fontSize: "1rem",
                   color: "white",
                 }}
               >
@@ -214,7 +214,7 @@ const UserProfile = () => {
           <div
             style={{
               marginTop: "2rem",
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               color: "white",
             }}
           ></div> //{`Followers : ${findFollowers(users, publicKey?.toBase58())}`}
@@ -289,15 +289,15 @@ const UserProfile = () => {
                   >
                     <AddCircleIcon
                       style={{
-                        color: "#30ceb7",
-                        width: "2rem",
-                        height: "2rem",
+                        color: "#E78C19",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
@@ -318,14 +318,14 @@ const UserProfile = () => {
                     <CancelIcon
                       style={{
                         color: "red",
-                        width: "2rem",
-                        height: "2rem",
+                        width: "1.5rem",
+                        height: "1.5rem",
                       }}
                     />
                     <div
                       style={{
                         margin: "5px",
-                        fontSize: "1.2rem",
+                        fontSize: "1rem",
                         color: "white",
                       }}
                     >
