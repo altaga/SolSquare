@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { userSchema, postSchema, addPostSchema } from "../utils/schema";
 import {
@@ -19,6 +25,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+
 const getRudeness = async (text) => {
   try {
     const result = await predictRudeness(text);
@@ -42,6 +49,8 @@ export const OwnerProvider = ({ children }) => {
   const router = useRouter();
   const [ownerToIndexMap, setOwnerToIndexMap] = useState({});
   const [loading, setLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
   const [users, setUsers] = useState([]);
   const [openPost, setOpenPost] = useState(false);
 
@@ -50,7 +59,9 @@ export const OwnerProvider = ({ children }) => {
   const [balance, setBalance] = useState(0);
   const [pubkey, setPubkey] = useState(null);
   const [rendered, setRendered] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setFilteredPosts] = useState([]);
+  const [allPosts, setPosts] = useState([]);
+  const [backupPosts, setBackupPosts] = useState([]);
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
   const [parentPostData, setParentPostData] = useState(null);
@@ -64,6 +75,31 @@ export const OwnerProvider = ({ children }) => {
     const balance = await connection.getBalance(publicKey);
     setBalance(balance);
   }, [publicKey, connection]);
+
+  useEffect(() => {
+    setFilteredPosts([]);
+    if (searchValue) {
+      console.log("all data ", backupPosts);
+      const tempData = backupPosts.filter(
+        (post) =>
+          post.content.toLowerCase().indexOf(searchValue.toLowerCase()) != -1 ||
+          post.owner.toLowerCase().indexOf(searchValue.toLowerCase()) != -1
+        // ||
+        //   post.addressPDA.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      console.log("tempData data ", tempData);
+      setFilteredPosts(tempData);
+
+    } else {
+      console.log("all data1 ", allPosts);
+      console.log("all data1323 ", backupPosts);
+      setFilteredPosts(backupPosts);
+      
+    }
+
+    console.log("backupPosts ", backupPosts);
+
+    }, [backupPosts, searchValue]);
 
   const getUsers = useCallback(async () => {
     const accounts = await connection.getProgramAccounts(programId, {
@@ -92,7 +128,6 @@ export const OwnerProvider = ({ children }) => {
 
   const getPosts = useCallback(
     async (parentData) => {
-  
       let filter = [
         {
           dataSize: 397, // number of bytes
@@ -104,13 +139,6 @@ export const OwnerProvider = ({ children }) => {
           memcmp: {
             offset: 32,
             bytes: new PublicKey(parentData?.addressPDA).toString(),
-          },
-        });
-      } else {
-        filter.push({
-          memcmp: {
-            offset: 32,
-            bytes: new PublicKey(Buffer.alloc(32, 0)).toString(),
           },
         });
       }
@@ -167,6 +195,7 @@ export const OwnerProvider = ({ children }) => {
       posts.sort((a, b) => b.bonkBalance - a.bonkBalance);
 
       setPosts(posts);
+      setBackupPosts(posts);
     },
     [connection]
   );
@@ -185,6 +214,7 @@ export const OwnerProvider = ({ children }) => {
 
         const rudenessResult = await getRudeness(text);
 
+       
         let parentPostPDA = new Uint8Array(32).fill(0);
         if (singlePostPage && parentPost) {
           parentPostPDA = new PublicKey(parentPost).toBytes();
@@ -258,29 +288,6 @@ export const OwnerProvider = ({ children }) => {
     },
     [publicKey, connection, sendTransaction, getPosts, singlePostPage]
   );
-
-  const getMainPDAInfo = useCallback(
-    async (addressPDA) => {
-      const mainAccount = await connection.getAccountInfo(
-        new PublicKey(addressPDA)
-      );
-
-      let post = {
-        ...deserialize(postSchema, mainAccount.data),
-        addressPDA: new PublicKey(addressPDA),
-        balance: 0,
-      };
-      post = {
-        ...post,
-        content: post.content.replaceAll("~", ""),
-        owner: new PublicKey(post.owner).toBase58(),
-      };
-      setParentPostData(post);
-      getPosts(post);
-    },
-    [connection]
-  );
-
   return (
     <OwnerContext.Provider
       value={{
@@ -313,7 +320,8 @@ export const OwnerProvider = ({ children }) => {
         parentPostData,
         setParentPostData,
         setSinglePostPage,
-        getMainPDAInfo,
+        setSearchValue,
+        searchValue,
       }}
     >
       {children}

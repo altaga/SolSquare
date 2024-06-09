@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search } from "@mui/icons-material";
@@ -14,6 +14,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 import { Box, Fade, Typography } from "@mui/material";
 import { useOwner } from "../context/feedContext";
+
 const Header = () => {
   const { publicKey } = useWallet();
 
@@ -21,16 +22,26 @@ const Header = () => {
     addPost,
     setMessage,
     message,
-    loading,
     setLoading,
+    loading,
     openPost,
     handleClosePost,
     handleOpenPost,
     setSinglePostPage,
+    setSearchValue,
+    searchValue,
   } = useOwner();
-
+  console.log(searchValue);
+  // if (!publicKey) {
+  //   return;
+  // }
+  // const [searchValue, setSearchValue] = useState("");
   if (!publicKey) {
+    // Handle search input change
     return;
+    const handleSearchInputChange = (e) => {
+      setSearchValue(e.target.value);
+    };
   }
   return (
     <>
@@ -56,9 +67,9 @@ const Header = () => {
           <input
             placeholder="Search for posts"
             className="searchInput"
-            // value={searchValue}
+            value={searchValue}
             onChange={(e) => {
-              //   setSearchValue(e.target.value);
+              setSearchValue(e.target.value);
             }}
           />
         </div>
