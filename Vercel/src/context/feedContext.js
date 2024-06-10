@@ -284,6 +284,7 @@ export const OwnerProvider = ({ children }) => {
 
         
       //Add BONK Payment for any new post
+      if(selectedPost){
       const [addressFrom] = PublicKey.findProgramAddressSync(
         [
           publicKey.toBuffer(),
@@ -326,7 +327,7 @@ export const OwnerProvider = ({ children }) => {
           parseFloat(1000) * Math.pow(10, 5) // 5 decimals for Bonk
         )
       );
-
+    }
 
         const signature = await sendTransaction(transaction, connection);
         TransactionToast(signature, "Post added");
