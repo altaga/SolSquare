@@ -3,7 +3,7 @@
 ### You own what you create.
 ![image](./Assets/logoB.png)
 
-SolSquare is a decentralized censorship-free tweet platform that promotes economic incentives for good behavior.
+SolSquare is a decentralized censorship-free post/tweet platform that promotes economic incentives for good behavior powered by Bonk Token and AI Rudeness Detection.
 
 # Fast Links:
 
@@ -11,8 +11,7 @@ SolSquare is a decentralized censorship-free tweet platform that promotes econom
 - BackEnd Code: [Code](./Backend/)
 - FrontEnd Code: [Code](./Frontend%20-%20NextJS/)
 - Pitch Deck: [Deck](./Presentation/)
-- User Guide: [User-Guide](./User%20Guide/)
-- Video Demo: [Video](https://www.youtube.com/watch?v=ngT85GfFafg)
+- Video Demo: [Video](pending...)
 
 # Inspiration
 
@@ -34,7 +33,7 @@ SolSquare was conceptualized to promote cost-effective censorship-free expressio
 
 # Solution:
 
-SolSquare is like a digital decentralized space for open expression without anyone controlling what's said. It encourages good behavior by rewarding positive contributions by boosts. Built on Solana, it's fast and secure, ensuring everyone can freely express themselves.
+SolSquare is like a digital decentralized space for open expression without anyone controlling what's said. It encourages good behavior by rewarding positive contributions by boosts, all the boost and rewards are based on Bonk Token. Fully built on Solana, it's fast and secure, ensuring everyone can freely express themselves.
 
 <img src="./Assets/solanaIcon.jpg" >
 
@@ -67,15 +66,18 @@ SolSquare is a project designed with several key features in mind. Solana and Ru
 The initial step is to configure the [Schemas](./Backend/Backend%20Solsquare%20(Cargo%20Project)/src/state.rs), as they facilitate the serialization and deserialization of all incoming data for the program.
 
 - Tweet (Post) Schema:
-  - Content: String
-  - Owner: [u8; 32]
-  - Timestamp: u32
+  - Owner: [u8; 32] // Owner of the post
+  - parentPost: [u8; 32] // if the post is a reply
+  - rudeness: bool // if the AI detect rudeness behavior 
+  - cid: String // IPFS link to multimedia
+  - content:String // Content of the tweet, limited to 256 characters
+  - timestamp:u32 // Creation or last modification.
 
 - User Schema:
-  - Owner: [u8; 32]
-  - Username: String
-  - Timestamp: u32
-  - Followers: u32
+  - Owner: [u8; 32] // Owner of the user
+  - Username: String // Username name
+  - Timestamp: u32 // Creation time
+  - Followers: u32 // Number of followers
 
 The second most crucial aspect of the program involves the instructions, which should be pass this as the first 8 bytes of the transaction as u8. While this is just one method, its implementation may vary among programmers.
 
@@ -85,6 +87,7 @@ The second most crucial aspect of the program involves the instructions, which s
         TransferFunds(),
         AddUser(UserData),
         ModifyUser(UserDataMod),
+        TransferTokens(),
     }
 
     impl ProgramInstruction {
@@ -92,21 +95,24 @@ The second most crucial aspect of the program involves the instructions, which s
             let selector = input[0];
             Ok(match selector {
                 0 => {
-                    // Code
+                    ...Code
                 },
                 1 => {
-                    // Code
+                    ...Code
                 },
                 2 => {
-                    // Code
+                    ...Code
                 },
                 3 => {
-                    // Code
+                    ...Code
                 },
                 4 => {
-                    // Code
+                    ...Code
                 },
-                _ => return Err(...)
+                5 => {
+                    ...Code
+                },
+                _ => return Err(ProgramError::InvalidInstructionData)
             })
         }
     }
@@ -117,9 +123,9 @@ Lastly, the program's basic functions, which currently total five, are as follow
 
 - Modify Tweet: This function modifies a PDA account, making only the desired changes.
 
-- Transfer Funds: This function transfers all funds from a tweet to the account owner.
+- Transfer Funds: This function transfers all funds, bonk tokens, from a tweet to the account owner.
 
-- Add User: This function creates a PDA account of exactly 76 bytes and adds the information from the aforementioned schema.
+- Add User: This function creates a PDA account and adds the information from the aforementioned schema.
 
 - Modify User: This function modifies a PDA account, making only the desired changes.
 
@@ -147,17 +153,49 @@ With just one click, users can boost a post, add a new post, or create a new use
 
 <img src="./Assets/4-post.png">
 
-### Mobile version:
+### AI Rudeness:
 
-Lastly, it's important to note that in recent years, the majority of users have transitioned to predominantly using mobile phones. Therefore, our app is a progressive web decentralized application (pwd), ensuring full compatibility on mobile devices.
+Because we want the platform to be safe and encourage good behavior from our users, our AI is able to detect aggressive and problematic behavior on the platform.
 
-<img src="./Assets/5-screen.png" >
+[CODE](./Frontend%20-%20NextJS/src/actions/rudeness.js)
+
+The rude content detection labels are as follows.
+
+    const labelsToInclude = [
+        "toxicity",
+        "severe_toxicity",
+        "identity_attack",
+        "insult",
+        "threat",
+        "sexual_explicit",
+        "obscene",
+    ];
+    ...
+    myModel
+        .classify(text)
+        .then((predictions) => {
+            const result = predictions.map((item) => {
+            return {
+                value: item.results[0].match ?? true, // if undefined, return true, because undefined is falsy in JS
+                label: item.label,
+            };
+            })
+            resolve(result);
+        })
+        .catch((error) => {
+            reject(error);
+        });
+    ...
+
+Our AI is very strict with aggressive behaviors, we have exhaustively tested this type of behavior, so you should not try to imitate them on the platform as they will be put in "spoilers", being a censorship-free platform we allow the publication of this material but it will not be rewarded.
+
+<img src="./Assets/serious.png" width="100%">
 
 ## What next ?
 
 Release to beta test. Please provide your valuable feedback. 
 
-Happy Tweeting !
+Happy Bonkeeng!
 
 # References:
 

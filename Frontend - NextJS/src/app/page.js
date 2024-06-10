@@ -1,9 +1,11 @@
-"use client";
+"use client"; 
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Image from "next/image";
 import { useEffect } from "react";
+import { getFilesServer } from "../actions/ipfs";
+import { predictRudeness } from "../actions/rudeness";
 
 export default function Home() {
   // Detect if wallet is connected
@@ -15,6 +17,7 @@ export default function Home() {
       window.location.href = `/feed`;
     }
   }, [publicKey]);
+
 
   return (
     <div
