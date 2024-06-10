@@ -43,9 +43,6 @@ const SortSideBar = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        borderLeftWidth: "1px",
-        borderLeftStyle: "solid",
-        borderLeftColor: "rgba(255,255, 255, 0.5)",
         color: "white",
       }}
     >

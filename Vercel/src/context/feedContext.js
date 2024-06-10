@@ -80,6 +80,13 @@ export const OwnerProvider = ({ children }) => {
     setBalance(balance);
   }, [publicKey, connection]);
 
+  const countReplies = (postId) => {
+    return backupPosts.filter(post => {
+      const parentPostString = new PublicKey(post.parentPost).toBase58();
+      return parentPostString === postId;
+    }).length;
+  };
+  
   useEffect(() => {
     setFilteredPosts([]);
     if (searchValue) {
@@ -417,7 +424,8 @@ export const OwnerProvider = ({ children }) => {
         searchValue,
         getMainPDAInfo,
         selectedPost,
-        setSelectedPost
+        setSelectedPost,
+        countReplies
       }}
     >
       {children}

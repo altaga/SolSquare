@@ -78,7 +78,8 @@ export default function FeedHome() {
     setOwnerToIndexMap,
     setParentPostData,
     selectedPost,
-    setSelectedPost
+    setSelectedPost,
+    countReplies
   } = useOwner();
   const { connection } = useConnection();
 
@@ -393,6 +394,7 @@ export default function FeedHome() {
                 users={users}
                 post={post}
                 index={index}
+                countReplies={countReplies}
               />
             );
           })}

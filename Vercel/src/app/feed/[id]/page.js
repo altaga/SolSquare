@@ -53,6 +53,7 @@ export default function FeedHome() {
     setParentPost,
     parentPostData,
     getMainPDAInfo,
+    countReplies
   } = useOwner();
   const { connection } = useConnection();
 
@@ -317,6 +318,7 @@ export default function FeedHome() {
               withdrawPost={withdrawPost}
               users={users}
               index={0}
+              countReplies={countReplies}
             />
             </div>
         )}
@@ -335,6 +337,7 @@ export default function FeedHome() {
                 users={users}
                 post={post}
                 index={index + 1}
+                countReplies={countReplies}
               />
             );
           })}

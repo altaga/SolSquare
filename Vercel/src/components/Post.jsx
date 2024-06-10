@@ -25,6 +25,7 @@ const Post = ({
   post,
   users,
   index,
+  countReplies
 }) => {
   const router = useRouter();
   const { setParentPostData, parentId, setOpenPost, setSinglePostPage } =
@@ -193,7 +194,7 @@ const Post = ({
             }}
           >
             
-            {`Reply (${0})`}
+            {`Reply (${countReplies(post.addressPDA)})`}
           </div>
         </button>
         <button

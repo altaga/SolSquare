@@ -54,7 +54,7 @@ const Header = () => {
           alignItems: "center",
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
-          borderBottomColor: "rgba(255,255, 255, 0.5)",
+          borderBottomColor: "rgb(231, 140, 25)",
         }}
       >
         <div style={{ margin: "1rem" }}>

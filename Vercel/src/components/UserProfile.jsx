@@ -131,9 +131,6 @@ const UserProfile = () => {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          borderRightWidth: "1px",
-          borderRightStyle: "solid",
-          borderRightColor: "rgba(255,255, 255, 0.5)",
           justifyContent: "center",
           alignItems: "center",
         }}
