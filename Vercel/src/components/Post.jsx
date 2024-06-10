@@ -115,6 +115,8 @@ const Post = ({
                 cursor: "pointer",
                 fontSize: "1.3rem",
                 textDecoration: "underline",
+                marginLeft: "3rem",
+                marginBottom: "1.5rem",
               }}
             >
               Show Post

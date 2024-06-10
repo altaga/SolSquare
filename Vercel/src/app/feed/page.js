@@ -14,6 +14,7 @@ import { serialize } from "borsh";
 import React, { useCallback, useState, useEffect } from "react";
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
+
 import { Box, Fade, Link, Typography, Slider } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../components/Post";
@@ -280,7 +281,7 @@ export default function FeedHome() {
     >
       <Fade in={openBoost} timeout={500}>
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="modal-modal-description" component="div" sx={{ mt: 2 }}>
             <div
               style={{
                 display: "flex",
@@ -320,7 +321,7 @@ export default function FeedHome() {
                 Amount: {amount.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </Typography>
               <div
-                style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1 rem" }}
+                style={{display: "flex", justifyContent: "space-evenly", marginTop: "1rem"}}
               >
                                 <button
                   disabled={loading}
@@ -332,7 +333,7 @@ export default function FeedHome() {
                 >
                   <BoltIcon
                     style={{
-                      color: "white",
+                      color: "rgb(231, 140, 25)",
                       width: "1.5rem",
                       height: "1.5rem",
                     }}
@@ -360,7 +361,7 @@ export default function FeedHome() {
                 >
                   <CancelIcon
                     style={{
-                      color: "white",
+                      color: "red",
                       width: "1.5rem",
                       height: "1.5rem",
                     }}

@@ -280,7 +280,7 @@ export default function FeedHome() {
       >
         <Fade in={openBoost} timeout={500}>
           <Box sx={modalStyle}>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <Typography id="modal-modal-description" component="div" sx={{ mt: 2 }}>
               <div
                 style={{
                   display: "flex",
@@ -291,7 +291,7 @@ export default function FeedHome() {
                 }}
               >
                 <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
-                  Lets boost this post
+                  Let's boost this post!
                 </div>
                 <div style={{ textAlign: "center", fontSize: "1.3rem" }}>
                   {selectedPost}
@@ -315,7 +315,7 @@ export default function FeedHome() {
                   }}
                 />
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop:"1rem" }}
                 >
                   <button
                     disabled={loading}
@@ -327,7 +327,7 @@ export default function FeedHome() {
                   >
                     <BoltIcon
                       style={{
-                        color: "white",
+                        color: "rgb(231, 140, 25)",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -356,7 +356,7 @@ export default function FeedHome() {
                   >
                     <CancelIcon
                       style={{
-                        color: "white",
+                        color: "red",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
