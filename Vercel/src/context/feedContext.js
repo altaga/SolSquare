@@ -68,7 +68,7 @@ export const OwnerProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
   const [parentPostData, setParentPostData] = useState(null);
-  //const [selectedPost, setSelectedPost] = useState("");
+  const [selectedPost, setSelectedPost] = useState("");
 
   const [singlePostPage, setSinglePostPage] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
@@ -213,9 +213,15 @@ export const OwnerProvider = ({ children }) => {
 
        
         let parentPostPDA = new Uint8Array(32).fill(0);
+/*
         if (singlePostPage && parentPost) {
           parentPostPDA = new PublicKey(parentPost).toBytes();
         }
+*/
+        if (selectedPost) {
+          parentPostPDA = new PublicKey(selectedPost).toBytes();
+        }
+
         const seedStruct = {
           owner: publicKey.toBytes(),
           parentPost: parentPostPDA,
@@ -271,7 +277,6 @@ export const OwnerProvider = ({ children }) => {
 
         
       //Add BONK Payment for any new post
-      console.log('aF Start')
       const [addressFrom] = PublicKey.findProgramAddressSync(
         [
           publicKey.toBuffer(),
@@ -280,17 +285,14 @@ export const OwnerProvider = ({ children }) => {
         ],
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
-      console.log('aT Start')
       const [addressTo] = PublicKey.findProgramAddressSync(
         [
-          //replace with selectedPost
-          new PublicKey("3eEyQdSxSntCGPwuBZ864N2xZiZuwZKemKhd88QcwWXd").toBuffer(),
+          new PublicKey(selectedPost).toBuffer(),
           TOKEN_PROGRAM_ID.toBuffer(),
           tokenAddress.toBuffer()
         ],
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
-      console.log('iTAAM Start')
       let isTokenAccountAlreadyMade = false;
       try {
         await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
@@ -303,8 +305,7 @@ export const OwnerProvider = ({ children }) => {
           createAssociatedTokenAccountInstruction(
             publicKey,
             addressTo,
-            //replace with selectedPost
-            new PublicKey("3eEyQdSxSntCGPwuBZ864N2xZiZuwZKemKhd88QcwWXd"),
+            new PublicKey(selectedPost),
             tokenAddress,
             TOKEN_PROGRAM_ID
           )
@@ -334,7 +335,7 @@ export const OwnerProvider = ({ children }) => {
         console.log(e);
       }
     },
-    [publicKey, connection, sendTransaction, getPosts, singlePostPage]
+    [publicKey, connection, sendTransaction, getPosts, singlePostPage, selectedPost]
   );
 
   const getMainPDAInfo = useCallback(
@@ -415,6 +416,8 @@ export const OwnerProvider = ({ children }) => {
         setSearchValue,
         searchValue,
         getMainPDAInfo,
+        selectedPost,
+        setSelectedPost
       }}
     >
       {children}

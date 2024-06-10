@@ -75,16 +75,16 @@ export default function FeedHome() {
     setLoading,
     loading,
     ownerToIndexMap,
-
     setOwnerToIndexMap,
     setParentPostData,
+    selectedPost,
+    setSelectedPost
   } = useOwner();
   const { connection } = useConnection();
 
   let [amount, setAmount] = useState("");
 
   const [openBoost, setOpenBoost] = React.useState(false);
-  const [selectedPost, setSelectedPost] = React.useState("");
   const handleOpenBoost = () => setOpenBoost(true);
   const handleCloseBoost = () => setOpenBoost(false);
 
