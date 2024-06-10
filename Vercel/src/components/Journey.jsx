@@ -137,13 +137,13 @@ const Journey = () => {
                 margin: "1rem", 
                 animation: "spin3d 5s linear infinite" 
               }}
-              src={`/pfp/7.png`}
+              src={`/pfp/spin.gif`}
               alt="profile picture"
               width={150}
               height={150}
             />
           </Box>
-          <Typography variant="body1">Respin your body trait, receive a rare or better replacement</Typography>
+          <Typography variant="body1">Respin your eyes trait & receive a rare or better replacement!</Typography>
         </Box>
       </Box>
     </Box>
