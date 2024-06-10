@@ -48,7 +48,7 @@ const Header = () => {
       <div
         style={{
           height: "10vh",
-          width: "99vw",
+          width: "100vw",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",

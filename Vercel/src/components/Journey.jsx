@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Orbitron } from "next/font/google";
 import { Box, LinearProgress, Typography } from "@mui/material";
@@ -20,6 +20,24 @@ const Journey = () => {
     { name: "Boost others a total of 100k BONK", completed: false },
     { name: "Have one of your posts reach 1m BONK", completed: false },
   ];
+
+  const particleContainerRef = useRef(null);
+
+  useEffect(() => {
+    const createParticle = () => {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = `${60 + Math.random() * 150}px`;
+      particleContainerRef.current.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 2000);
+    };
+
+    const interval = setInterval(createParticle, 200);
+    return () => clearInterval(interval);
+  }, []);
 
   // Find the first uncompleted task
   const firstUncompletedTaskIndex = tasks.findIndex(task => !task.completed);
@@ -46,9 +64,9 @@ const Journey = () => {
         width={150}
         height={150}
       />
-      <Typography variant="h4">Rit Rafa</Typography>
+      <Typography variant="h4" sx={{ fontFamily: orbitron.style.fontFamily }}>Rit Rafa</Typography>
       <Box sx={{ width: "80%", marginTop: "1rem" }}>
-        <Typography variant="h6">Overall Progress</Typography>
+        <Typography variant="h6" sx={{ fontFamily: orbitron.style.fontFamily }}>Overall Progress</Typography>
         <LinearProgress
           variant="determinate"
           value={progress}
@@ -68,7 +86,7 @@ const Journey = () => {
       </Box>
       <Box sx={{ width: "80%", marginTop: "2rem", display: "flex", justifyContent: "space-between", position: "relative" }}>
         <Box sx={{ width: "70%", marginLeft: "5rem", position: "relative" }}>
-          <Typography variant="h6">Goals</Typography>
+          <Typography variant="h6" sx={{ fontFamily: orbitron.style.fontFamily }}>Goals</Typography>
           {tasks.map((task, index) => (
             <Box key={index} sx={{ display: "flex", alignItems: "center", marginTop: "1rem" }}>
               {task.completed ? (
@@ -99,7 +117,7 @@ const Journey = () => {
           sx={{
             width: "300px",
             height: "300px",
-            backgroundColor: "#1e1e1e",
+            backgroundColor: "rgb(53, 53, 53)",
             borderRadius: "10px",
             display: "flex",
             flexDirection: "column",
@@ -107,19 +125,26 @@ const Journey = () => {
             alignItems: "center",
             padding: "1rem",
             marginLeft: "1rem",
-            marginRight: "5rem"
+            marginRight: "5rem",
+            position: "relative",
           }}
         >
-          <Typography variant="h6">Next Reward</Typography>
-          <Image
-            className="spinning"
-            style={{ borderRadius: "15px", margin: "1rem" }}
-            src={`/pfp/7.png`}
-            alt="profile picture"
-            width={150}
-            height={150}
-          />
-          <Typography variant="body1">Respin your body trait, recieve a rare or better replacement</Typography>
+          <Typography variant="h6" sx={{ fontFamily: orbitron.style.fontFamily }}>Next Reward</Typography>
+          <Box className="particle-container" ref={particleContainerRef}>
+            <Image
+              className="spinning"
+              style={{ 
+                borderRadius: "15px", 
+                margin: "1rem", 
+                animation: "spin3d 5s linear infinite" 
+              }}
+              src={`/pfp/7.png`}
+              alt="profile picture"
+              width={150}
+              height={150}
+            />
+          </Box>
+          <Typography variant="body1">Respin your body trait, receive a rare or better replacement</Typography>
         </Box>
       </Box>
     </Box>

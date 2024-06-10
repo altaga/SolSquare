@@ -119,11 +119,33 @@
   animation: spin 10s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
+@keyframes spin3d {
+  0% {
+    transform: rotateY(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: rgb(231, 140, 25);
+  animation: particleFade 2s linear;
+  border-radius: 25%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes particleFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-65px);
   }
 }
