@@ -261,7 +261,7 @@ const UserProfile = () => {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New User
                 </div>
                 <div
@@ -300,7 +300,7 @@ const UserProfile = () => {
                   <div>{`${32 - username.length} / 32`}</div>
                 </div>
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1rem" }}
                 >
                   <button
                     disabled={loading}

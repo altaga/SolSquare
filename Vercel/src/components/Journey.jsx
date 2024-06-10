@@ -53,8 +53,7 @@ const Journey = () => {
         justifyContent: "center",
         alignItems: "center",
         padding: "2rem",
-        color: "white",
-        fontFamily: orbitron.style.fontFamily,
+        color: "white"
       }}
     >
       <Image
@@ -117,7 +116,7 @@ const Journey = () => {
           sx={{
             width: "300px",
             height: "300px",
-            backgroundColor: "rgb(53, 53, 53)",
+            backgroundColor: "rgba(128,128,128,0.1)",
             borderRadius: "10px",
             display: "flex",
             flexDirection: "column",

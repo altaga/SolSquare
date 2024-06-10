@@ -1,9 +1,7 @@
 "use client";
 
 import { modalStyle } from "../../utils/utils";
-
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -13,18 +11,15 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { serialize } from "borsh";
-import React, { useCallback, useState, useEffect, use } from "react";
-
+import React, { useCallback, useState, useEffect } from "react";
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Box, Fade, Link, Typography } from "@mui/material";
+import { Box, Fade, Link, Typography, Slider } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../components/Post";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
-
 import { withdrawSchema } from "../../utils/schema";
-
 import { useOwner } from "../../context/feedContext";
 import TransactionToast from "../../components/TransactionToast";
 import {
@@ -82,12 +77,17 @@ export default function FeedHome() {
     countReplies
   } = useOwner();
   const { connection } = useConnection();
+  const router = useRouter();
 
-  let [amount, setAmount] = useState("");
+  let [amount, setAmount] = useState(0);
 
   const [openBoost, setOpenBoost] = React.useState(false);
   const handleOpenBoost = () => setOpenBoost(true);
   const handleCloseBoost = () => setOpenBoost(false);
+
+  const handleSliderChange = (event, newValue) => {
+    setAmount(Math.pow(10, newValue));
+  };
 
   const [visiblePosts, setVisiblePosts] = useState({});
 
@@ -140,14 +140,14 @@ export default function FeedHome() {
           addressFrom,
           addressTo,
           publicKey,
-          parseFloat(amount) * Math.pow(10, 5) // 5 decimals for Bonk
+          parseFloat(amount.toFixed(0)) * Math.pow(10, 5) // 5 decimals for Bonk
         )
       );
       const signature = await sendTransaction(transaction, connection);
       transactionToast(signature, "Post boosted with Bonk!");
       handleCloseBoost();
       setTimeout(() => {
-        setAmount("");
+        setAmount(0);
         setSelectedPost("");
         setLoading(false);
         getPosts();
@@ -272,111 +272,115 @@ export default function FeedHome() {
       {
         // Boost Modal
       }
-      <Modal
-        open={openBoost}
-        onClose={handleCloseBoost}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Fade in={openBoost} timeout={500}>
-          <Box sx={modalStyle}>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
-                  Lets boost this post
-                </div>
-                <div style={{ textAlign: "center", fontSize: "1.3rem" }}>
-                  {selectedPost}
-                </div>
-                <input
-                  style={{
-                    alignSelf: "center",
-                    marginTop: "1rem",
-                    marginBottom: "1rem",
-                    padding: "0.5rem",
-                    borderRadius: "10px",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: "black",
-                  }}
-                  placeholder="Enter amount"
-                  className="searchInput"
-                  value={amount}
-                  onChange={(e) => {
-                    setAmount(e.target.value);
-                  }}
-                />
-                <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
-                >
-                  <button
-                    disabled={loading}
-                    onClick={() => {
-                      setLoading(true);
-                      boostPost();
-                    }}
-                    className={orbitron.className + " buttonInteraction"}
-                  >
-                    <BoltIcon
-                      style={{
-                        color: "white",
-                        width: "1.5rem",
-                        height: "1.5rem",
-                      }}
-                    />
-                    <div
-                      style={{
-                        margin: "5px",
-                        fontSize: "1rem",
-                        color: "white",
-                      }}
-                    >
-                      Boost
-                    </div>
-                  </button>
-                  <button
-                    disabled={loading}
-                    onClick={() => {
-                      handleCloseBoost();
-                      setTimeout(() => {
-                        setAmount("");
-                        setSelectedPost("");
-                        setLoading(false);
-                      }, 500);
-                    }}
-                    className={orbitron.className + " buttonInteraction"}
-                  >
-                    <CancelIcon
-                      style={{
-                        color: "white",
-                        width: "1.5rem",
-                        height: "1.5rem",
-                      }}
-                    />
-                    <div
-                      style={{
-                        margin: "5px",
-                        fontSize: "1rem",
-                        color: "white",
-                      }}
-                    >
-                      Cancel
-                    </div>
-                  </button>
-                </div>
+    <Modal
+      open={openBoost}
+      onClose={handleCloseBoost}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Fade in={openBoost} timeout={500}>
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem"}}>
+                Let's boost this post!
               </div>
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
+              <Slider
+                value={Math.log10(amount)}
+                onChange={handleSliderChange}
+                min={2}
+                max={8}
+                step={0.2}
+                sx={{
+                  color: "rgb(231, 140, 25)",
+                  '& .MuiSlider-thumb': {
+                    backgroundImage: `url('/bonk.webp')`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    width: 24,
+                    height: 24,
+                  },
+                  '& .MuiSlider-track': {
+                    backgroundColor: "rgb(231, 140, 25)",
+                  },
+                  '& .MuiSlider-rail': {
+                    backgroundColor: '#d3d3d3',
+                  },
+                }}
+              />
+              <Typography variant="h6" align="center" sx={{ mt: 2 }}>
+                Amount: {amount.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Typography>
+              <div
+                style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1 rem" }}
+              >
+                                <button
+                  disabled={loading}
+                  onClick={() => {
+                    setLoading(true);
+                    boostPost();
+                  }}
+                  className={orbitron.className + " buttonInteraction"}
+                >
+                  <BoltIcon
+                    style={{
+                      color: "white",
+                      width: "1.5rem",
+                      height: "1.5rem",
+                    }}
+                  />
+                  <div
+                    style={{
+                      margin: "5px",
+                      fontSize: "1rem",
+                      color: "white",
+                    }}
+                  >
+                    Boost
+                  </div>
+                </button>
+                <button
+                  disabled={loading}
+                  onClick={() => {
+                    handleCloseBoost();
+                    setTimeout(() => {
+                      setAmount(0);
+                      setLoading(false);
+                    }, 500);
+                  }}
+                  className={orbitron.className + " buttonInteraction"}
+                >
+                  <CancelIcon
+                    style={{
+                      color: "white",
+                      width: "1.5rem",
+                      height: "1.5rem",
+                    }}
+                  />
+                  <div
+                    style={{
+                      margin: "5px",
+                      fontSize: "1rem",
+                      color: "white",
+                    }}
+                  >
+                    Cancel
+                  </div>
+                </button>
+              </div>
+            </div>
+          </Typography>
+        </Box>
+      </Fade>
+    </Modal>
 
       <div className="scrollable-div">
         {pubkey &&

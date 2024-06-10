@@ -120,7 +120,7 @@ const Header = () => {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New Post
                 </div>
                 <div
@@ -159,7 +159,7 @@ const Header = () => {
                   <div>{`${256 - message.length} / 256`}</div>
                 </div>
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1rem" }}
                 >
                   <button
                     disabled={loading}

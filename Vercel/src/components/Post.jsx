@@ -99,7 +99,7 @@ const Post = ({
                 marginRight: "0.5rem"
               }}
             >
-              {`⚡${Math.round(post.bonkBalance)} BONK`}
+              {`⚡${Math.round(post.bonkBalance).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} BONK`}
             </div>
             <Image src={"/bonk.webp"} alt="logo" width={25} height={25}></Image>
           </div>
