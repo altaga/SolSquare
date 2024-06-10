@@ -11,6 +11,7 @@ import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { useOwner } from "../context/feedContext";
+import { Select } from "@mui/material";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const Post = ({
@@ -171,6 +172,7 @@ const Post = ({
         </button>
         <button
           onClick={() => {
+            setSelectedPost(post.addressPDA);
             setOpenPost(true);
             setSinglePostPage(true);
           }}
@@ -190,6 +192,7 @@ const Post = ({
               color: "white",
             }}
           >
+            
             {`Reply (${0})`}
           </div>
         </button>

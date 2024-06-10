@@ -322,10 +322,6 @@ export default function FeedHome() {
         )}
         {pubkey &&
           posts.map((post, index) => {
-            console.log(post);
-            console.log(index);
-            console.log(ownerToIndexMap);
-            console.log(visiblePosts);
             return (
               <Post
                 key={"post-" + index}

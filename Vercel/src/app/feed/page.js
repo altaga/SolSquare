@@ -33,8 +33,6 @@ import {
   createAssociatedTokenAccountInstruction,
   createTransferInstruction,
   getAccount,
-  getAssociatedTokenAddressSync,
-  getOrCreateAssociatedTokenAccount
 } from "@solana/spl-token";
 import { toast } from "react-toastify";
 

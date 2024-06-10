@@ -24,6 +24,9 @@ import { useRouter } from "next/navigation";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAccount,
 } from "@solana/spl-token";
 
 const getRudeness = async (text) => {
@@ -65,6 +68,7 @@ export const OwnerProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
   const [parentPostData, setParentPostData] = useState(null);
+  //const [selectedPost, setSelectedPost] = useState("");
 
   const [singlePostPage, setSinglePostPage] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
@@ -87,18 +91,11 @@ export const OwnerProvider = ({ children }) => {
         // ||
         //   post.addressPDA.toLowerCase().includes(searchValue.toLowerCase())
       );
-      console.log("tempData data ", tempData);
       setFilteredPosts(tempData);
-
     } else {
-      console.log("all data1 ", allPosts);
-      console.log("all data1323 ", backupPosts);
       setFilteredPosts(backupPosts);
-      
     }
-
-    console.log("backupPosts ", backupPosts);
-
+    console.log(allPosts);
     }, [backupPosts, searchValue]);
 
   const getUsers = useCallback(async () => {
@@ -272,6 +269,57 @@ export const OwnerProvider = ({ children }) => {
           })
         );
 
+        
+      //Add BONK Payment for any new post
+      console.log('aF Start')
+      const [addressFrom] = PublicKey.findProgramAddressSync(
+        [
+          publicKey.toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      console.log('aT Start')
+      const [addressTo] = PublicKey.findProgramAddressSync(
+        [
+          //replace with selectedPost
+          new PublicKey("3eEyQdSxSntCGPwuBZ864N2xZiZuwZKemKhd88QcwWXd").toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      console.log('iTAAM Start')
+      let isTokenAccountAlreadyMade = false;
+      try {
+        await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
+        isTokenAccountAlreadyMade = true;
+      } catch {
+        // Nothing
+      }
+      if (!isTokenAccountAlreadyMade) {
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            publicKey,
+            addressTo,
+            //replace with selectedPost
+            new PublicKey("3eEyQdSxSntCGPwuBZ864N2xZiZuwZKemKhd88QcwWXd"),
+            tokenAddress,
+            TOKEN_PROGRAM_ID
+          )
+        );
+      }
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressTo,
+          publicKey,
+          parseFloat(1000) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
+      );
+
+
         const signature = await sendTransaction(transaction, connection);
         TransactionToast(signature, "Post added");
 
@@ -305,6 +353,27 @@ export const OwnerProvider = ({ children }) => {
         content: post.content.replaceAll("~", ""),
         owner: new PublicKey(post.owner).toBase58(),
       };
+
+      const OWNER = new PublicKey(post.addressPDA);
+      const [address] = PublicKey.findProgramAddressSync(
+        [
+          OWNER.toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer(),
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+  
+      let bonkBalance;
+      try {
+        bonkBalance = await connection.getTokenAccountBalance(address);
+        bonkBalance = bonkBalance.value.uiAmount;
+      } catch (e) {
+        bonkBalance = 0;
+      }
+  
+      post.bonkBalance = bonkBalance;
+    
       setParentPostData(post);
       getPosts(post);
     },
