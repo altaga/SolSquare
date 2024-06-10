@@ -153,6 +153,7 @@ const UserProfile = () => {
           href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}
           target="_blank"
           rel="noopener noreferrer"
+          className={orbitron.className}
           style={{
             fontSize: "1.2rem",
             color: "white",
