@@ -11,6 +11,7 @@ import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
 import ExploreIcon from "@mui/icons-material/Explore";
 import { useOwner } from "../context/feedContext";
+import { Select } from "@mui/material";
 // Fonts
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const Post = ({
@@ -24,6 +25,7 @@ const Post = ({
   post,
   users,
   index,
+  countReplies
 }) => {
   const router = useRouter();
   const { setParentPostData, parentId, setOpenPost, setSinglePostPage } =
@@ -97,7 +99,7 @@ const Post = ({
                 marginRight: "0.5rem"
               }}
             >
-              {`⚡${Math.round(post.bonkBalance)} BONK`}
+              {`⚡${Math.round(post.bonkBalance).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} BONK`}
             </div>
             <Image src={"/bonk.webp"} alt="logo" width={25} height={25}></Image>
           </div>
@@ -113,6 +115,8 @@ const Post = ({
                 cursor: "pointer",
                 fontSize: "1.3rem",
                 textDecoration: "underline",
+                marginLeft: "3rem",
+                marginBottom: "1.5rem",
               }}
             >
               Show Post
@@ -170,6 +174,32 @@ const Post = ({
           </div>
         </button>
         <button
+          onClick={() => {
+            setSelectedPost(post.addressPDA);
+            setOpenPost(true);
+            setSinglePostPage(true);
+          }}
+          className={orbitron.className + " buttonInteraction"}
+        >
+          <CommentIcon
+            style={{
+              color: "#E78C19",
+              width: "1.5rem",
+              height: "1.5rem",
+            }}
+          />
+          <div
+            style={{
+              margin: "5px",
+              fontSize: "1rem",
+              color: "white",
+            }}
+          >
+            
+            {`Reply (${countReplies(post.addressPDA)})`}
+          </div>
+        </button>
+        <button
           onClick={() =>
             window.open(
               `https://explorer.solana.com/address/${post.addressPDA}?cluster=devnet`,
@@ -193,30 +223,6 @@ const Post = ({
             }}
           >
             Explorer
-          </div>
-        </button>
-        <button
-          onClick={() => {
-            setOpenPost(true);
-            setSinglePostPage(true);
-          }}
-          className={orbitron.className + " buttonInteraction"}
-        >
-          <CommentIcon
-            style={{
-              color: "#E78C19",
-              width: "1.5rem",
-              height: "1.5rem",
-            }}
-          />
-          <div
-            style={{
-              margin: "5px",
-              fontSize: "1rem",
-              color: "white",
-            }}
-          >
-            {`Reply (${0})`}
           </div>
         </button>
         {post.owner === pubkey?.toBase58() && (

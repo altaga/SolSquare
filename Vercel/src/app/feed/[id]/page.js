@@ -1,9 +1,7 @@
 "use client";
 
 import { modalStyle } from "../../../utils/utils";
-
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-
 import {
   LAMPORTS_PER_SOL,
   PublicKey,
@@ -13,23 +11,48 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { serialize } from "borsh";
-
 import React, { useCallback, useEffect, useState } from "react";
-
 import BoltIcon from "@mui/icons-material/Bolt";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
-import { Box, Fade, Typography } from "@mui/material";
+import { Box, Fade, Link, Typography, Slider } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Post from "../../../components/Post";
 import { useParams, useLocation, useRouter } from "next/navigation";
 import { Orbitron } from "next/font/google";
-
 import { withdrawSchema } from "../../../utils/schema";
-
 import { useOwner } from "../../../context/feedContext";
 import TransactionToast from "../../../components/TransactionToast";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAccount,
+} from "@solana/spl-token";
+import { toast } from "react-toastify";
+
+const tokenAddress = new PublicKey(process.env.NEXT_PUBLIC_TOKEN_ADDRESS);
+const tokenAddressAuthority = new PublicKey(
+  process.env.NEXT_PUBLIC_TOKEN_ADDRESS_AUTH
+);
+
+const transactionToast = (txhash, message) => {
+  // Notification can be a component, a string or a plain object
+  toast(
+    <div>
+      {message}:
+      <br />
+      <Link
+        href={`https://explorer.solana.com/tx/${txhash}?cluster=devnet`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {txhash}
+      </Link>
+    </div>
+  );
+};
 
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 
@@ -53,8 +76,13 @@ export default function FeedHome() {
     setParentPost,
     parentPostData,
     getMainPDAInfo,
+    countReplies
   } = useOwner();
   const { connection } = useConnection();
+
+  const handleSliderChange = (event, newValue) => {
+    setAmount(Math.pow(10, newValue));
+  };
 
   useEffect(() => {
     if (parentId?.id) {
@@ -72,8 +100,8 @@ export default function FeedHome() {
     };
   }, [parentId]);
 
-  const [amount, setAmount] = useState("");
-  // Modal Boost
+  let [amount, setAmount] = useState(0);
+
   const [openBoost, setOpenBoost] = React.useState(false);
   const [selectedPost, setSelectedPost] = React.useState("");
   const handleOpenBoost = () => setOpenBoost(true);
@@ -90,18 +118,70 @@ export default function FeedHome() {
 
   const boostPost = useCallback(async () => {
     try {
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(selectedPost),
-          lamports: parseFloat(amount) * LAMPORTS_PER_SOL,
-        })
+      const [addressFrom] = PublicKey.findProgramAddressSync(
+        [
+          publicKey.toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const [addressTo] = PublicKey.findProgramAddressSync(
+        [
+          new PublicKey(selectedPost).toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const [addressBurn] = PublicKey.findProgramAddressSync(
+        [
+          new PublicKey('1nc1nerator11111111111111111111111111111111').toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      let isTokenAccountAlreadyMade = false;
+      try {
+        await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
+        isTokenAccountAlreadyMade = true;
+      } catch {
+        // Nothing
+      }
+      let transaction = new Transaction();
+      if (!isTokenAccountAlreadyMade) {
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            publicKey,
+            addressTo,
+            new PublicKey(selectedPost),
+            tokenAddress,
+            TOKEN_PROGRAM_ID
+          )
+        );
+      }
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressTo,
+          publicKey,
+          parseFloat(amount.toFixed(0)*0.97) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
+      );
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressBurn,
+          publicKey,
+          parseFloat(amount.toFixed(0)*0.03) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
       );
       const signature = await sendTransaction(transaction, connection);
-      TransactionToast(signature, "Post boosted");
+      transactionToast(signature, "Post boosted with Bonk!");
       handleCloseBoost();
       setTimeout(() => {
-        setAmount("");
+        setAmount(0);
         setSelectedPost("");
         setLoading(false);
         getPosts();
@@ -119,7 +199,6 @@ export default function FeedHome() {
     selectedPost,
     getPosts,
     getBalance,
-    setLoading,
   ]);
 
   const withdrawPost = useCallback(
@@ -183,32 +262,37 @@ export default function FeedHome() {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
-                  Lets boost this post
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                  Let's boost this post!
                 </div>
-                <div style={{ textAlign: "center", fontSize: "1.3rem" }}>
-                  {selectedPost}
-                </div>
-                <input
-                  style={{
-                    alignSelf: "center",
-                    marginTop: "1rem",
-                    marginBottom: "1rem",
-                    padding: "0.5rem",
-                    borderRadius: "10px",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: "black",
-                  }}
-                  placeholder="Enter amount"
-                  className="searchInput"
-                  value={amount}
-                  onChange={(e) => {
-                    setAmount(e.target.value);
-                  }}
-                />
+                <Slider
+                value={Math.log10(amount)}
+                onChange={handleSliderChange}
+                min={2}
+                max={8}
+                step={0.2}
+                sx={{
+                  color: "rgb(231, 140, 25)",
+                  '& .MuiSlider-thumb': {
+                    backgroundImage: `url('/bonk.webp')`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    width: 24,
+                    height: 24,
+                  },
+                  '& .MuiSlider-track': {
+                    backgroundColor: "rgb(231, 140, 25)",
+                  },
+                  '& .MuiSlider-rail': {
+                    backgroundColor: '#d3d3d3',
+                  },
+                }}
+              />
+              <Typography variant="h6" align="center" sx={{ mt: 2 }}>
+                Amount: {amount.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              </Typography>
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop:"1rem" }}
                 >
                   <button
                     disabled={loading}
@@ -220,7 +304,7 @@ export default function FeedHome() {
                   >
                     <BoltIcon
                       style={{
-                        color: "white",
+                        color: "rgb(231, 140, 25)",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -240,7 +324,7 @@ export default function FeedHome() {
                     onClick={() => {
                       handleCloseBoost();
                       setTimeout(() => {
-                        setAmount("");
+                        setAmount(0);
                         setSelectedPost("");
                         setLoading(false);
                       }, 500);
@@ -249,7 +333,7 @@ export default function FeedHome() {
                   >
                     <CancelIcon
                       style={{
-                        color: "white",
+                        color: "red",
                         width: "1.5rem",
                         height: "1.5rem",
                       }}
@@ -317,15 +401,12 @@ export default function FeedHome() {
               withdrawPost={withdrawPost}
               users={users}
               index={0}
+              countReplies={countReplies}
             />
             </div>
         )}
         {pubkey &&
           posts.map((post, index) => {
-            console.log(post);
-            console.log(index);
-            console.log(ownerToIndexMap);
-            console.log(visiblePosts);
             return (
               <Post
                 key={"post-" + index}
@@ -339,6 +420,7 @@ export default function FeedHome() {
                 users={users}
                 post={post}
                 index={index + 1}
+                countReplies={countReplies}
               />
             );
           })}

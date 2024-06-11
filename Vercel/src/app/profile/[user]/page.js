@@ -677,7 +677,7 @@ export default function FeedHome({ params }) {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New Post
                 </div>
                 <div
@@ -798,7 +798,7 @@ export default function FeedHome({ params }) {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New User
                 </div>
                 <div
@@ -1353,7 +1353,7 @@ export default function FeedHome({ params }) {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New Post
                 </div>
                 <div
@@ -1474,7 +1474,7 @@ export default function FeedHome({ params }) {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New User
                 </div>
                 <div

@@ -24,6 +24,9 @@ import { useRouter } from "next/navigation";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  createTransferInstruction,
+  getAccount,
 } from "@solana/spl-token";
 
 const getRudeness = async (text) => {
@@ -65,6 +68,7 @@ export const OwnerProvider = ({ children }) => {
   const [message, setMessage] = useState("");
   const [parentPost, setParentPost] = useState(null);
   const [parentPostData, setParentPostData] = useState(null);
+  const [selectedPost, setSelectedPost] = useState("");
 
   const [singlePostPage, setSinglePostPage] = useState(false);
   const handleOpenPost = () => setOpenPost(true);
@@ -76,6 +80,13 @@ export const OwnerProvider = ({ children }) => {
     setBalance(balance);
   }, [publicKey, connection]);
 
+  const countReplies = (postId) => {
+    return backupPosts.filter(post => {
+      const parentPostString = new PublicKey(post.parentPost).toBase58();
+      return parentPostString === postId;
+    }).length;
+  };
+  
   useEffect(() => {
     setFilteredPosts([]);
     if (searchValue) {
@@ -87,18 +98,11 @@ export const OwnerProvider = ({ children }) => {
         // ||
         //   post.addressPDA.toLowerCase().includes(searchValue.toLowerCase())
       );
-      console.log("tempData data ", tempData);
       setFilteredPosts(tempData);
-
     } else {
-      console.log("all data1 ", allPosts);
-      console.log("all data1323 ", backupPosts);
       setFilteredPosts(backupPosts);
-      
     }
-
-    console.log("backupPosts ", backupPosts);
-
+    console.log(allPosts);
     }, [backupPosts, searchValue]);
 
   const getUsers = useCallback(async () => {
@@ -216,9 +220,15 @@ export const OwnerProvider = ({ children }) => {
 
        
         let parentPostPDA = new Uint8Array(32).fill(0);
+/*
         if (singlePostPage && parentPost) {
           parentPostPDA = new PublicKey(parentPost).toBytes();
         }
+*/
+        if (selectedPost) {
+          parentPostPDA = new PublicKey(selectedPost).toBytes();
+        }
+
         const seedStruct = {
           owner: publicKey.toBytes(),
           parentPost: parentPostPDA,
@@ -272,6 +282,69 @@ export const OwnerProvider = ({ children }) => {
           })
         );
 
+        
+      //Add BONK Payment for any new post
+      if(selectedPost){
+      const [addressFrom] = PublicKey.findProgramAddressSync(
+        [
+          publicKey.toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const [addressTo] = PublicKey.findProgramAddressSync(
+        [
+          new PublicKey(selectedPost).toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      const [addressBurn] = PublicKey.findProgramAddressSync(
+        [
+          new PublicKey('1nc1nerator11111111111111111111111111111111').toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+      let isTokenAccountAlreadyMade = false;
+      try {
+        await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
+        isTokenAccountAlreadyMade = true;
+      } catch {
+        // Nothing
+      }
+      if (!isTokenAccountAlreadyMade) {
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            publicKey,
+            addressTo,
+            new PublicKey(selectedPost),
+            tokenAddress,
+            TOKEN_PROGRAM_ID
+          )
+        );
+      }
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressTo,
+          publicKey,
+          parseFloat(1000*0.97) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
+      );
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressBurn,
+          publicKey,
+          parseFloat(1000*0.03) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
+      );
+    }
+
         const signature = await sendTransaction(transaction, connection);
         TransactionToast(signature, "Post added");
 
@@ -286,8 +359,52 @@ export const OwnerProvider = ({ children }) => {
         console.log(e);
       }
     },
-    [publicKey, connection, sendTransaction, getPosts, singlePostPage]
+    [publicKey, connection, sendTransaction, getPosts, singlePostPage, selectedPost]
   );
+
+  const getMainPDAInfo = useCallback(
+    async (addressPDA) => {
+      const mainAccount = await connection.getAccountInfo(
+        new PublicKey(addressPDA)
+      );
+
+      let post = {
+        ...deserialize(postSchema, mainAccount.data),
+        addressPDA: new PublicKey(addressPDA),
+        balance: 0,
+      };
+      post = {
+        ...post,
+        content: post.content.replaceAll("~", ""),
+        owner: new PublicKey(post.owner).toBase58(),
+      };
+
+      const OWNER = new PublicKey(post.addressPDA);
+      const [address] = PublicKey.findProgramAddressSync(
+        [
+          OWNER.toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer(),
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
+  
+      let bonkBalance;
+      try {
+        bonkBalance = await connection.getTokenAccountBalance(address);
+        bonkBalance = bonkBalance.value.uiAmount;
+      } catch (e) {
+        bonkBalance = 0;
+      }
+  
+      post.bonkBalance = bonkBalance;
+    
+      setParentPostData(post);
+      getPosts(post);
+    },
+    [connection]
+  );
+
   return (
     <OwnerContext.Provider
       value={{
@@ -322,6 +439,10 @@ export const OwnerProvider = ({ children }) => {
         setSinglePostPage,
         setSearchValue,
         searchValue,
+        getMainPDAInfo,
+        selectedPost,
+        setSelectedPost,
+        countReplies
       }}
     >
       {children}

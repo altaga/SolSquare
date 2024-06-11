@@ -7,6 +7,7 @@ import { Orbitron } from "next/font/google";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Modal } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import RouteIcon from '@mui/icons-material/Route';
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { userSchema, addUserSchema } from "../utils/schema";
 import { Box, Fade, Typography } from "@mui/material";
@@ -26,9 +27,11 @@ import {
 } from "@solana/web3.js";
 import { serialize } from "borsh";
 import TransactionToast from "./TransactionToast";
+import { useRouter } from "next/navigation";
 
 const orbitron = Orbitron({ weight: "400", subsets: ["latin"] });
 const programId = new PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID);
+
 
 const UserProfile = () => {
   const {
@@ -48,6 +51,7 @@ const UserProfile = () => {
   const [username, setUsername] = useState("");
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
+  const router = useRouter();
 
   const addUser = useCallback(async () => {
     try {
@@ -131,9 +135,6 @@ const UserProfile = () => {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          borderRightWidth: "1px",
-          borderRightStyle: "solid",
-          borderRightColor: "rgba(255,255, 255, 0.5)",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -152,6 +153,7 @@ const UserProfile = () => {
           href={`https://explorer.solana.com/address/${publicKey?.toBase58()}?cluster=devnet`}
           target="_blank"
           rel="noopener noreferrer"
+          className={orbitron.className}
           style={{
             fontSize: "1.2rem",
             color: "white",
@@ -168,6 +170,7 @@ const UserProfile = () => {
             `${findUser(users, publicKey?.toBase58())}`
           )}
         </Link>
+        
         <div
           style={{
             marginTop: "2rem",
@@ -179,6 +182,28 @@ const UserProfile = () => {
             Math.round((balance / LAMPORTS_PER_SOL) * 1000) / 1000
           }`}
         </div>
+        <button
+              disabled={false}
+              onClick={() => router.push('../journey')}
+              className={orbitron.className + " buttonInteraction"}
+            >
+              <RouteIcon
+                style={{
+                  color: "#E78C19",
+                  width: "1.5rem",
+                  height: "1.5rem",
+                }}
+              />
+              <div
+                style={{
+                  margin: "5px",
+                  fontSize: "1rem",
+                  color: "white",
+                }}
+              >
+                Reward Journey
+              </div>
+            </button>
         {findUser(users, publicKey?.toBase58()) === publicKey?.toBase58() ? (
           <div
             style={{
@@ -238,7 +263,7 @@ const UserProfile = () => {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New User
                 </div>
                 <div
@@ -277,7 +302,7 @@ const UserProfile = () => {
                   <div>{`${32 - username.length} / 32`}</div>
                 </div>
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1rem" }}
                 >
                   <button
                     disabled={loading}

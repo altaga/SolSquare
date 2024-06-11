@@ -48,13 +48,13 @@ const Header = () => {
       <div
         style={{
           height: "10vh",
-          width: "99vw",
+          width: "100vw",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           borderBottomWidth: "1px",
           borderBottomStyle: "solid",
-          borderBottomColor: "rgba(255,255, 255, 0.5)",
+          borderBottomColor: "rgb(231, 140, 25)",
         }}
       >
         <div style={{ margin: "1rem" }}>
@@ -120,7 +120,7 @@ const Header = () => {
                   height: "100%",
                 }}
               >
-                <div style={{ textAlign: "center", fontSize: "1.5rem" }}>
+                <div className={orbitron.className} style={{ textAlign: "center", fontSize: "1.5rem" }}>
                   Create New Post
                 </div>
                 <div
@@ -159,7 +159,7 @@ const Header = () => {
                   <div>{`${256 - message.length} / 256`}</div>
                 </div>
                 <div
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
+                  style={{ display: "flex", justifyContent: "space-evenly", marginTop: "1rem" }}
                 >
                   <button
                     disabled={loading}
