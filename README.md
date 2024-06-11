@@ -9,7 +9,7 @@ SolSquare is a decentralized censorship-free post/tweet platform that promotes e
 
 - WebDapp: https://www.solsquare.net/
 - BackEnd Code: [Code](./Backend/)
-- FrontEnd Code: [Code](./Frontend%20-%20NextJS/)
+- FrontEnd Code: [Code](./Vercel/)
 - Pitch Deck: [Deck](./Presentation/)
 - Video Demo: [Video](https://youtu.be/LP2YR1wCiQg)
 
@@ -152,6 +152,10 @@ The entire post feed originates from the Solana network, where each tweet and us
 With just one click, users can boost a post, add a new post, or create a new user.
 
 <img src="./Assets/4-post.png">
+
+Boosting content helps the best things be seen by the most people.
+
+<img src="./Assets/6-boost.png">
 
 ### AI Rudeness:
 
