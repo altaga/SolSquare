@@ -9,7 +9,7 @@ SolSquare is a decentralized censorship-free post/tweet platform that promotes e
 
 - WebDapp: https://www.solsquare.net/
 - BackEnd Code: [Code](./Backend/)
-- FrontEnd Code: [Code](./Frontend%20-%20NextJS/)
+- FrontEnd Code: [Code](./Vercel/)
 - Pitch Deck: [Deck](./Presentation/)
 - Video Demo: [Video](https://youtu.be/LP2YR1wCiQg)
 
