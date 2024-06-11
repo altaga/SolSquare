@@ -134,6 +134,14 @@ export default function FeedHome() {
         ],
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
+      const [addressBurn] = PublicKey.findProgramAddressSync(
+        [
+          new PublicKey('1nc1nerator11111111111111111111111111111111').toBuffer(),
+          TOKEN_PROGRAM_ID.toBuffer(),
+          tokenAddress.toBuffer()
+        ],
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      );
       let isTokenAccountAlreadyMade = false;
       try {
         await getAccount(connection, addressTo, "confirmed", TOKEN_PROGRAM_ID);
@@ -158,7 +166,15 @@ export default function FeedHome() {
           addressFrom,
           addressTo,
           publicKey,
-          parseFloat(amount.toFixed(0)) * Math.pow(10, 5) // 5 decimals for Bonk
+          parseFloat(amount.toFixed(0)*0.97) * Math.pow(10, 5) // 5 decimals for Bonk
+        )
+      );
+      transaction.add(
+        createTransferInstruction(
+          addressFrom,
+          addressBurn,
+          publicKey,
+          parseFloat(amount.toFixed(0)*0.03) * Math.pow(10, 5) // 5 decimals for Bonk
         )
       );
       const signature = await sendTransaction(transaction, connection);

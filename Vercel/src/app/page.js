@@ -42,7 +42,7 @@ export default function Home() {
           backgroundColor: "rgba(128,128,128,0.1)",
           padding: "2rem",
           borderRadius: "1rem",
-          boxShadow: "0 0 10px rgba(255,255, 255, 1)",
+          boxShadow: "0 0 10px rgba(231, 140, 25, 1)",
         }}
       >
         <Image

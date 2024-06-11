@@ -170,6 +170,7 @@ const UserProfile = () => {
             `${findUser(users, publicKey?.toBase58())}`
           )}
         </Link>
+        
         <div
           style={{
             marginTop: "2rem",
