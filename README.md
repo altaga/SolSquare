@@ -153,6 +153,10 @@ With just one click, users can boost a post, add a new post, or create a new use
 
 <img src="./Assets/4-post.png">
 
+Boosting content helps the best things be seen by the most people.
+
+<img src="./Assets/6-boost.png">
+
 ### AI Rudeness:
 
 Because we want the platform to be safe and encourage good behavior from our users, our AI is able to detect aggressive and problematic behavior on the platform.
